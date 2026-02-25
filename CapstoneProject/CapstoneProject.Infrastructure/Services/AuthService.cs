@@ -2,6 +2,7 @@
 using CapstoneProject.Application.Interface.IRepository;
 using CapstoneProject.Application.Interface.IService;
 using CapstoneProject.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Org.BouncyCastle.Crypto.Generators;
@@ -66,7 +67,7 @@ namespace CapstoneProject.Infrastructure.Services
 
         private async Task SendVerifyEmail(string email, string token)
         {
-            var link = $"https://localhost:7084/api/registers/verify?token={token}";
+            var link = $"https://localhost:7084/api/auth/verify?token={token}";
 
             var client = new SmtpClient("smtp.gmail.com", 587)
             {
@@ -120,6 +121,91 @@ namespace CapstoneProject.Infrastructure.Services
             await _authRepository.UpdateAsync(user);
 
             return "Email verified successfully!";
+        }
+
+        public async Task<TokenResponse> LoginAsync(LoginRequest request)
+        {
+            var user = await _authRepository.GetByEmailAsync(request.Email);
+            if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+            {
+                throw new Exception("Email or password incorrect");
+            }
+            if (user.EmailVerified == false)
+            {
+                throw new Exception("Do not verify");
+            }
+            if (user.Status == "Locked")
+            {
+                throw new Exception("Account locked");
+            }
+            return await GenerateTokens(user);
+        }
+
+        public async Task<TokenResponse> RefreshTokenAsync(string refreshToken)
+        {
+            var storedToken = await _authRepository.GetRefreshTokenAsync(refreshToken);
+
+            if (storedToken == null)
+                throw new Exception("Refresh Token do not exit.");
+
+            if (storedToken.IsRevoked == true)
+                throw new Exception("Refresh Token revoked.");
+
+            if (storedToken.ExpiryDate < DateTime.UtcNow)
+                throw new Exception("Refresh Token expiryDate.");
+            storedToken.IsRevoked = true;
+            await _authRepository.UpdateRefreshTokenAsync(storedToken);
+            return await GenerateTokens(storedToken.User);
+        }
+        private async Task<TokenResponse> GenerateTokens(User user)
+        {
+            var jwtKey = _configuration["Jwt:Key"];
+            if (string.IsNullOrEmpty(jwtKey)) throw new Exception("Jwt:Key is null or empty");
+
+            var jwtHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.UTF8.GetBytes(jwtKey);
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[]
+                {
+            new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
+            new Claim(ClaimTypes.Email, user.Email ?? ""),
+            new Claim(ClaimTypes.Role, user.Role ?? "Student")
+        }),
+                Expires = DateTime.UtcNow.AddMinutes(15),
+                Issuer = _configuration["Jwt:Issuer"],
+                Audience = _configuration["Jwt:Audience"],
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            var token = jwtHandler.CreateToken(tokenDescriptor);
+            var accessToken = jwtHandler.WriteToken(token);
+            var newRefreshToken = new RefreshToken
+            {
+                UserId = user.UserId,
+                User = user, 
+                Token = Guid.NewGuid().ToString() + "-" + DateTime.UtcNow.Ticks,
+                ExpiryDate = DateTime.UtcNow.AddDays(7),
+                IsRevoked = false
+            };
+            if (_authRepository == null) throw new Exception("_authRepository is null");
+
+            await _authRepository.AddRefreshTokenAsync(newRefreshToken);
+
+            return new TokenResponse
+            {
+                AccessToken = accessToken,
+                RefreshToken = newRefreshToken.Token,
+                ExpiryDate = newRefreshToken.ExpiryDate
+            };
+        }
+
+        public async Task<bool> LogoutAsync(string refreshToken)
+        {
+            if (string.IsNullOrEmpty(refreshToken)) return false;
+            await _authRepository.RevokeRefreshTokenAsync(refreshToken);
+            return true;
         }
 
     }
