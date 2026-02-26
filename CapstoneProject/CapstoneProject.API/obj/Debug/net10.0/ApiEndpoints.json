@@ -1,6 +1,5 @@
 [
   {
-<<<<<<< Updated upstream
     "ContainingType": "CapstoneProject.API.Controllers.AuthController",
     "Method": "Login",
     "RelativePath": "api/Auth/login",
@@ -81,8 +80,6 @@
     "ReturnTypes": []
   },
   {
-=======
->>>>>>> Stashed changes
     "ContainingType": "CapstoneProject.API.Controllers.RegistersController",
     "Method": "Register",
     "RelativePath": "api/Registers/register",

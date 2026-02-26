@@ -5,7 +5,6 @@
     "version": "1.0"
   },
   "paths": {
-<<<<<<< Updated upstream
     "/api/Auth/register": {
       "post": {
         "tags": [
@@ -151,8 +150,6 @@
         }
       }
     },
-=======
->>>>>>> Stashed changes
     "/api/Registers/register": {
       "post": {
         "tags": [
@@ -208,7 +205,6 @@
   },
   "components": {
     "schemas": {
-<<<<<<< Updated upstream
       "LoginRequest": {
         "type": "object",
         "properties": {
@@ -243,8 +239,6 @@
         },
         "additionalProperties": false
       },
-=======
->>>>>>> Stashed changes
       "RegisterRequest": {
         "type": "object",
         "properties": {
@@ -271,12 +265,9 @@
   },
   "tags": [
     {
-<<<<<<< Updated upstream
       "name": "Auth"
     },
     {
-=======
->>>>>>> Stashed changes
       "name": "Registers"
     }
   ]
