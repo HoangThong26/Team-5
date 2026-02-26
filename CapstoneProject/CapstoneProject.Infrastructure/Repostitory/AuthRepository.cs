@@ -45,6 +45,40 @@ namespace CapstoneProject.Infrastructure.Repostitory
                 .FirstOrDefaultAsync(x => x.VerifyToken == token);
         }
 
-     
+        public async Task AddRefreshTokenAsync(RefreshToken refreshToken)
+        {
+            if (refreshToken.IsRevoked == null) refreshToken.IsRevoked = false;
+
+            await _context.RefreshTokens.AddAsync(refreshToken);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<RefreshToken?> GetRefreshTokenAsync(string token)
+        {
+            return await _context.RefreshTokens
+                .Include(t => t.User)
+                .FirstOrDefaultAsync(t => t.Token == token);
+        }
+
+        public async Task UpdateRefreshTokenAsync(RefreshToken refreshToken)
+        {
+            _context.RefreshTokens.Update(refreshToken);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task RevokeRefreshTokenAsync(string token)
+        {
+            var refreshToken = await _context.RefreshTokens
+                .FirstOrDefaultAsync(t => t.Token == token);
+
+            if (refreshToken != null)
+            {
+                refreshToken.IsRevoked = true;
+                _context.RefreshTokens.Update(refreshToken);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+
     }
 }
