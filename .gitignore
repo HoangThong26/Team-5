@@ -1,0 +1,31 @@
+## Visual Studio Temp Files
+.vs/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+*.user
+*.userosscache
+*.sln.docstates
+
+## Build Results
+[Bb]in/
+[Oo]bj/
+
+## .NET Core / ASP.NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+out/
+
+## User-specific files (Thông tin cấu hình cá nhân)
+appsettings.Development.json
+*.user
+
+## Node.js (Nếu sau này bạn làm thêm React/Angular)
+node_modules/
+npm-debug.log
+
+## OS Files
+.DS_Store
+Thumbs.db
