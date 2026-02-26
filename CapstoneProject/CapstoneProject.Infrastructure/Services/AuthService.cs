@@ -197,7 +197,12 @@ namespace CapstoneProject.Infrastructure.Services
             {
                 AccessToken = accessToken,
                 RefreshToken = newRefreshToken.Token,
-                ExpiryDate = newRefreshToken.ExpiryDate
+                ExpiryDate = newRefreshToken.ExpiryDate,
+                User = new UserViewDTO
+                {
+                    FullName = user.FullName,
+                    Role = user.Role
+                }
             };
         }
 
