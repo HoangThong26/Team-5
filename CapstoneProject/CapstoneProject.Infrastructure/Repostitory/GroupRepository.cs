@@ -51,5 +51,12 @@ namespace CapstoneProject.Infrastructure.Repostitory
             // Đếm số lượng thành viên hiện tại của một nhóm
             return await _context.GroupMembers.CountAsync(m => m.GroupId == groupId);
         }
+        public async Task<Group?> GetGroupByIdAsync(int groupId)
+        {
+            // Dùng Include để lấy Group kèm theo danh sách GroupMembers
+            return await _context.Groups
+                .Include(g => g.GroupMembers)
+                .FirstOrDefaultAsync(g => g.GroupId == groupId);
+        }
     }
 }

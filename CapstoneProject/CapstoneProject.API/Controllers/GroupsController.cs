@@ -38,5 +38,18 @@ namespace CapstoneProject.API.Controllers
             // Trả về lỗi nếu đã có nhóm hoặc lỗi hệ thống
             return BadRequest(new { message = result });
         }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetGroupDetails(int id)
+        {
+            var result = await _groupService.GetGroupDetailsAsync(id);
+
+            // Nếu không tìm thấy nhóm (có thể do nhập sai ID hoặc nhóm đã bị xóa)
+            if (result == null)
+            {
+                return NotFound(new { message = "Không tìm thấy thông tin nhóm!" });
+            }
+
+            return Ok(result);
+        }
     }
 }

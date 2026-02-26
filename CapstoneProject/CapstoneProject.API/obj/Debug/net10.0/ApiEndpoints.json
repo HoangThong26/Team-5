@@ -81,6 +81,22 @@
   },
   {
     "ContainingType": "CapstoneProject.API.Controllers.GroupsController",
+    "Method": "GetGroupDetails",
+    "RelativePath": "api/Groups/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CapstoneProject.API.Controllers.GroupsController",
     "Method": "CreateGroup",
     "RelativePath": "api/Groups/create",
     "HttpMethod": "POST",

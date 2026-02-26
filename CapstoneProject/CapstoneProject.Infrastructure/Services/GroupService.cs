@@ -4,6 +4,7 @@ using CapstoneProject.Application.Interface.IRepository;
 using CapstoneProject.Domain.Entities;
 using System;
 using System.Threading.Tasks;
+using System.Linq; // Nhớ đảm bảo có using này ở trên cùng để dùng được .Select()
 
 namespace CapstoneProject.Infrastructure.Services
 {
@@ -59,5 +60,29 @@ namespace CapstoneProject.Infrastructure.Services
                 return "Lỗi hệ thống khi lưu dữ liệu tạo nhóm.";
             }
         }
+        public async Task<GroupDetailResponse?> GetGroupDetailsAsync(int groupId)
+        {
+            // 1. Gọi Repository lấy dữ liệu thô
+            var group = await _groupRepository.GetGroupByIdAsync(groupId);
+            if (group == null) return null;
+
+            // 2. Map (Chuyển đổi) từ Entity sang DTO để trả về cho API
+            var response = new GroupDetailResponse
+            {
+                GroupId = group.GroupId,
+                GroupName = group.GroupName,
+                Status = group.Status,
+                CreatedAt = group.CreatedAt,
+                Members = group.GroupMembers.Select(m => new GroupMemberDto
+                {
+                    UserId = m.UserId,
+                    RoleInGroup = m.RoleInGroup,
+                    JoinedAt = m.JoinedAt
+                }).ToList()
+            };
+
+            return response;
+        }
+
     }
 }
