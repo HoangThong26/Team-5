@@ -67,7 +67,7 @@ namespace CapstoneProject.Infrastructure.Repostitory
         }
 
         public async Task RevokeRefreshTokenAsync(string token)
-        {
+        { 
             var refreshToken = await _context.RefreshTokens
                 .FirstOrDefaultAsync(t => t.Token == token);
 
