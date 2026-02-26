@@ -112,6 +112,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "CapstoneProject.API.Controllers.GroupsController",
+    "Method": "InviteMember",
+    "RelativePath": "api/Groups/invite",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "CapstoneProject.Application.DTO.InviteMemberRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "CapstoneProject.API.Controllers.RegistersController",
     "Method": "Register",
     "RelativePath": "api/Registers/register",

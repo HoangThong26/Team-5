@@ -51,5 +51,23 @@ namespace CapstoneProject.API.Controllers
 
             return Ok(result);
         }
+        [HttpPost("invite")]
+        // [Authorize] <-- Tạm comment đợi làm chức năng Login
+        public async Task<IActionResult> InviteMember([FromBody] InviteMemberRequest request)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            // Giả lập Leader đang đăng nhập có UserId = 1
+            int currentUserId = 1;
+
+            var result = await _groupService.InviteMemberAsync(currentUserId, request);
+
+            if (result.StartsWith("Thành công"))
+            {
+                return Ok(new { message = result });
+            }
+
+            return BadRequest(new { message = result });
+        }
     }
 }

@@ -83,6 +83,57 @@ namespace CapstoneProject.Infrastructure.Services
 
             return response;
         }
+        public async Task<string> InviteMemberAsync(int leaderId, InviteMemberRequest request)
+        {
+            // TRẠM 1: Lấy thông tin nhóm & Kiểm tra quyền
+            var group = await _groupRepository.GetGroupByIdAsync(request.GroupId);
+            if (group == null) return "Không tìm thấy nhóm!";
+            if (group.LeaderId != leaderId) return "Bạn không phải trưởng nhóm, bạn không có quyền mời thành viên!";
+
+            // TRẠM 2: Kiểm tra trạng thái nhóm
+            if (group.IsLocked == true || group.Status != "Forming")
+                return "Nhóm đã khóa hoặc không còn ở trạng thái gom người!";
+
+            // TRẠM 3: Kiểm tra sức chứa (Tối đa 5 người)
+            int currentMembers = await _groupRepository.GetMemberCountAsync(request.GroupId);
+            if (currentMembers >= 5) return "Nhóm đã đạt số lượng tối đa (5 người)!";
+
+            // TRẠM 4: Kiểm tra người được mời
+            var invitee = await _groupRepository.GetUserByEmailAsync(request.InviteeEmail);
+            if (invitee == null) return "Không tìm thấy sinh viên nào sử dụng Email này trong hệ thống!";
+            if (invitee.UserId == leaderId) return "Bạn không thể tự mời chính mình!";
+
+            // TRẠM 5: Kiểm tra tính độc quyền
+            bool hasGroup = await _groupRepository.IsUserInAnyGroupAsync(invitee.UserId);
+            if (hasGroup) return $"Sinh viên {invitee.FullName} đã tham gia một nhóm khác!";
+
+            // TRẠM 6: Tránh spam lời mời
+            bool alreadyInvited = await _groupRepository.HasPendingInvitationAsync(request.GroupId, invitee.UserId);
+            if (alreadyInvited) return "Bạn đã gửi lời mời cho sinh viên này rồi, vui lòng chờ họ xác nhận!";
+
+            // VƯỢT QUA MỌI TRẠM -> TẠO LỜI MỜI
+            try
+            {
+                var invitation = new GroupInvitation
+                {
+                    GroupId = request.GroupId,
+                    SenderId = leaderId,
+                    ReceiverId = invitee.UserId,
+                    Status = "Pending",
+                    CreatedAt = DateTime.Now
+                };
+
+                await _groupRepository.AddInvitationAsync(invitation);
+
+                // TODO: GỌI HÀM GỬI EMAIL TẠI ĐÂY (Mình sẽ setup ở bước sau để bạn test code API chạy mượt trước)
+
+                return "Thành công: Đã tạo lời mời gia nhập nhóm!";
+            }
+            catch (Exception)
+            {
+                return "Lỗi hệ thống khi lưu lời mời.";
+            }
+        }
 
     }
 }

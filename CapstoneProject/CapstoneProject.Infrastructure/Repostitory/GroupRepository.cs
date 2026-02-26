@@ -58,5 +58,24 @@ namespace CapstoneProject.Infrastructure.Repostitory
                 .Include(g => g.GroupMembers)
                 .FirstOrDefaultAsync(g => g.GroupId == groupId);
         }
+        // Copy 3 hàm này dán vào bên trong class GroupRepository
+        public async Task<User?> GetUserByEmailAsync(string email)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+        }
+
+        public async Task<bool> HasPendingInvitationAsync(int groupId, int receiverId)
+        {
+            // Kiểm tra xem lời mời đã tồn tại và đang ở trạng thái Pending chưa
+            return await _context.GroupInvitations
+                .AnyAsync(i => i.GroupId == groupId && i.ReceiverId == receiverId && i.Status == "Pending");
+        }
+
+        public async Task<GroupInvitation> AddInvitationAsync(GroupInvitation invitation)
+        {
+            await _context.GroupInvitations.AddAsync(invitation);
+            await _context.SaveChangesAsync();
+            return invitation;
+        }
     }
 }
