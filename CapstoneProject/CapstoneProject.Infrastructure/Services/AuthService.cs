@@ -126,18 +126,40 @@ namespace CapstoneProject.Infrastructure.Services
         public async Task<TokenResponse> LoginAsync(LoginRequest request)
         {
             var user = await _authRepository.GetByEmailAsync(request.Email);
-            if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+            if (user == null) throw new Exception("Invalid email or password.");
+            if (user.LockUntil.HasValue && user.LockUntil > DateTime.UtcNow)
             {
-                throw new Exception("Email or password incorrect");
+                var remainingMinutes = Math.Ceiling((user.LockUntil.Value - DateTime.UtcNow).TotalMinutes);
+                throw new Exception($"Account is temporarily locked. Please try again after {remainingMinutes} minutes.");
+            }
+
+            if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+            {
+                user.FailedLoginCount++;
+
+                if (user.FailedLoginCount >= 5)
+                {
+                    int lockMinutes = ((user.FailedLoginCount ?? 0) - 4) * 5;
+                    user.LockUntil = DateTime.UtcNow.AddMinutes(lockMinutes);
+                    user.Status = "Locked";
+                }
+
+                await _authRepository.UpdateAsync(user);
+                throw new Exception("Invalid email or password.");
             }
             if (user.EmailVerified == false)
             {
-                throw new Exception("Do not verify");
+                throw new Exception("Email address is not verified.");
             }
-            if (user.Status == "Locked")
+            if (user.Status == "Banned")
             {
-                throw new Exception("Account locked");
+                throw new Exception("This account has been permanently disabled.");
             }
+            user.FailedLoginCount = 0;
+            user.LockUntil = null;
+            user.Status = "Active";
+            await _authRepository.UpdateAsync(user);
+
             return await GenerateTokens(user);
         }
 
@@ -200,6 +222,7 @@ namespace CapstoneProject.Infrastructure.Services
                 ExpiryDate = newRefreshToken.ExpiryDate,
                 User = new UserViewDTO
                 {
+                    Email = user.Email,
                     FullName = user.FullName,
                     Role = user.Role
                 }
