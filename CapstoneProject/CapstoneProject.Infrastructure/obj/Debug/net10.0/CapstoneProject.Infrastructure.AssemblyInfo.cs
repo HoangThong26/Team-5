@@ -14,7 +14,11 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CapstoneProject.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+<<<<<<< Updated upstream
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+90cafd2cd07cbb162cd352e9637cf82be2d1706b")]
+=======
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9f4e3fdde4de75bb71774a3297dd068e83ffaf67")]
+>>>>>>> Stashed changes
 [assembly: System.Reflection.AssemblyProductAttribute("CapstoneProject.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CapstoneProject.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
