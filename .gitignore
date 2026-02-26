@@ -1,0 +1,13 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+bin/
+obj/
+
+# Node
+node_modules/
+dist/
+
+# Logs
+*.log

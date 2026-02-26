@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "gTUwl4F5BM8=",
+  "dgSpecHash": "3odmFTkaf5Q=",
   "success": true,
-  "projectFilePath": "C:\\Users\\admin\\Desktop\\CapstoneProject\\CapstoneProject.Domain\\CapstoneProject.Domain.csproj",
+  "projectFilePath": "C:\\Users\\admin\\Downloads\\cloneGitTeam5\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\CapstoneProject.Domain.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\admin\\.nuget\\packages\\bcrypt.net-next\\4.1.0\\bcrypt.net-next.4.1.0.nupkg.sha512",
     "C:\\Users\\admin\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\10.0.3\\microsoft.aspnetcore.authentication.jwtbearer.10.0.3.nupkg.sha512",

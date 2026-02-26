@@ -903,11 +903,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\admin\\Desktop\\CapstoneProject\\CapstoneProject.Domain\\CapstoneProject.Domain.csproj",
+      "projectUniqueName": "C:\\Users\\admin\\Downloads\\cloneGitTeam5\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\CapstoneProject.Domain.csproj",
       "projectName": "CapstoneProject.Domain",
-      "projectPath": "C:\\Users\\admin\\Desktop\\CapstoneProject\\CapstoneProject.Domain\\CapstoneProject.Domain.csproj",
+      "projectPath": "C:\\Users\\admin\\Downloads\\cloneGitTeam5\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\CapstoneProject.Domain.csproj",
       "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\admin\\Desktop\\CapstoneProject\\CapstoneProject.Domain\\obj\\",
+      "outputPath": "C:\\Users\\admin\\Downloads\\cloneGitTeam5\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
