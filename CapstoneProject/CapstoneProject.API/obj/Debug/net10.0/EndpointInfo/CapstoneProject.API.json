@@ -150,6 +150,37 @@
         }
       }
     },
+    "/api/Groups/create": {
+      "post": {
+        "tags": [
+          "Groups"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateGroupRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateGroupRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateGroupRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Registers/register": {
       "post": {
         "tags": [
@@ -205,6 +236,26 @@
   },
   "components": {
     "schemas": {
+      "CreateGroupRequest": {
+        "required": [
+          "groupName",
+          "targetMembers"
+        ],
+        "type": "object",
+        "properties": {
+          "groupName": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "targetMembers": {
+            "maximum": 5,
+            "minimum": 2,
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "LoginRequest": {
         "type": "object",
         "properties": {
@@ -266,6 +317,9 @@
   "tags": [
     {
       "name": "Auth"
+    },
+    {
+      "name": "Groups"
     },
     {
       "name": "Registers"

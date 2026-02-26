@@ -80,6 +80,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "CapstoneProject.API.Controllers.GroupsController",
+    "Method": "CreateGroup",
+    "RelativePath": "api/Groups/create",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "CapstoneProject.Application.DTO.CreateGroupRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "CapstoneProject.API.Controllers.RegistersController",
     "Method": "Register",
     "RelativePath": "api/Registers/register",

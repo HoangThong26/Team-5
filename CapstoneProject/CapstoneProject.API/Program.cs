@@ -57,6 +57,10 @@ builder.Services.AddAuthorization();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
+
+// THÊM 2 DÒNG NÀY CHO GROUP:
+builder.Services.AddScoped<IGroupRepository, GroupRepository>();
+builder.Services.AddScoped<IGroupService, GroupService>();
 #endregion
 
 var app = builder.Build();

@@ -1,0 +1,42 @@
+﻿using CapstoneProject.Application.DTO;
+using CapstoneProject.Application.Interface.IService;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
+
+namespace CapstoneProject.API.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class GroupsController : ControllerBase
+    {
+        private readonly IGroupService _groupService;
+
+        public GroupsController(IGroupService groupService)
+        {
+            _groupService = groupService;
+        }
+
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateGroup([FromBody] CreateGroupRequest request)
+        {
+            // Dữ liệu hợp lệ theo DataAnnotations chưa? (Ví dụ: tên nhóm rỗng, số người > 5)
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Giả lập cứng UserId = 1 (Tạm thời test. Sau này lấy ra từ JWT Token)
+            int currentUserId = 1;
+
+            var result = await _groupService.CreateGroupAsync(currentUserId, request);
+
+            if (result == "Tạo nhóm thành công!")
+            {
+                return Ok(new { message = result });
+            }
+
+            // Trả về lỗi nếu đã có nhóm hoặc lỗi hệ thống
+            return BadRequest(new { message = result });
+        }
+    }
+}
