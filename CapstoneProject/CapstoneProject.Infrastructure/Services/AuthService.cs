@@ -92,43 +92,43 @@ namespace CapstoneProject.Infrastructure.Services
             var mail = new MailMessage
             {
                 From = new MailAddress(senderEmail, "Capstone Management"),
-                Subject = "Capstone Management - Xác nhận email đăng ký",
+                Subject = "Capstone Management - Verify Email",
                 IsBodyHtml = true,
                 Body = $@"
-        <div style='font-family:Arial,sans-serif;line-height:1.6;color:#333'>
-            <h2>Xin chào,</h2>
+                <div style='font-family:Arial,sans-serif;line-height:1.6;color:#333'>
+                <h2>Hello,</h2>
 
-            <p>Bạn vừa đăng ký tài khoản tại hệ thống <b>Capstone Management</b>.</p>
+                <p>You have just registered an account on the <b>Capstone Management</b> system.</p>
 
-            <p>Để hoàn tất quá trình đăng ký, vui lòng xác nhận email bằng cách nhấn vào nút bên dưới:</p>
+                <p>To complete your registration, please confirm your email address by clicking the button below:</p>
 
-            <div style='margin:20px 0'>
-                <a href='{link}' target='_blank'
-                   style='display:inline-block;
-                          padding:12px 24px;
-                          background-color:#007bff;
-                          color:#ffffff;
-                          text-decoration:none;
-                          border-radius:6px;
-                          font-weight:bold;'>
-                    Xác nhận Email
-                </a>
-            </div>
+                    <div style='margin:20px 0'>
+                 <a href='{link}' target='_blank'
+                    style='display:inline-block;
+                  padding:12px 24px;
+                  background-color:#007bff;
+                  color:#ffffff;
+                  text-decoration:none;
+                  border-radius:6px;
+                  font-weight:bold;'>
+                    Verify Email
+                        </a>
+                    </div>
 
-            <p>Nếu bạn không thực hiện yêu cầu này, vui lòng bỏ qua email này.</p>
+                <p>If you did not make this request, please ignore this email.</p>
 
-            <hr style='margin:30px 0'>
+                <hr style='margin:30px 0'>
 
-            <p style='font-size:12px;color:#888'>
-                Capstone Management System<br/>
-                Đây là email tự động, vui lòng không trả lời trực tiếp.
-            </p>
+                <p style='font-size:12px;color:#888'>
+                    Capstone Management System<br/>
+                    This is an automated email. Please do not reply directly.
+                </p>
 
-            <p style='font-size:12px;color:#888'>
-                Hoặc sao chép đường link sau vào trình duyệt:<br/>
-                {link}
-            </p>
-        </div>"
+                <p style='font-size:12px;color:#888'>
+                    Or copy and paste the following link into your browser:<br/>
+                    {link}
+                </p>
+            </div>"
             };
 
             mail.To.Add(email);
@@ -324,7 +324,7 @@ namespace CapstoneProject.Infrastructure.Services
                 .GetValidTokenAsync(request.Email, request.Token);
 
             if (token == null)
-                throw new Exception("OTP không hợp lệ hoặc đã hết hạn");
+                throw new Exception("OTP Invalid or expired");
 
             var user = token.User;
 
