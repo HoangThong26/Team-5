@@ -34,7 +34,7 @@ namespace CapstoneProject.Infrastructure.Services
                 From = new MailAddress(senderEmail),
                 Subject = subject,
                 Body = body,
-                IsBodyHtml = false
+                IsBodyHtml = true
             };
 
             mailMessage.To.Add(to);

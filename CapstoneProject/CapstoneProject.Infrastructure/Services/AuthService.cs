@@ -22,14 +22,17 @@ namespace CapstoneProject.Infrastructure.Services
         private readonly IEmailService _emailService;
         private readonly IUserRepository _userRepository;
         private readonly IPasswordResetTokenRepository _tokenRepository;
+        private readonly IConfiguration _config;
 
-        public AuthService(IAuthRepository authRepository, IConfiguration configuration, IEmailService emailService,IPasswordResetTokenRepository passwordResetTokenRepository, IUserRepository userRepository)
+        public AuthService(IAuthRepository authRepository, IConfiguration configuration, IEmailService emailService
+            ,IPasswordResetTokenRepository passwordResetTokenRepository, IUserRepository userRepository, IConfiguration config)
         {
             _authRepository = authRepository;
             _configuration = configuration;
             _emailService = emailService;
             _userRepository = userRepository;
             _tokenRepository = passwordResetTokenRepository;
+            _config = config;
         }
 
         public async Task<string> RegisterAsync(RegisterRequest request)
@@ -74,39 +77,64 @@ namespace CapstoneProject.Infrastructure.Services
 
         private async Task SendVerifyEmail(string email, string token)
         {
-            var link = $"https://localhost:7084/api/auth/verify?token={token}";
+            var baseUrl = _config["AppSettings:BaseUrl"];
+            var senderEmail = _config["EmailSettings:SenderEmail"];
+            var appPassword = _config["EmailSettings:AppPassword"];
 
-            var client = new SmtpClient("smtp.gmail.com", 587)
+            var link = $"{baseUrl}/api/auth/verify?token={token}";
+
+            using var client = new SmtpClient("smtp.gmail.com", 587)
             {
-                Credentials = new NetworkCredential("he186507hoangbathong@gmail.com", "hthjxjajxbgrwljo"),
+                Credentials = new NetworkCredential(senderEmail, appPassword),
                 EnableSsl = true
             };
 
             var mail = new MailMessage
             {
-                From = new MailAddress("he186507hoangbathong@gmail.com"),
-                Subject = "Verify your account",
+                From = new MailAddress(senderEmail, "Capstone Management"),
+                Subject = "Capstone Management - Xác nhận email đăng ký",
                 IsBodyHtml = true,
                 Body = $@"
-                     <h2>Verify Your Account</h2>
-                        <p>Click the button below to verify your account:</p>
+        <div style='font-family:Arial,sans-serif;line-height:1.6;color:#333'>
+            <h2>Xin chào,</h2>
 
-                        <a href='{link}' 
-                            style='
-                            display:inline-block;
-                             padding:12px 25px;
-                            background-color:#007bff;
-                        color:#ffffff;
-                    text-decoration:none;
-                border-radius:6px;
-                font-weight:bold;'>
-            Verify Email
-                    </a>
-                <p style='margin-top:20px;'>Or copy this link:</p>
-                    <p>{link}</p>"
+            <p>Bạn vừa đăng ký tài khoản tại hệ thống <b>Capstone Management</b>.</p>
+
+            <p>Để hoàn tất quá trình đăng ký, vui lòng xác nhận email bằng cách nhấn vào nút bên dưới:</p>
+
+            <div style='margin:20px 0'>
+                <a href='{link}' target='_blank'
+                   style='display:inline-block;
+                          padding:12px 24px;
+                          background-color:#007bff;
+                          color:#ffffff;
+                          text-decoration:none;
+                          border-radius:6px;
+                          font-weight:bold;'>
+                    Xác nhận Email
+                </a>
+            </div>
+
+            <p>Nếu bạn không thực hiện yêu cầu này, vui lòng bỏ qua email này.</p>
+
+            <hr style='margin:30px 0'>
+
+            <p style='font-size:12px;color:#888'>
+                Capstone Management System<br/>
+                Đây là email tự động, vui lòng không trả lời trực tiếp.
+            </p>
+
+            <p style='font-size:12px;color:#888'>
+                Hoặc sao chép đường link sau vào trình duyệt:<br/>
+                {link}
+            </p>
+        </div>"
             };
 
             mail.To.Add(email);
+
+            mail.ReplyToList.Add(senderEmail);
+            mail.Headers.Add("X-Priority", "3");
 
             await client.SendMailAsync(mail);
         }
