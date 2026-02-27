@@ -70,9 +70,7 @@ namespace CapstoneProject.API.Controllers
 
             return BadRequest("Token incorrect.");
         }
-        public class LogoutRequest
-        {
-            public string RefreshToken { get; set; }
-        }
+    
+
     }
 }

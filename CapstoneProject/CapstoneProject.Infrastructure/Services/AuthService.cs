@@ -19,11 +19,13 @@ namespace CapstoneProject.Infrastructure.Services
     {
         private readonly IAuthRepository _authRepository;
         private readonly IConfiguration _configuration;
+        private readonly IEmailService _emailService;
 
-        public AuthService(IAuthRepository authRepository, IConfiguration configuration)
+        public AuthService(IAuthRepository authRepository, IConfiguration configuration, IEmailService emailService)
         {
             _authRepository = authRepository;
             _configuration = configuration;
+            _emailService = emailService;
         }
 
         public async Task<string> RegisterAsync(RegisterRequest request)
@@ -258,5 +260,6 @@ namespace CapstoneProject.Infrastructure.Services
             await _authRepository.RevokeRefreshTokenAsync(refreshToken);
             return true;
         }
+
     }
 }

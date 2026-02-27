@@ -17,6 +17,11 @@ namespace CapstoneProject.Infrastructure.Repostitory
         {
             _context = context;
         }
+
+        public async Task<User?> GetByIdAsync(int id)
+        {
+            return await _context.Users.FindAsync(id);
+        }
         public async Task AddAsync(User user)
         {
             var checkExit = await _context.Users.AnyAsync(u=> u.Email == user.Email);
@@ -91,7 +96,25 @@ namespace CapstoneProject.Infrastructure.Repostitory
                         throw new Exception("Failed to save login history: " + ex.Message);
             }
             }
+
+        public async Task SaveResetTokenAsync(PasswordResetToken token)
+        {
+            await _context.PasswordResetTokens.AddAsync(token);
+            await _context.SaveChangesAsync();
         }
+
+        public async Task<PasswordResetToken?> GetValidTokenAsync(string email, string otp)
+        {
+            return await _context.PasswordResetTokens
+                .Include(t => t.User) 
+                .Where(t => t.User.Email == email
+                         && t.Token == otp
+                         && t.IsUsed == false
+                         && t.ExpiryTime > DateTime.UtcNow)
+                .OrderByDescending(t => t.ExpiryTime)
+                .FirstOrDefaultAsync();
+        }
+    }
 
 
     }
