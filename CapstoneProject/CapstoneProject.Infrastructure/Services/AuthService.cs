@@ -167,17 +167,10 @@ namespace CapstoneProject.Infrastructure.Services
                 throw new Exception("Invalid email or password.");
             }
 
-
             if (user.EmailVerified == false)
             {
                 await LogHistory(user.UserId, false);
                 throw new Exception("Email address is not verified.");
-            }
-
-            if (user.Status == "Banned")
-            {
-                await LogHistory(user.UserId, false);
-                throw new Exception("This account has been permanently disabled.");
             }
             user.FailedLoginCount = 0;
             user.LockUntil = null;
@@ -257,7 +250,9 @@ namespace CapstoneProject.Infrastructure.Services
         public async Task<bool> LogoutAsync(string refreshToken)
         {
             if (string.IsNullOrEmpty(refreshToken)) return false;
+            await _authRepository.UpdateStatusByRefreshTokenAsync(refreshToken, "Inactive");
             await _authRepository.RevokeRefreshTokenAsync(refreshToken);
+
             return true;
         }
 

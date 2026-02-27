@@ -12,5 +12,6 @@ namespace CapstoneProject.Application.Interface.IRepository
         Task AddAsync(User user);
         Task UpdateAsync(User user);
         Task<List<User>> GetAllUsersAsync();
+        Task UpdateUserStatusAsync(int userId, string newStatus);
     }
 }

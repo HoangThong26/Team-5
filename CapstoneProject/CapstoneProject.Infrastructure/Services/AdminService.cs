@@ -20,7 +20,7 @@ namespace CapstoneProject.Infrastructure.Services
         public async Task<string> CreateUserByRoleAsync(AdminCreateUserRequest request)
         {
             var existing = await _userRepository.GetByEmailAsync(request.Email);
-            if (existing != null) throw new Exception("Email đã tồn tại trên hệ thống.");
+            if (existing != null) throw new Exception("Email Exited.");
             var newUser = new User
             {
                 Email = request.Email,

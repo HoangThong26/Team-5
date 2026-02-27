@@ -18,8 +18,10 @@ namespace CapstoneProject.Application.Interface.IRepository
         Task UpdateRefreshTokenAsync(RefreshToken refreshToken);
         Task RevokeRefreshTokenAsync(string token);
         Task SaveLoginHistoryAsync(LoginHistory history);
-        Task SaveResetTokenAsync(PasswordResetToken token);
         Task<PasswordResetToken?> GetValidTokenAsync(string email, string otp);
+        Task UpdateStatusByRefreshTokenAsync(string refreshToken, string newStatus);
+
+
 
     }
 }

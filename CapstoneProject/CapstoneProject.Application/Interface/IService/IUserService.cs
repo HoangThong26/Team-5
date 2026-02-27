@@ -7,6 +7,7 @@ namespace CapstoneProject.Application.Interface.IService
 {
     public interface IUserService
     {
+        Task<UserGetProfileRequest> GetProfileUser(int userId);
         Task<bool> UpdateProfileAsync(int userId, UpdateProfileRequest request);
     }
 }

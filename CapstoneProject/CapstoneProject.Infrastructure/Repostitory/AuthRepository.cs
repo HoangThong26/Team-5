@@ -114,6 +114,29 @@ namespace CapstoneProject.Infrastructure.Repostitory
                 .OrderByDescending(t => t.ExpiryTime)
                 .FirstOrDefaultAsync();
         }
+
+        public async Task UpdateStatusByRefreshTokenAsync(string refreshToken, string newStatus)
+        {
+            var tokenRecord = await _context.RefreshTokens
+                .FirstOrDefaultAsync(t => t.Token == refreshToken);
+
+            if (tokenRecord != null)
+            {
+                var user = await _context.Users.FindAsync(tokenRecord.UserId);
+                if (user != null)
+                {
+                    user.Status = newStatus;
+                    _context.Users.Update(user);
+                    await _context.SaveChangesAsync();
+                }
+            }
+        }
+
+        public async Task UpdateResetTokenAsync(PasswordResetToken token)
+        {
+            _context.PasswordResetTokens.Update(token);
+            await _context.SaveChangesAsync();
+        }
     }
 
 

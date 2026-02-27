@@ -4,10 +4,10 @@ using System.Text;
 
 namespace CapstoneProject.Application.DTO
 {
-    public class ResetPasswordRequest
+    public class UpdatePasswordProfileRequest
     {
-        public string Email { get; set; } = null!;
-        public string Otp { get; set; } = null!;
+        public string OldPassword { get; set; } = null!;
         public string NewPassword { get; set; } = null!;
+        public string Otp { get; set; } = null!;
     }
 }
