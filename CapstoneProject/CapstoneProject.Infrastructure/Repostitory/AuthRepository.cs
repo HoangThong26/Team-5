@@ -79,6 +79,20 @@ namespace CapstoneProject.Infrastructure.Repostitory
             }
         }
 
+            public async Task SaveLoginHistoryAsync(LoginHistory history)
+            {
+                try
+                {
+                    await _context.LoginHistories.AddAsync(history);
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                        throw new Exception("Failed to save login history: " + ex.Message);
+            }
+            }
+        }
+
 
     }
-}
+

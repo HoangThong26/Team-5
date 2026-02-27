@@ -123,36 +123,58 @@ namespace CapstoneProject.Infrastructure.Services
             return "Email verified successfully!";
         }
 
-        public async Task<TokenResponse> LoginAsync(LoginRequest request)
+        public async Task<TokenResponse> LoginAsync(LoginRequest request, string ipAddress)
         {
             var user = await _authRepository.GetByEmailAsync(request.Email);
-            if (user == null) throw new Exception("Invalid email or password.");
-            if (user.LockUntil.HasValue && user.LockUntil > DateTime.UtcNow)
+            bool isSuccess = false;
+            async Task LogHistory(int? uid, bool success)
             {
-                var remainingMinutes = Math.Ceiling((user.LockUntil.Value - DateTime.UtcNow).TotalMinutes);
-                throw new Exception($"Account is temporarily locked. Please try again after {remainingMinutes} minutes.");
+                var history = new LoginHistory
+                {
+                    UserId = uid,
+                    Ipaddress = ipAddress,
+                    LoginTime = DateTime.UtcNow,
+                    IsSuccess = success
+                };
+                await _authRepository.SaveLoginHistoryAsync(history); 
+            }
+            if (user == null)
+            {
+                await LogHistory(null, false); 
+                throw new Exception("Invalid email or password.");
             }
 
+            if (user.LockUntil.HasValue && user.LockUntil > DateTime.UtcNow)
+            {
+                await LogHistory(user.UserId, false); 
+                var remainingMinutes = Math.Ceiling((user.LockUntil.Value - DateTime.UtcNow).TotalMinutes);
+                throw new Exception($"Account is temporarily locked. Try again after {remainingMinutes} minutes.");
+            }
             if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
             {
                 user.FailedLoginCount++;
-
                 if (user.FailedLoginCount >= 5)
                 {
                     int lockMinutes = ((user.FailedLoginCount ?? 0) - 4) * 5;
                     user.LockUntil = DateTime.UtcNow.AddMinutes(lockMinutes);
                     user.Status = "Locked";
                 }
-
                 await _authRepository.UpdateAsync(user);
+
+                await LogHistory(user.UserId, false);
                 throw new Exception("Invalid email or password.");
             }
+
+
             if (user.EmailVerified == false)
             {
+                await LogHistory(user.UserId, false);
                 throw new Exception("Email address is not verified.");
             }
+
             if (user.Status == "Banned")
             {
+                await LogHistory(user.UserId, false);
                 throw new Exception("This account has been permanently disabled.");
             }
             user.FailedLoginCount = 0;
@@ -160,6 +182,7 @@ namespace CapstoneProject.Infrastructure.Services
             user.Status = "Active";
             await _authRepository.UpdateAsync(user);
 
+            await LogHistory(user.UserId, true);
             return await GenerateTokens(user);
         }
 
@@ -235,6 +258,5 @@ namespace CapstoneProject.Infrastructure.Services
             await _authRepository.RevokeRefreshTokenAsync(refreshToken);
             return true;
         }
-
     }
 }

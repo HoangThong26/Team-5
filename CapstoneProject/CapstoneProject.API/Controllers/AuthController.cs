@@ -36,7 +36,8 @@ namespace CapstoneProject.API.Controllers
         {
             try
             {
-                var result = await _authService.LoginAsync(request);
+                string ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "Unknown";
+                var result = await _authService.LoginAsync(request,ipAddress);
                 return Ok(result);
             }
             catch (Exception ex)

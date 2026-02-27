@@ -10,7 +10,7 @@ namespace CapstoneProject.Application.Interface.IService
     {
         Task<string> RegisterAsync(RegisterRequest request);
         Task<string> VerifyAsync(string token);
-        Task<TokenResponse> LoginAsync(LoginRequest request);
+        Task<TokenResponse> LoginAsync(LoginRequest request, string ipAddress);
         Task<TokenResponse> RefreshTokenAsync(string refreshToken);
         Task<bool> LogoutAsync(string refreshToken);
     }
