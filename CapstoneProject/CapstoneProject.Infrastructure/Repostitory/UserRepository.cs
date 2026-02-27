@@ -43,5 +43,17 @@ namespace CapstoneProject.Infrastructure.Repostitory
         {
             return await _context.Users.ToListAsync();
         }
+
+        public async Task UpdateUserStatusAsync(int userId, string newStatus)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            if (user != null)
+            {
+                user.Status = newStatus;
+                await _context.SaveChangesAsync();
+            }
+        }
+
+ 
     }
 }

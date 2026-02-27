@@ -17,6 +17,11 @@ namespace CapstoneProject.Infrastructure.Repostitory
         {
             _context = context;
         }
+
+        public async Task<User?> GetByIdAsync(int id)
+        {
+            return await _context.Users.FindAsync(id);
+        }
         public async Task AddAsync(User user)
         {
             var checkExit = await _context.Users.AnyAsync(u=> u.Email == user.Email);
@@ -79,6 +84,61 @@ namespace CapstoneProject.Infrastructure.Repostitory
             }
         }
 
+            public async Task SaveLoginHistoryAsync(LoginHistory history)
+            {
+                try
+                {
+                    await _context.LoginHistories.AddAsync(history);
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                        throw new Exception("Failed to save login history: " + ex.Message);
+            }
+            }
+
+        public async Task SaveResetTokenAsync(PasswordResetToken token)
+        {
+            await _context.PasswordResetTokens.AddAsync(token);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<PasswordResetToken?> GetValidTokenAsync(string email, string otp)
+        {
+            return await _context.PasswordResetTokens
+                .Include(t => t.User) 
+                .Where(t => t.User.Email == email
+                         && t.Token == otp
+                         && t.IsUsed == false
+                         && t.ExpiryTime > DateTime.UtcNow)
+                .OrderByDescending(t => t.ExpiryTime)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task UpdateStatusByRefreshTokenAsync(string refreshToken, string newStatus)
+        {
+            var tokenRecord = await _context.RefreshTokens
+                .FirstOrDefaultAsync(t => t.Token == refreshToken);
+
+            if (tokenRecord != null)
+            {
+                var user = await _context.Users.FindAsync(tokenRecord.UserId);
+                if (user != null)
+                {
+                    user.Status = newStatus;
+                    _context.Users.Update(user);
+                    await _context.SaveChangesAsync();
+                }
+            }
+        }
+
+        public async Task UpdateResetTokenAsync(PasswordResetToken token)
+        {
+            _context.PasswordResetTokens.Update(token);
+            await _context.SaveChangesAsync();
+        }
+    }
+
 
     }
-}
+
