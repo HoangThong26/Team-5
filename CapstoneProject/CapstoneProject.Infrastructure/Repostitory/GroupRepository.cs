@@ -77,5 +77,25 @@ namespace CapstoneProject.Infrastructure.Repostitory
             await _context.SaveChangesAsync();
             return invitation;
         }
+
+        // 1. Lấy thông tin thư mời
+        public async Task<GroupInvitation?> GetInvitationByIdAsync(int invitationId)
+        {
+            return await _context.GroupInvitations.FirstOrDefaultAsync(i => i.InvitationId == invitationId);
+        }
+
+        // 2. Cập nhật trạng thái thư mời (từ Pending sang Accepted)
+        public async Task UpdateInvitationAsync(GroupInvitation invitation)
+        {
+            _context.GroupInvitations.Update(invitation);
+            await _context.SaveChangesAsync();
+        }
+
+        // 3. Thêm sinh viên vào nhóm
+        public async Task AddGroupMemberAsync(GroupMember member)
+        {
+            await _context.GroupMembers.AddAsync(member);
+            await _context.SaveChangesAsync();
+        }
     }
 }

@@ -2,25 +2,30 @@
 using CapstoneProject.Application.Interface.IService;
 using CapstoneProject.Application.Interface.IRepository;
 using CapstoneProject.Domain.Entities;
+using Microsoft.Extensions.Configuration; // Dùng để đọc appsettings.json
 using System;
+using System.Linq;
+using System.Net; // Dùng cho NetworkCredential
+using System.Net.Mail; // Dùng cho SmtpClient và MailMessage
 using System.Threading.Tasks;
-using System.Linq; // Nhớ đảm bảo có using này ở trên cùng để dùng được .Select()
 
 namespace CapstoneProject.Infrastructure.Services
 {
     public class GroupService : IGroupService
     {
         private readonly IGroupRepository _groupRepository;
+        private readonly IConfiguration _configuration; // Khai báo IConfiguration
 
-        public GroupService(IGroupRepository groupRepository)
+        // Cập nhật Constructor
+        public GroupService(IGroupRepository groupRepository, IConfiguration configuration)
         {
             _groupRepository = groupRepository;
+            _configuration = configuration;
         }
 
         public async Task<string> CreateGroupAsync(int userId, CreateGroupRequest request)
         {
             // 1. Validate: Kiểm tra số lượng cấu hình (2-5 người)
-            // (Mặc dù DTO đã chặn ở DataAnnotations, nhưng check thêm ở Service cho chắc chắn)
             if (request.TargetMembers < 2 || request.TargetMembers > 5)
             {
                 return "Số lượng thành viên nhóm phải từ 2 đến 5 người!";
@@ -38,7 +43,6 @@ namespace CapstoneProject.Infrastructure.Services
                 Status = "Forming",
                 IsLocked = false,
                 CreatedAt = DateTime.Now
-                // Lưu ý: Nếu muốn lưu lại TargetMembers xuống SQL, bạn cần vào DB tạo thêm cột MaxMembers cho bảng Groups nhé!
             };
 
             // 4. Khởi tạo đối tượng Leader
@@ -60,6 +64,7 @@ namespace CapstoneProject.Infrastructure.Services
                 return "Lỗi hệ thống khi lưu dữ liệu tạo nhóm.";
             }
         }
+
         public async Task<GroupDetailResponse?> GetGroupDetailsAsync(int groupId)
         {
             // 1. Gọi Repository lấy dữ liệu thô
@@ -83,6 +88,7 @@ namespace CapstoneProject.Infrastructure.Services
 
             return response;
         }
+
         public async Task<string> InviteMemberAsync(int leaderId, InviteMemberRequest request)
         {
             // TRẠM 1: Lấy thông tin nhóm & Kiểm tra quyền
@@ -103,15 +109,18 @@ namespace CapstoneProject.Infrastructure.Services
             if (invitee == null) return "Không tìm thấy sinh viên nào sử dụng Email này trong hệ thống!";
             if (invitee.UserId == leaderId) return "Bạn không thể tự mời chính mình!";
 
+            // Lấy tên sinh viên (Nếu User của bạn dùng cột khác cho tên thì hãy đổi invitee.FullName thành cột tương ứng)
+            string inviteeName = invitee.FullName ?? "Sinh viên";
+
             // TRẠM 5: Kiểm tra tính độc quyền
             bool hasGroup = await _groupRepository.IsUserInAnyGroupAsync(invitee.UserId);
-            if (hasGroup) return $"Sinh viên {invitee.FullName} đã tham gia một nhóm khác!";
+            if (hasGroup) return $"Sinh viên {inviteeName} đã tham gia một nhóm khác!";
 
             // TRẠM 6: Tránh spam lời mời
             bool alreadyInvited = await _groupRepository.HasPendingInvitationAsync(request.GroupId, invitee.UserId);
             if (alreadyInvited) return "Bạn đã gửi lời mời cho sinh viên này rồi, vui lòng chờ họ xác nhận!";
 
-            // VƯỢT QUA MỌI TRẠM -> TẠO LỜI MỜI
+            // VƯỢT QUA MỌI TRẠM -> TẠO LỜI MỜI VÀ GỬI EMAIL
             try
             {
                 var invitation = new GroupInvitation
@@ -123,17 +132,118 @@ namespace CapstoneProject.Infrastructure.Services
                     CreatedAt = DateTime.Now
                 };
 
+                // Lưu vào Database
                 await _groupRepository.AddInvitationAsync(invitation);
 
-                // TODO: GỌI HÀM GỬI EMAIL TẠI ĐÂY (Mình sẽ setup ở bước sau để bạn test code API chạy mượt trước)
+                // GỌI HÀM GỬI EMAIL
+                await SendInvitationEmailAsync(invitee.Email, inviteeName, group.GroupName, invitation.InvitationId);
 
-                return "Thành công: Đã tạo lời mời gia nhập nhóm!";
+                return "Thành công: Đã tạo lời mời và gửi Email thông báo!";
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return "Lỗi hệ thống khi lưu lời mời.";
+                // Trả về ex.Message để dễ dàng debug lỗi nếu có
+                return $"Lỗi hệ thống: {ex.Message}";
             }
         }
 
+        // =========================================================================
+        // HÀM PRIVATE: CHỈ CHỊU TRÁCH NHIỆM GỬI EMAIL THÔNG BÁO
+        // =========================================================================
+        private async Task SendInvitationEmailAsync(string toEmail, string fullName, string groupName, int invitationId)
+        {
+            // 1. Đọc tài khoản Gmail từ file appsettings.json gốc của bạn
+            string senderEmail = _configuration["EmailSettings:Email"];
+            string senderPassword = _configuration["EmailSettings:Password"];
+            string baseUrl = _configuration["AppSettings:BaseUrl"];
+
+            // 2. Gắn cứng cấu hình máy chủ của Google
+            string smtpServer = "smtp.gmail.com";
+            int smtpPort = 587;
+            string senderName = "Hệ thống Capstone Project";
+
+            // 3. Chuẩn bị Link và Nội dung Email (Có trang trí CSS một chút cho đẹp)
+            string acceptLink = $"{baseUrl}/api/groups/accept-invite?invitationId={invitationId}";
+
+            string subject = $"Lời mời tham gia nhóm Capstone: {groupName}";
+            string body = $@"
+                <div style='font-family: Arial, sans-serif; line-height: 1.6; color: #333;'>
+                    <h3 style='color: #0056b3;'>Chào {fullName},</h3>
+                    <p>Bạn vừa nhận được lời mời tham gia nhóm <strong>{groupName}</strong> để thực hiện Đồ án Capstone.</p>
+                    <p>Vui lòng click vào nút bên dưới để xác nhận tham gia:</p>
+                    <p style='margin: 20px 0;'>
+                        <a href='{acceptLink}' style='padding: 10px 20px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;'>Xác nhận tham gia</a>
+                    </p>
+                    <p>Nếu bạn không muốn tham gia, vui lòng bỏ qua email này.</p>
+                    <hr style='border: none; border-top: 1px solid #eee; margin-top: 20px;' />
+                    <p style='font-size: 12px; color: #999;'>Đây là email tự động từ hệ thống, vui lòng không trả lời thư này.</p>
+                </div>";
+
+            // 4. Tiến hành gửi mail qua SmtpClient
+            var mailMessage = new MailMessage
+            {
+                From = new MailAddress(senderEmail, senderName),
+                Subject = subject,
+                Body = body,
+                IsBodyHtml = true
+            };
+            mailMessage.To.Add(toEmail);
+
+            using var smtpClient = new SmtpClient(smtpServer, smtpPort)
+            {
+                Credentials = new NetworkCredential(senderEmail, senderPassword),
+                EnableSsl = true // Rất quan trọng: Gmail bắt buộc dùng SSL
+            };
+
+            await smtpClient.SendMailAsync(mailMessage);
+        }
+
+        public async Task<string> AcceptInviteAsync(int invitationId)
+        {
+            // 1. Lấy thông tin lời mời
+            var invitation = await _groupRepository.GetInvitationByIdAsync(invitationId);
+            if (invitation == null) return "Không tìm thấy lời mời này trong hệ thống.";
+
+            // BẢO VỆ CHỐNG LỖI INT? -> INT
+            if (invitation.GroupId == null || invitation.ReceiverId == null)
+                return "Dữ liệu lời mời bị lỗi (thiếu ID nhóm hoặc người nhận).";
+
+            // 2. Kiểm tra trạng thái lời mời
+            if (invitation.Status != "Pending")
+                return "Lời mời này đã được xác nhận hoặc đã hết hạn/bị hủy.";
+
+            // 3. Kiểm tra xem nhóm có bị đầy không (trước khi cho vào)
+            // Đã thêm .Value để chuyển từ int? sang int
+            int currentMembers = await _groupRepository.GetMemberCountAsync(invitation.GroupId.Value);
+            if (currentMembers >= 5) return "Rất tiếc, nhóm này đã đủ 5 thành viên.";
+
+            // 4. Kiểm tra xem sinh viên này có vô tình join nhóm khác trong lúc chờ mail không
+            // Đã thêm .Value
+            bool hasGroup = await _groupRepository.IsUserInAnyGroupAsync(invitation.ReceiverId.Value);
+            if (hasGroup) return "Bạn đã tham gia một nhóm khác rồi.";
+
+            try
+            {
+                // 5. Cập nhật trạng thái lời mời thành "Accepted"
+                invitation.Status = "Accepted";
+                await _groupRepository.UpdateInvitationAsync(invitation);
+
+                // 6. Đưa sinh viên vào nhóm
+                var newMember = new GroupMember
+                {
+                    GroupId = invitation.GroupId.Value,    // Đã thêm .Value
+                    UserId = invitation.ReceiverId.Value,  // Đã thêm .Value
+                    RoleInGroup = "Member",
+                    JoinedAt = DateTime.Now
+                };
+                await _groupRepository.AddGroupMemberAsync(newMember);
+
+                return "Xác nhận tham gia nhóm thành công! Chào mừng bạn đến với nhóm.";
+            }
+            catch (Exception ex)
+            {
+                return $"Lỗi hệ thống khi xử lý tham gia nhóm: {ex.Message}";
+            }
+        }
     }
 }

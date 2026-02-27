@@ -97,6 +97,22 @@
   },
   {
     "ContainingType": "CapstoneProject.API.Controllers.GroupsController",
+    "Method": "AcceptInvite",
+    "RelativePath": "api/Groups/accept-invite",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "invitationId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CapstoneProject.API.Controllers.GroupsController",
     "Method": "CreateGroup",
     "RelativePath": "api/Groups/create",
     "HttpMethod": "POST",

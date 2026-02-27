@@ -69,5 +69,33 @@ namespace CapstoneProject.API.Controllers
 
             return BadRequest(new { message = result });
         }
+
+        // THÊM API NÀY VÀO GROUPS CONTROLLER
+        [HttpGet("accept-invite")]
+        public async Task<IActionResult> AcceptInvite([FromQuery] int invitationId)
+        {
+            var result = await _groupService.AcceptInviteAsync(invitationId);
+
+            // Tùy chỉnh giao diện trả về cho người dùng khi click link
+            if (result.Contains("thành công"))
+            {
+                // Trả về một mã HTML đơn giản báo thành công
+                string htmlSuccess = $@"
+                    <div style='text-align:center; padding:50px; font-family:Arial;'>
+                        <h1 style='color:green;'>Thành công!</h1>
+                        <p>{result}</p>
+                        <p>Bạn có thể đóng tab này và quay lại hệ thống.</p>
+                    </div>";
+                return Content(htmlSuccess, "text/html");
+            }
+
+            // Báo lỗi bằng giao diện HTML
+            string htmlError = $@"
+                    <div style='text-align:center; padding:50px; font-family:Arial;'>
+                        <h1 style='color:red;'>Rất tiếc!</h1>
+                        <p>{result}</p>
+                    </div>";
+            return Content(htmlError, "text/html");
+        }
     }
 }

@@ -13,5 +13,10 @@ namespace CapstoneProject.Application.Interface.IRepository
         Task<GroupInvitation> AddInvitationAsync(GroupInvitation invitation);
         Task<Group> CreateGroupWithLeaderAsync(Group group, GroupMember member);
         Task<int> GetMemberCountAsync(int groupId); // Chuẩn bị sẵn cho chức năng Thêm thành viên
+
+        // Thêm 3 dòng này vào IGroupRepository
+        Task<GroupInvitation?> GetInvitationByIdAsync(int invitationId);
+        Task UpdateInvitationAsync(GroupInvitation invitation);
+        Task AddGroupMemberAsync(GroupMember member);
     }
 }
