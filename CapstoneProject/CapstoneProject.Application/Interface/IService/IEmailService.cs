@@ -6,6 +6,6 @@ namespace CapstoneProject.Application.Interface.IService
 {
     public interface IEmailService
     {
-        Task SendEmailAsync(string email, string subject, string htmlMessage);
+        Task SendEmailAsync(string to, string subject, string body);
     }
 }
