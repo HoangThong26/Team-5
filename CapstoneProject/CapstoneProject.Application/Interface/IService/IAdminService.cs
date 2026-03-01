@@ -10,5 +10,6 @@ namespace CapstoneProject.Application.Interface.IService
     {
         Task<string> CreateUserByRoleAsync(AdminCreateUserRequest request);
         Task<List<User>> GetAllUsersAsync();
+        Task DeleteAsync(int userId);
     }
 }

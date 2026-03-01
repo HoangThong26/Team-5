@@ -8,7 +8,7 @@ namespace CapstoneProject.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public class AdminController : ControllerBase
     {
         private readonly IAdminService _adminService;
@@ -37,6 +37,21 @@ namespace CapstoneProject.API.Controllers
         {
             var users = await _adminService.GetAllUsersAsync();
             return Ok(users);
+        }
+
+        [HttpDelete("delete-user/{userId}")]
+        public async Task<IActionResult> DeleteUser(int userId)
+        {
+            try
+            {
+                await _adminService.DeleteAsync(userId);
+                return Ok(new { message = "User deleted successfully." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+
         }
     }
 }

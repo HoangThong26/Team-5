@@ -42,5 +42,10 @@ namespace CapstoneProject.Infrastructure.Services
         {
             return await _userRepository.GetAllUsersAsync();
         }
+
+        public async Task DeleteAsync(int userId)
+        {
+            await _userRepository.DeleteAsync(userId);
+        }
     }
 }
