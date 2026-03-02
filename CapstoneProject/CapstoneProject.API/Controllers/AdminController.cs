@@ -51,7 +51,13 @@ namespace CapstoneProject.API.Controllers
             {
                 return BadRequest(new { error = ex.Message });
             }
+        }
 
+
+        [HttpPatch]
+        public async Task UnlockAcountAsync(int userId)
+        {
+            await _adminService.UnlockAccountAsync(userId);
         }
     }
 }

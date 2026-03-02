@@ -1,9 +1,6 @@
 ﻿using CapstoneProject.Application.DTO;
 using CapstoneProject.Application.Interface.IRepository;
 using CapstoneProject.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using CapstoneProject.Application.Interface.IService;
 
 namespace CapstoneProject.Infrastructure.Services
@@ -46,6 +43,11 @@ namespace CapstoneProject.Infrastructure.Services
         public async Task DeleteAsync(int userId)
         {
             await _userRepository.DeleteAsync(userId);
+        }
+
+        public async Task UnlockAccountAsync(int userId)
+        {
+            await _userRepository.ChangeStatusAsync(userId);
         }
     }
 }

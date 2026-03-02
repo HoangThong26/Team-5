@@ -70,5 +70,17 @@ namespace CapstoneProject.Infrastructure.Repostitory
 
             await _context.SaveChangesAsync();
         }
+
+        public async Task ChangeStatusAsync(int userId)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null)
+            {
+                throw new Exception("User not exit!");
+            }
+            user.Status = "Active";
+            user.LockUntil = null;
+            await _context.SaveChangesAsync();
+        }
     }
 }
