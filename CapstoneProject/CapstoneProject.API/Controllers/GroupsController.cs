@@ -19,50 +19,48 @@ namespace CapstoneProject.API.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> CreateGroup([FromBody] CreateGroupRequest request)
         {
-            // Dữ liệu hợp lệ theo DataAnnotations chưa? (Ví dụ: tên nhóm rỗng, số người > 5)
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            // Giả lập cứng UserId = 1 (Tạm thời test. Sau này lấy ra từ JWT Token)
-            int currentUserId = 1;
+            var userIdClaim = int.Parse(User.FindFirst("id")?.Value);
 
-            var result = await _groupService.CreateGroupAsync(currentUserId, request);
+            var result = await _groupService.CreateGroupAsync(userIdClaim, request);
 
-            if (result == "Tạo nhóm thành công!")
+            // Updated comparison string to English
+            if (result == "Group created successfully!")
             {
                 return Ok(new { message = result });
             }
 
-            // Trả về lỗi nếu đã có nhóm hoặc lỗi hệ thống
             return BadRequest(new { message = result });
         }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetGroupDetails(int id)
         {
             var result = await _groupService.GetGroupDetailsAsync(id);
 
-            // Nếu không tìm thấy nhóm (có thể do nhập sai ID hoặc nhóm đã bị xóa)
             if (result == null)
             {
-                return NotFound(new { message = "Không tìm thấy thông tin nhóm!" });
+                return NotFound(new { message = "Group information not found!" });
             }
 
             return Ok(result);
         }
+
         [HttpPost("invite")]
-        // [Authorize] <-- Tạm comment đợi làm chức năng Login
         public async Task<IActionResult> InviteMember([FromBody] InviteMemberRequest request)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            // Giả lập Leader đang đăng nhập có UserId = 1
             int currentUserId = 1;
 
             var result = await _groupService.InviteMemberAsync(currentUserId, request);
 
-            if (result.StartsWith("Thành công"))
+            // Updated check to English "Success"
+            if (result.StartsWith("Success"))
             {
                 return Ok(new { message = result });
             }
@@ -70,29 +68,26 @@ namespace CapstoneProject.API.Controllers
             return BadRequest(new { message = result });
         }
 
-        // THÊM API NÀY VÀO GROUPS CONTROLLER
         [HttpGet("accept-invite")]
         public async Task<IActionResult> AcceptInvite([FromQuery] int invitationId)
         {
             var result = await _groupService.AcceptInviteAsync(invitationId);
 
-            // Tùy chỉnh giao diện trả về cho người dùng khi click link
-            if (result.Contains("thành công"))
+            // Updated check and HTML content to English
+            if (result.Contains("successfully"))
             {
-                // Trả về một mã HTML đơn giản báo thành công
                 string htmlSuccess = $@"
                     <div style='text-align:center; padding:50px; font-family:Arial;'>
-                        <h1 style='color:green;'>Thành công!</h1>
+                        <h1 style='color:green;'>Success!</h1>
                         <p>{result}</p>
-                        <p>Bạn có thể đóng tab này và quay lại hệ thống.</p>
+                        <p>You can close this tab and return to the system.</p>
                     </div>";
                 return Content(htmlSuccess, "text/html");
             }
 
-            // Báo lỗi bằng giao diện HTML
             string htmlError = $@"
                     <div style='text-align:center; padding:50px; font-family:Arial;'>
-                        <h1 style='color:red;'>Rất tiếc!</h1>
+                        <h1 style='color:red;'>Oops!</h1>
                         <p>{result}</p>
                     </div>";
             return Content(htmlError, "text/html");

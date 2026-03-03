@@ -239,9 +239,9 @@
               "Title": "GroupService.cs",
               "DocumentMoniker": "C:\\Users\\admin\\Downloads\\cloneGitTeam5\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Services\\GroupService.cs",
               "RelativeDocumentMoniker": "CapstoneProject.Infrastructure\\Services\\GroupService.cs",
-              "ToolTip": "C:\\Users\\admin\\Downloads\\cloneGitTeam5\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Services\\GroupService.cs*",
-              "RelativeToolTip": "CapstoneProject.Infrastructure\\Services\\GroupService.cs*",
-              "ViewState": "AgIAANgAAAAAAAAAAAAQwPAAAAAJAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\admin\\Downloads\\cloneGitTeam5\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Services\\GroupService.cs",
+              "RelativeToolTip": "CapstoneProject.Infrastructure\\Services\\GroupService.cs",
+              "ViewState": "AgIAAOAAAAAAAAAAAAAQwO4AAABGAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-02-26T07:18:53.496Z",
               "EditorCaption": ""
@@ -252,12 +252,11 @@
               "Title": "IGroupRepository.cs",
               "DocumentMoniker": "C:\\Users\\admin\\Downloads\\cloneGitTeam5\\Team-5\\CapstoneProject\\CapstoneProject.Application\\Interface\\IRepository\\IGroupRepository.cs",
               "RelativeDocumentMoniker": "CapstoneProject.Application\\Interface\\IRepository\\IGroupRepository.cs",
-              "ToolTip": "C:\\Users\\admin\\Downloads\\cloneGitTeam5\\Team-5\\CapstoneProject\\CapstoneProject.Application\\Interface\\IRepository\\IGroupRepository.cs*",
-              "RelativeToolTip": "CapstoneProject.Application\\Interface\\IRepository\\IGroupRepository.cs*",
+              "ToolTip": "C:\\Users\\admin\\Downloads\\cloneGitTeam5\\Team-5\\CapstoneProject\\CapstoneProject.Application\\Interface\\IRepository\\IGroupRepository.cs",
+              "RelativeToolTip": "CapstoneProject.Application\\Interface\\IRepository\\IGroupRepository.cs",
               "ViewState": "AgIAAAcAAAAAAAAAAAAnwBMAAAA1AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-26T07:31:34.896Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-26T07:31:34.896Z"
             },
             {
               "$type": "Document",
@@ -265,12 +264,11 @@
               "Title": "IGroupService.cs",
               "DocumentMoniker": "C:\\Users\\admin\\Downloads\\cloneGitTeam5\\Team-5\\CapstoneProject\\CapstoneProject.Application\\Interface\\IRepository\\IGroupService.cs",
               "RelativeDocumentMoniker": "CapstoneProject.Application\\Interface\\IRepository\\IGroupService.cs",
-              "ToolTip": "C:\\Users\\admin\\Downloads\\cloneGitTeam5\\Team-5\\CapstoneProject\\CapstoneProject.Application\\Interface\\IRepository\\IGroupService.cs*",
-              "RelativeToolTip": "CapstoneProject.Application\\Interface\\IRepository\\IGroupService.cs*",
+              "ToolTip": "C:\\Users\\admin\\Downloads\\cloneGitTeam5\\Team-5\\CapstoneProject\\CapstoneProject.Application\\Interface\\IRepository\\IGroupService.cs",
+              "RelativeToolTip": "CapstoneProject.Application\\Interface\\IRepository\\IGroupService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAA5AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-26T07:37:07.81Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-26T07:37:07.81Z"
             },
             {
               "$type": "Document",
@@ -282,8 +280,7 @@
               "RelativeToolTip": "CapstoneProject.Application\\DTO\\InviteMemberRequest.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-26T09:25:15.159Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-26T09:25:15.159Z"
             },
             {
               "$type": "Document",
@@ -291,12 +288,11 @@
               "Title": "GroupRepository.cs",
               "DocumentMoniker": "C:\\Users\\admin\\Downloads\\cloneGitTeam5\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Repostitory\\GroupRepository.cs",
               "RelativeDocumentMoniker": "CapstoneProject.Infrastructure\\Repostitory\\GroupRepository.cs",
-              "ToolTip": "C:\\Users\\admin\\Downloads\\cloneGitTeam5\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Repostitory\\GroupRepository.cs*",
-              "RelativeToolTip": "CapstoneProject.Infrastructure\\Repostitory\\GroupRepository.cs*",
+              "ToolTip": "C:\\Users\\admin\\Downloads\\cloneGitTeam5\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Repostitory\\GroupRepository.cs",
+              "RelativeToolTip": "CapstoneProject.Infrastructure\\Repostitory\\GroupRepository.cs",
               "ViewState": "AgIAAEoAAAAAAAAAAAAQwGIAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-26T07:32:15.868Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-26T07:32:15.868Z"
             },
             {
               "$type": "Document",
@@ -304,12 +300,11 @@
               "Title": "GroupsController.cs",
               "DocumentMoniker": "C:\\Users\\admin\\Downloads\\cloneGitTeam5\\Team-5\\CapstoneProject\\CapstoneProject.API\\Controllers\\GroupsController.cs",
               "RelativeDocumentMoniker": "CapstoneProject.API\\Controllers\\GroupsController.cs",
-              "ToolTip": "C:\\Users\\admin\\Downloads\\cloneGitTeam5\\Team-5\\CapstoneProject\\CapstoneProject.API\\Controllers\\GroupsController.cs*",
-              "RelativeToolTip": "CapstoneProject.API\\Controllers\\GroupsController.cs*",
+              "ToolTip": "C:\\Users\\admin\\Downloads\\cloneGitTeam5\\Team-5\\CapstoneProject\\CapstoneProject.API\\Controllers\\GroupsController.cs",
+              "RelativeToolTip": "CapstoneProject.API\\Controllers\\GroupsController.cs",
               "ViewState": "AgIAAEwAAAAAAAAAAAAgwGIAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-26T07:33:25.396Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-26T07:33:25.396Z"
             },
             {
               "$type": "Document",
@@ -321,8 +316,7 @@
               "RelativeToolTip": "CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-02-26T07:18:40.314Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-26T07:18:40.314Z"
             },
             {
               "$type": "Document",
@@ -334,8 +328,7 @@
               "RelativeToolTip": "CapstoneProject.API\\appsettings.json",
               "ViewState": "AgIAAAcAAAAAAAAAAAAUwB0AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-02-26T06:43:48.419Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-26T06:43:48.419Z"
             },
             {
               "$type": "Document",
@@ -359,8 +352,7 @@
               "RelativeToolTip": "CapstoneProject.Application\\CapstoneProject.Application.csproj",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-02-26T06:43:48.594Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-26T06:43:48.594Z"
             },
             {
               "$type": "Document",
@@ -396,8 +388,7 @@
               "RelativeToolTip": "CapstoneProject.API\\CapstoneProject.API.csproj",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-02-26T06:43:48.522Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-26T06:43:48.522Z"
             },
             {
               "$type": "Document",

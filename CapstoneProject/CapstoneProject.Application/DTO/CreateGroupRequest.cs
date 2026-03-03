@@ -4,11 +4,11 @@ namespace CapstoneProject.Application.DTO
 {
     public class CreateGroupRequest
     {
-        [Required(ErrorMessage = "Tên nhóm không được để trống")]
+        [Required(ErrorMessage = "Group name is required")]
         public string GroupName { get; set; } = null!;
 
-        [Required(ErrorMessage = "Vui lòng nhập số lượng thành viên dự kiến")]
-        [Range(2, 5, ErrorMessage = "Số lượng thành viên nhóm phải từ 2 đến 5 người!")]
+        [Required(ErrorMessage = "Please enter the expected number of members")]
+        [Range(2, 5, ErrorMessage = "Group size must be between 2 and 5 members!")]
         public int TargetMembers { get; set; }
     }
 }
