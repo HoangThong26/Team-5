@@ -77,9 +77,13 @@ namespace CapstoneProject.Infrastructure.Services
 
         private async Task SendVerifyEmail(string email, string token)
         {
+<<<<<<< HEAD
+            var link = $"https://localhost:7084/api/auth/verify?token={token}";
+=======
             var baseUrl = _config["AppSettings:BaseUrl"];
             var senderEmail = _config["EmailSettings:SenderEmail"];
             var appPassword = _config["EmailSettings:AppPassword"];
+>>>>>>> c461d4c1f68f0a909524422d02ea522b4ad20704
 
             var link = $"{baseUrl}/api/auth/verify?token={token}";
 
@@ -161,6 +165,23 @@ namespace CapstoneProject.Infrastructure.Services
             return "Email verified successfully!";
         }
 
+<<<<<<< HEAD
+        public async Task<TokenResponse> LoginAsync(LoginRequest request)
+        {
+            var user = await _authRepository.GetByEmailAsync(request.Email);
+            if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+            {
+                throw new Exception("Email or password incorrect");
+            }
+            if (user.EmailVerified == false)
+            {
+                throw new Exception("Do not verify");
+            }
+            if (user.Status == "Locked")
+            {
+                throw new Exception("Account locked");
+            }
+=======
         public async Task<TokenResponse> LoginAsync(LoginRequest request, string ipAddress)
         {
             var user = await _authRepository.GetByEmailAsync(request.Email);
@@ -214,6 +235,7 @@ namespace CapstoneProject.Infrastructure.Services
             await _authRepository.UpdateAsync(user);
 
             await LogHistory(user.UserId, true);
+>>>>>>> c461d4c1f68f0a909524422d02ea522b4ad20704
             return await GenerateTokens(user);
         }
 
@@ -273,6 +295,9 @@ namespace CapstoneProject.Infrastructure.Services
             {
                 AccessToken = accessToken,
                 RefreshToken = newRefreshToken.Token,
+<<<<<<< HEAD
+                ExpiryDate = newRefreshToken.ExpiryDate
+=======
                 ExpiryDate = newRefreshToken.ExpiryDate,
                 User = new UserViewDTO
                 {
@@ -280,12 +305,19 @@ namespace CapstoneProject.Infrastructure.Services
                     FullName = user.FullName,
                     Role = user.Role
                 }
+>>>>>>> c461d4c1f68f0a909524422d02ea522b4ad20704
             };
         }
 
         public async Task<bool> LogoutAsync(string refreshToken)
         {
             if (string.IsNullOrEmpty(refreshToken)) return false;
+<<<<<<< HEAD
+            await _authRepository.RevokeRefreshTokenAsync(refreshToken);
+            return true;
+        }
+
+=======
             await _authRepository.UpdateStatusByRefreshTokenAsync(refreshToken, "Inactive");
             await _authRepository.RevokeRefreshTokenAsync(refreshToken);
 
@@ -335,5 +367,6 @@ namespace CapstoneProject.Infrastructure.Services
             await _tokenRepository.SaveChangesAsync();
         }
 
+>>>>>>> c461d4c1f68f0a909524422d02ea522b4ad20704
     }
 }

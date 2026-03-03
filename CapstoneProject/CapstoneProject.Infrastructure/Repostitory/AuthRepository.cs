@@ -72,7 +72,11 @@ namespace CapstoneProject.Infrastructure.Repostitory
         }
 
         public async Task RevokeRefreshTokenAsync(string token)
+<<<<<<< HEAD
+        {
+=======
         { 
+>>>>>>> c461d4c1f68f0a909524422d02ea522b4ad20704
             var refreshToken = await _context.RefreshTokens
                 .FirstOrDefaultAsync(t => t.Token == token);
 
@@ -84,6 +88,9 @@ namespace CapstoneProject.Infrastructure.Repostitory
             }
         }
 
+<<<<<<< HEAD
+
+=======
             public async Task SaveLoginHistoryAsync(LoginHistory history)
             {
                 try
@@ -137,6 +144,7 @@ namespace CapstoneProject.Infrastructure.Repostitory
             _context.PasswordResetTokens.Update(token);
             await _context.SaveChangesAsync();
         }
+>>>>>>> c461d4c1f68f0a909524422d02ea522b4ad20704
     }
 
 
