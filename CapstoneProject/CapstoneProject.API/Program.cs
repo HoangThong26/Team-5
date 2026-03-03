@@ -1,30 +1,30 @@
 using CapstoneProject.Application.Interface.IRepository;
 using CapstoneProject.Application.Interface.IService;
+using CapstoneProject.Infrastructure.Database.AppDbContext;
 using CapstoneProject.Infrastructure.Repostitory;
 using CapstoneProject.Infrastructure.Services;
-using CapstoneProject.Infrastructure.Database.AppDbContext;
-
-using Microsoft.EntityFrameworkCore;
+using CapstoneProject.Infrastructure.Validation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<LoginRequestValidator>();
+
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-#region DATABASE
-
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection")
-    ));
-
-#endregion
-
-#region JWT CONFIGURATION
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]);
@@ -49,38 +49,42 @@ builder.Services.AddAuthentication(options =>
 });
 
 builder.Services.AddAuthorization();
-
-#endregion
-
-#region DEPENDENCY INJECTION
-
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IUserRepository,UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAdminService,AdminService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IPasswordResetTokenRepository, PasswordResetTokenRepository>();
 
+<<<<<<< HEAD
 
 // THÊM 2 DÒNG NÀY CHO GROUP:
 builder.Services.AddScoped<IGroupRepository, GroupRepository>();
 builder.Services.AddScoped<IGroupService, GroupService>();
 #endregion
 
+=======
+builder.Services.AddCors(options => {
+    options.AddPolicy("AllowAll", builder => {
+        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+    });
+});
+>>>>>>> c461d4c1f68f0a909524422d02ea522b4ad20704
 var app = builder.Build();
 
-#region MIDDLEWARE PIPELINE
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseCors("AllowAll");
 app.UseHttpsRedirection();
-
-// ⚠ QUAN TRỌNG: Authentication phải đứng trước Authorization
 app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.MapControllers();
-
-#endregion
 
 app.Run();

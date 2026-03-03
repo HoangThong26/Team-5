@@ -19,11 +19,20 @@ namespace CapstoneProject.Infrastructure.Services
     {
         private readonly IAuthRepository _authRepository;
         private readonly IConfiguration _configuration;
+        private readonly IEmailService _emailService;
+        private readonly IUserRepository _userRepository;
+        private readonly IPasswordResetTokenRepository _tokenRepository;
+        private readonly IConfiguration _config;
 
-        public AuthService(IAuthRepository authRepository, IConfiguration configuration)
+        public AuthService(IAuthRepository authRepository, IConfiguration configuration, IEmailService emailService
+            ,IPasswordResetTokenRepository passwordResetTokenRepository, IUserRepository userRepository, IConfiguration config)
         {
             _authRepository = authRepository;
             _configuration = configuration;
+            _emailService = emailService;
+            _userRepository = userRepository;
+            _tokenRepository = passwordResetTokenRepository;
+            _config = config;
         }
 
         public async Task<string> RegisterAsync(RegisterRequest request)
@@ -54,6 +63,7 @@ namespace CapstoneProject.Infrastructure.Services
                 Phone = request.Phone,
                 EmailVerified = false,
                 Role = "Student",
+                Status = "Active",
                 VerifyToken = token,
                 VerifyTokenExpire = DateTime.UtcNow.AddHours(24),
                 CreatedAt = DateTime.UtcNow
@@ -67,36 +77,68 @@ namespace CapstoneProject.Infrastructure.Services
 
         private async Task SendVerifyEmail(string email, string token)
         {
+<<<<<<< HEAD
             var link = $"https://localhost:7084/api/auth/verify?token={token}";
+=======
+            var baseUrl = _config["AppSettings:BaseUrl"];
+            var senderEmail = _config["EmailSettings:SenderEmail"];
+            var appPassword = _config["EmailSettings:AppPassword"];
+>>>>>>> c461d4c1f68f0a909524422d02ea522b4ad20704
 
-            var client = new SmtpClient("smtp.gmail.com", 587)
+            var link = $"{baseUrl}/api/auth/verify?token={token}";
+
+            using var client = new SmtpClient("smtp.gmail.com", 587)
             {
-                Credentials = new NetworkCredential("he186507hoangbathong@gmail.com", "hthjxjajxbgrwljo"),
+                Credentials = new NetworkCredential(senderEmail, appPassword),
                 EnableSsl = true
             };
 
             var mail = new MailMessage
             {
-                From = new MailAddress("he186507hoangbathong@gmail.com"),
-                Subject = "Verify your account",
+                From = new MailAddress(senderEmail, "Capstone Management"),
+                Subject = "Capstone Management - Verify Email",
                 IsBodyHtml = true,
                 Body = $@"
-                    <h2>Verify Your Account</h2>
-                    <p>Click the button below to verify your account:</p>
-                   <button> <a href='{link}' 
-                     style='padding:10px 20px;
-                      background-color:blue;
-                      color:white;
-                      text-decoration:none;
-                      border-radius:5px;'>
-                        Verify Email
-                    </a>
-                </button>
-                    <p>Or copy this link:</p>
-                    <p>{link}</p>"
+                <div style='font-family:Arial,sans-serif;line-height:1.6;color:#333'>
+                <h2>Hello,</h2>
+
+                <p>You have just registered an account on the <b>Capstone Management</b> system.</p>
+
+                <p>To complete your registration, please confirm your email address by clicking the button below:</p>
+
+                    <div style='margin:20px 0'>
+                 <a href='{link}' target='_blank'
+                    style='display:inline-block;
+                  padding:12px 24px;
+                  background-color:#007bff;
+                  color:#ffffff;
+                  text-decoration:none;
+                  border-radius:6px;
+                  font-weight:bold;'>
+                    Verify Email
+                        </a>
+                    </div>
+
+                <p>If you did not make this request, please ignore this email.</p>
+
+                <hr style='margin:30px 0'>
+
+                <p style='font-size:12px;color:#888'>
+                    Capstone Management System<br/>
+                    This is an automated email. Please do not reply directly.
+                </p>
+
+                <p style='font-size:12px;color:#888'>
+                    Or copy and paste the following link into your browser:<br/>
+                    {link}
+                </p>
+            </div>"
             };
 
             mail.To.Add(email);
+
+            mail.ReplyToList.Add(senderEmail);
+            mail.Headers.Add("X-Priority", "3");
 
             await client.SendMailAsync(mail);
         }
@@ -123,6 +165,7 @@ namespace CapstoneProject.Infrastructure.Services
             return "Email verified successfully!";
         }
 
+<<<<<<< HEAD
         public async Task<TokenResponse> LoginAsync(LoginRequest request)
         {
             var user = await _authRepository.GetByEmailAsync(request.Email);
@@ -138,6 +181,61 @@ namespace CapstoneProject.Infrastructure.Services
             {
                 throw new Exception("Account locked");
             }
+=======
+        public async Task<TokenResponse> LoginAsync(LoginRequest request, string ipAddress)
+        {
+            var user = await _authRepository.GetByEmailAsync(request.Email);
+            bool isSuccess = false;
+            async Task LogHistory(int? uid, bool success)
+            {
+                var history = new LoginHistory
+                {
+                    UserId = uid,
+                    Ipaddress = ipAddress,
+                    LoginTime = DateTime.UtcNow,
+                    IsSuccess = success
+                };
+                await _authRepository.SaveLoginHistoryAsync(history); 
+            }
+            if (user == null)
+            {
+                await LogHistory(null, false); 
+                throw new Exception("Invalid email or password.");
+            }
+
+            if (user.LockUntil.HasValue && user.LockUntil > DateTime.UtcNow)
+            {
+                await LogHistory(user.UserId, false); 
+                var remainingMinutes = Math.Ceiling((user.LockUntil.Value - DateTime.UtcNow).TotalMinutes);
+                throw new Exception($"Account is temporarily locked. Try again after {remainingMinutes} minutes.");
+            }
+            if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+            {
+                user.FailedLoginCount++;
+                if (user.FailedLoginCount >= 5)
+                {
+                    int lockMinutes = ((user.FailedLoginCount ?? 0) - 4) * 5;
+                    user.LockUntil = DateTime.UtcNow.AddMinutes(lockMinutes);
+                    user.Status = "Locked";
+                }
+                await _authRepository.UpdateAsync(user);
+
+                await LogHistory(user.UserId, false);
+                throw new Exception("Invalid email or password.");
+            }
+
+            if (user.EmailVerified == false)
+            {
+                await LogHistory(user.UserId, false);
+                throw new Exception("Email address is not verified.");
+            }
+            user.FailedLoginCount = 0;
+            user.LockUntil = null;
+            user.Status = "Active";
+            await _authRepository.UpdateAsync(user);
+
+            await LogHistory(user.UserId, true);
+>>>>>>> c461d4c1f68f0a909524422d02ea522b4ad20704
             return await GenerateTokens(user);
         }
 
@@ -197,16 +295,78 @@ namespace CapstoneProject.Infrastructure.Services
             {
                 AccessToken = accessToken,
                 RefreshToken = newRefreshToken.Token,
+<<<<<<< HEAD
                 ExpiryDate = newRefreshToken.ExpiryDate
+=======
+                ExpiryDate = newRefreshToken.ExpiryDate,
+                User = new UserViewDTO
+                {
+                    Email = user.Email,
+                    FullName = user.FullName,
+                    Role = user.Role
+                }
+>>>>>>> c461d4c1f68f0a909524422d02ea522b4ad20704
             };
         }
 
         public async Task<bool> LogoutAsync(string refreshToken)
         {
             if (string.IsNullOrEmpty(refreshToken)) return false;
+<<<<<<< HEAD
             await _authRepository.RevokeRefreshTokenAsync(refreshToken);
             return true;
         }
 
+=======
+            await _authRepository.UpdateStatusByRefreshTokenAsync(refreshToken, "Inactive");
+            await _authRepository.RevokeRefreshTokenAsync(refreshToken);
+
+            return true;
+        }
+
+        public async Task ForgotPasswordAsync(string email)
+        {
+            var user = await _userRepository.GetByEmailAsync(email);
+
+            if (user == null)
+                throw new Exception("Email do not exited!");
+            var otp = new Random().Next(100000, 999999).ToString();
+
+            var resetToken = new PasswordResetToken
+            {
+                UserId = user.UserId,
+                Token = otp,
+                ExpiryTime = DateTime.UtcNow.AddMinutes(10),
+                IsUsed = false
+            };
+
+            await _tokenRepository.AddAsync(resetToken);
+            await _tokenRepository.SaveChangesAsync();
+
+            await _emailService.SendEmailAsync(
+                user.Email,
+                "Reset Password",
+                $"OTP: {otp}"
+            );
+        }
+
+        public async Task ResetPasswordAsync(ResetPasswordRequestDto request)
+        {
+            var token = await _tokenRepository
+                .GetValidTokenAsync(request.Email, request.Token);
+
+            if (token == null)
+                throw new Exception("OTP Invalid or expired");
+
+            var user = token.User;
+
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
+
+            token.IsUsed = true;
+
+            await _tokenRepository.SaveChangesAsync();
+        }
+
+>>>>>>> c461d4c1f68f0a909524422d02ea522b4ad20704
     }
 }
