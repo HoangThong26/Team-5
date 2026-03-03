@@ -57,20 +57,17 @@ builder.Services.AddScoped<IAdminService,AdminService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IPasswordResetTokenRepository, PasswordResetTokenRepository>();
 
-<<<<<<< HEAD
 
 // THÊM 2 DÒNG NÀY CHO GROUP:
 builder.Services.AddScoped<IGroupRepository, GroupRepository>();
 builder.Services.AddScoped<IGroupService, GroupService>();
-#endregion
 
-=======
+
 builder.Services.AddCors(options => {
     options.AddPolicy("AllowAll", builder => {
         builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
     });
 });
->>>>>>> c461d4c1f68f0a909524422d02ea522b4ad20704
 var app = builder.Build();
 
 
