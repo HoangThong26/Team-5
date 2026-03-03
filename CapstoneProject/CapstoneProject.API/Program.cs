@@ -58,6 +58,13 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IPasswordResetTokenRepository, PasswordResetTokenRepository>();
 builder.Services.AddScoped<ITopicRepository, TopicRepository>();
 builder.Services.AddScoped<ITopicService, TopicService>();
+
+
+// THÊM 2 DÒNG NÀY CHO GROUP:
+builder.Services.AddScoped<IGroupRepository, GroupRepository>();
+builder.Services.AddScoped<IGroupService, GroupService>();
+
+
 builder.Services.AddCors(options => {
     options.AddPolicy("AllowAll", builder => {
         builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();

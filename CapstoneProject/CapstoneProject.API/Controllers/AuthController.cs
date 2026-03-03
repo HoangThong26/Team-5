@@ -36,8 +36,12 @@ namespace CapstoneProject.API.Controllers
         {
             try
             {
+<<<<<<< HEAD
+                var result = await _authService.LoginAsync(request);
+=======
                 string ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "Unknown";
                 var result = await _authService.LoginAsync(request,ipAddress);
+>>>>>>> c461d4c1f68f0a909524422d02ea522b4ad20704
                 return Ok(result);
             }
             catch (Exception ex)
@@ -70,6 +74,12 @@ namespace CapstoneProject.API.Controllers
 
             return BadRequest("Token incorrect.");
         }
+<<<<<<< HEAD
+        public class LogoutRequest
+        {
+            public string RefreshToken { get; set; }
+        }
+=======
 
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword(
@@ -115,5 +125,6 @@ namespace CapstoneProject.API.Controllers
         }
 
 
+>>>>>>> c461d4c1f68f0a909524422d02ea522b4ad20704
     }
 }
