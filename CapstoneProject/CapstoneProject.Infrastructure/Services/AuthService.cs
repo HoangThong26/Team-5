@@ -246,6 +246,7 @@ namespace CapstoneProject.Infrastructure.Services
             {
                 Subject = new ClaimsIdentity(new[]
                 {
+            new Claim("id", user.UserId.ToString()),
             new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
             new Claim(ClaimTypes.Email, user.Email ?? ""),
             new Claim(ClaimTypes.Role, user.Role ?? "Student")

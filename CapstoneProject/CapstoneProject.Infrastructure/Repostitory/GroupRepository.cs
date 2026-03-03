@@ -26,16 +26,17 @@ namespace CapstoneProject.Infrastructure.Repostitory
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
-                // 1. Lưu Group
+                // 1. Lưu Group để lấy GroupId
                 await _context.Groups.AddAsync(group);
                 await _context.SaveChangesAsync();
 
-                // 2. Gán GroupId cho Leader và lưu Member
+                // 2. Gán GroupId cho Leader và lưu vào bảng GroupMembers
                 member.GroupId = group.GroupId;
                 await _context.GroupMembers.AddAsync(member);
                 await _context.SaveChangesAsync();
 
-                // 3. Chốt giao dịch
+                // CHÚ Ý: Không gán Mentor ở đây vì lúc này nhóm mới có 1 người.
+
                 await transaction.CommitAsync();
                 return group;
             }
@@ -43,6 +44,81 @@ namespace CapstoneProject.Infrastructure.Repostitory
             {
                 await transaction.RollbackAsync();
                 throw;
+            }
+        }
+
+
+        public async Task<string> AcceptInvitationWithMentorCheckAsync(int invitationId)
+        {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                // 1. Lấy thông tin lời mời
+                var invite = await _context.GroupInvitations.FindAsync(invitationId);
+                if (invite == null || invite.Status != "Pending")
+                    return "Lời mời không hợp lệ hoặc đã được xử lý.";
+
+                // 2. Kiểm tra xem User này đã có nhóm khác chưa (Double check an toàn)
+                bool alreadyInGroup = await _context.GroupMembers.AnyAsync(m => m.UserId == invite.ReceiverId);
+                if (alreadyInGroup) return "Bạn đã là thành viên của một nhóm khác.";
+
+                // 3. Thêm thành viên mới vào GroupMembers
+                var newMember = new GroupMember
+                {
+                    GroupId =(int) invite.GroupId,
+                    UserId = (int) invite.ReceiverId,
+                    JoinedAt = DateTime.Now,
+                    RoleInGroup = "Member"
+                };
+                await _context.GroupMembers.AddAsync(newMember);
+
+                // 4. Cập nhật trạng thái lời mời
+                invite.Status = "Accepted";
+                _context.GroupInvitations.Update(invite);
+                await _context.SaveChangesAsync();
+
+                // 5. ĐẾM SỐ THÀNH VIÊN HIỆN TẠI (Tính cả người vừa vào)
+                int memberCount = await _context.GroupMembers.CountAsync(m => m.GroupId == invite.GroupId);
+
+                string mentorNotification = "";
+
+                // 6. NẾU ĐỦ 4 NGƯỜI THÌ GÁN MENTOR
+                if (memberCount == 4)
+                {
+                    // Kiểm tra xem nhóm đã có Mentor chưa (đề phòng)
+                    bool hasMentor = await _context.MentorAssignments.AnyAsync(a => a.GroupId == invite.GroupId);
+
+                    if (!hasMentor)
+                    {
+                        // Tìm Mentor ngẫu nhiên đang hoạt động
+                        var randomMentor = await _context.Users
+                            .Where(u => u.Role == "Mentor" && u.Status == "Active")
+                            .OrderBy(u => Guid.NewGuid())
+                            .FirstOrDefaultAsync();
+
+                        if (randomMentor != null)
+                        {
+                            var assignment = new MentorAssignment
+                            {
+                                GroupId = invite.GroupId,
+                                MentorId = randomMentor.UserId,
+                                AssignedAt = DateTime.Now
+                            };
+                            await _context.MentorAssignments.AddAsync(assignment);
+                            mentorNotification = " Nhóm đã đạt đủ 4 thành viên, Mentor đã được gán tự động!";
+                        }
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return $"Chấp nhận lời mời thành công!{mentorNotification}";
+            }
+            catch (Exception)
+            {
+                await transaction.RollbackAsync();
+                throw; // Để Service xử lý hoặc Log lỗi
             }
         }
 
