@@ -78,6 +78,11 @@ namespace CapstoneProject.Infrastructure.Repostitory
             {
                 throw new Exception("User not exit!");
             }
+
+            if (user.Status == "Active")
+            {
+                throw new Exception("Account do not locked");
+            }
             user.Status = "Active";
             user.LockUntil = null;
             await _context.SaveChangesAsync();

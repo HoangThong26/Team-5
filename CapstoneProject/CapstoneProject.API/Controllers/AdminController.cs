@@ -54,7 +54,7 @@ namespace CapstoneProject.API.Controllers
         }
 
 
-        [HttpPatch]
+        [HttpPatch("unlock-account")]
         public async Task UnlockAcountAsync(int userId)
         {
             await _adminService.UnlockAccountAsync(userId);

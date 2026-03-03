@@ -56,7 +56,8 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAdminService,AdminService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IPasswordResetTokenRepository, PasswordResetTokenRepository>();
-
+builder.Services.AddScoped<ITopicRepository, TopicRepository>();
+builder.Services.AddScoped<ITopicService, TopicService>();
 builder.Services.AddCors(options => {
     options.AddPolicy("AllowAll", builder => {
         builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
