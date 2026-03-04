@@ -8,7 +8,7 @@ namespace CapstoneProject.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public class AdminController : ControllerBase
     {
         private readonly IAdminService _adminService;
@@ -58,6 +58,17 @@ namespace CapstoneProject.API.Controllers
         public async Task UnlockAcountAsync(int userId)
         {
             await _adminService.UnlockAccountAsync(userId);
+        }
+
+        [HttpGet("search-users")]
+        public async Task<IActionResult> SearchUsers(string keyword)
+        {
+            if (string.IsNullOrEmpty(keyword))
+                return BadRequest("Keyword is required");
+
+            var result = await _adminService.SearchUsersAsync(keyword);
+
+            return Ok(result);
         }
     }
 }
