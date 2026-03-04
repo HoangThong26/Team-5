@@ -1,0 +1,13 @@
+C:\Users\PC\Documents\GitHub\Team-5\CapstoneProject\CapstoneProject.Domain\bin\Debug\net10.0\CapstoneProject.Domain.deps.json
+C:\Users\PC\Documents\GitHub\Team-5\CapstoneProject\CapstoneProject.Domain\bin\Debug\net10.0\CapstoneProject.Domain.dll
+C:\Users\PC\Documents\GitHub\Team-5\CapstoneProject\CapstoneProject.Domain\bin\Debug\net10.0\CapstoneProject.Domain.pdb
+C:\Users\PC\Documents\GitHub\Team-5\CapstoneProject\CapstoneProject.Domain\obj\Debug\net10.0\CapstoneProject.Domain.csproj.AssemblyReference.cache
+C:\Users\PC\Documents\GitHub\Team-5\CapstoneProject\CapstoneProject.Domain\obj\Debug\net10.0\CapstoneProject.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\PC\Documents\GitHub\Team-5\CapstoneProject\CapstoneProject.Domain\obj\Debug\net10.0\CapstoneProject.Domain.AssemblyInfoInputs.cache
+C:\Users\PC\Documents\GitHub\Team-5\CapstoneProject\CapstoneProject.Domain\obj\Debug\net10.0\CapstoneProject.Domain.AssemblyInfo.cs
+C:\Users\PC\Documents\GitHub\Team-5\CapstoneProject\CapstoneProject.Domain\obj\Debug\net10.0\CapstoneProject.Domain.csproj.CoreCompileInputs.cache
+C:\Users\PC\Documents\GitHub\Team-5\CapstoneProject\CapstoneProject.Domain\obj\Debug\net10.0\CapstoneProject.Domain.sourcelink.json
+C:\Users\PC\Documents\GitHub\Team-5\CapstoneProject\CapstoneProject.Domain\obj\Debug\net10.0\CapstoneProject.Domain.dll
+C:\Users\PC\Documents\GitHub\Team-5\CapstoneProject\CapstoneProject.Domain\obj\Debug\net10.0\refint\CapstoneProject.Domain.dll
+C:\Users\PC\Documents\GitHub\Team-5\CapstoneProject\CapstoneProject.Domain\obj\Debug\net10.0\CapstoneProject.Domain.pdb
+C:\Users\PC\Documents\GitHub\Team-5\CapstoneProject\CapstoneProject.Domain\obj\Debug\net10.0\ref\CapstoneProject.Domain.dll
