@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\QuangAnh\\Documents\\GitHub\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj": {}
+    "C:\\Users\\hbt2k\\OneDrive\\Documents\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj": {}
   },
   "projects": {
-    "C:\\Users\\QuangAnh\\Documents\\GitHub\\Team-5\\CapstoneProject\\CapstoneProject.Application\\CapstoneProject.Application.csproj": {
+    "C:\\Users\\hbt2k\\OneDrive\\Documents\\Team-5\\CapstoneProject\\CapstoneProject.Application\\CapstoneProject.Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\QuangAnh\\Documents\\GitHub\\Team-5\\CapstoneProject\\CapstoneProject.Application\\CapstoneProject.Application.csproj",
+        "projectUniqueName": "C:\\Users\\hbt2k\\OneDrive\\Documents\\Team-5\\CapstoneProject\\CapstoneProject.Application\\CapstoneProject.Application.csproj",
         "projectName": "CapstoneProject.Application",
-        "projectPath": "C:\\Users\\QuangAnh\\Documents\\GitHub\\Team-5\\CapstoneProject\\CapstoneProject.Application\\CapstoneProject.Application.csproj",
-        "packagesPath": "C:\\Users\\QuangAnh\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\QuangAnh\\Documents\\GitHub\\Team-5\\CapstoneProject\\CapstoneProject.Application\\obj\\",
+        "projectPath": "C:\\Users\\hbt2k\\OneDrive\\Documents\\Team-5\\CapstoneProject\\CapstoneProject.Application\\CapstoneProject.Application.csproj",
+        "packagesPath": "C:\\Users\\hbt2k\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\hbt2k\\OneDrive\\Documents\\Team-5\\CapstoneProject\\CapstoneProject.Application\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\QuangAnh\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\hbt2k\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,15 +26,14 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "C:\\Users\\QuangAnh\\Documents\\GitHub\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\CapstoneProject.Domain.csproj": {
-                "projectPath": "C:\\Users\\QuangAnh\\Documents\\GitHub\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\CapstoneProject.Domain.csproj"
+              "C:\\Users\\hbt2k\\OneDrive\\Documents\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\CapstoneProject.Domain.csproj": {
+                "projectPath": "C:\\Users\\hbt2k\\OneDrive\\Documents\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\CapstoneProject.Domain.csproj"
               }
             }
           }
@@ -378,20 +377,20 @@
         }
       }
     },
-    "C:\\Users\\QuangAnh\\Documents\\GitHub\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\CapstoneProject.Domain.csproj": {
+    "C:\\Users\\hbt2k\\OneDrive\\Documents\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\CapstoneProject.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\QuangAnh\\Documents\\GitHub\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\CapstoneProject.Domain.csproj",
+        "projectUniqueName": "C:\\Users\\hbt2k\\OneDrive\\Documents\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\CapstoneProject.Domain.csproj",
         "projectName": "CapstoneProject.Domain",
-        "projectPath": "C:\\Users\\QuangAnh\\Documents\\GitHub\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\CapstoneProject.Domain.csproj",
-        "packagesPath": "C:\\Users\\QuangAnh\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\QuangAnh\\Documents\\GitHub\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\obj\\",
+        "projectPath": "C:\\Users\\hbt2k\\OneDrive\\Documents\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\CapstoneProject.Domain.csproj",
+        "packagesPath": "C:\\Users\\hbt2k\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\hbt2k\\OneDrive\\Documents\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\QuangAnh\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\hbt2k\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -400,7 +399,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -732,20 +730,20 @@
         }
       }
     },
-    "C:\\Users\\QuangAnh\\Documents\\GitHub\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj": {
+    "C:\\Users\\hbt2k\\OneDrive\\Documents\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\QuangAnh\\Documents\\GitHub\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj",
+        "projectUniqueName": "C:\\Users\\hbt2k\\OneDrive\\Documents\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj",
         "projectName": "CapstoneProject.Infrastructure",
-        "projectPath": "C:\\Users\\QuangAnh\\Documents\\GitHub\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj",
-        "packagesPath": "C:\\Users\\QuangAnh\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\QuangAnh\\Documents\\GitHub\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\obj\\",
+        "projectPath": "C:\\Users\\hbt2k\\OneDrive\\Documents\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj",
+        "packagesPath": "C:\\Users\\hbt2k\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\hbt2k\\OneDrive\\Documents\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\QuangAnh\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\hbt2k\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -754,18 +752,17 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "C:\\Users\\QuangAnh\\Documents\\GitHub\\Team-5\\CapstoneProject\\CapstoneProject.Application\\CapstoneProject.Application.csproj": {
-                "projectPath": "C:\\Users\\QuangAnh\\Documents\\GitHub\\Team-5\\CapstoneProject\\CapstoneProject.Application\\CapstoneProject.Application.csproj"
+              "C:\\Users\\hbt2k\\OneDrive\\Documents\\Team-5\\CapstoneProject\\CapstoneProject.Application\\CapstoneProject.Application.csproj": {
+                "projectPath": "C:\\Users\\hbt2k\\OneDrive\\Documents\\Team-5\\CapstoneProject\\CapstoneProject.Application\\CapstoneProject.Application.csproj"
               },
-              "C:\\Users\\QuangAnh\\Documents\\GitHub\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\CapstoneProject.Domain.csproj": {
-                "projectPath": "C:\\Users\\QuangAnh\\Documents\\GitHub\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\CapstoneProject.Domain.csproj"
+              "C:\\Users\\hbt2k\\OneDrive\\Documents\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\CapstoneProject.Domain.csproj": {
+                "projectPath": "C:\\Users\\hbt2k\\OneDrive\\Documents\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\CapstoneProject.Domain.csproj"
               }
             }
           }

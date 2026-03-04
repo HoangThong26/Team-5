@@ -43,6 +43,22 @@
   },
   {
     "ContainingType": "CapstoneProject.API.Controllers.AdminController",
+    "Method": "SearchUsers",
+    "RelativePath": "api/Admin/search-users",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "keyword",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CapstoneProject.API.Controllers.AdminController",
     "Method": "UnlockAcountAsync",
     "RelativePath": "api/Admin/unlock-account",
     "HttpMethod": "PATCH",
