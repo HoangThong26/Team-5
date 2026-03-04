@@ -50,8 +50,11 @@ namespace CapstoneProject.Infrastructure.Services
 
             try
             {
-                await _groupRepository.CreateGroupWithLeaderAsync(group, member);
-                return "Group created successfully!";
+                // Repository này hiện tại chỉ tạo Group + Leader
+                var result = await _groupRepository.CreateGroupWithLeaderAsync(group, member);
+
+                // THAY ĐỔI: Thông báo đúng thực tế (chưa có mentor)
+                return "Group created successfully! Invite more members to reach 4 for mentor assignment.";
             }
             catch (Exception)
             {
@@ -79,6 +82,22 @@ namespace CapstoneProject.Infrastructure.Services
             };
 
             return response;
+        }
+
+        public async Task<string> AcceptInviteAsync(int invitationId)
+        {
+            // Chúng ta không kiểm tra rời rạc nữa mà gọi hàm xử lý Transaction 
+            // bên trong Repository để đảm bảo tính an toàn dữ liệu (Atomic)
+            try
+            {
+                // Hàm này sẽ tự động: Thêm member -> Check count -> Gán Mentor nếu count == 4
+                var result = await _groupRepository.AcceptInvitationWithMentorCheckAsync(invitationId);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return $"System error while processing participation: {ex.Message}";
+            }
         }
 
         public async Task<string> InviteMemberAsync(int leaderId, InviteMemberRequest request)
@@ -130,8 +149,8 @@ namespace CapstoneProject.Infrastructure.Services
 
         private async Task SendInvitationEmailAsync(string toEmail, string fullName, string groupName, int invitationId)
         {
-            string senderEmail = _configuration["EmailSettings:Email"];
-            string senderPassword = _configuration["EmailSettings:Password"];
+            string senderEmail = _configuration["EmailSettings:SenderEmail"];
+            string senderPassword = _configuration["EmailSettings:AppPassword"];
             string baseUrl = _configuration["AppSettings:BaseUrl"];
 
             string smtpServer = "smtp.gmail.com";
@@ -172,43 +191,5 @@ namespace CapstoneProject.Infrastructure.Services
             await smtpClient.SendMailAsync(mailMessage);
         }
 
-        public async Task<string> AcceptInviteAsync(int invitationId)
-        {
-            var invitation = await _groupRepository.GetInvitationByIdAsync(invitationId);
-            if (invitation == null) return "Invitation not found in the system.";
-
-            if (invitation.GroupId == null || invitation.ReceiverId == null)
-                return "Invalid invitation data (Missing Group or Receiver ID).";
-
-            if (invitation.Status != "Pending")
-                return "This invitation has already been processed, expired, or cancelled.";
-
-            int currentMembers = await _groupRepository.GetMemberCountAsync(invitation.GroupId.Value);
-            if (currentMembers >= 5) return "Sorry, this group is already full.";
-
-            bool hasGroup = await _groupRepository.IsUserInAnyGroupAsync(invitation.ReceiverId.Value);
-            if (hasGroup) return "You have already joined another group.";
-
-            try
-            {
-                invitation.Status = "Accepted";
-                await _groupRepository.UpdateInvitationAsync(invitation);
-
-                var newMember = new GroupMember
-                {
-                    GroupId = invitation.GroupId.Value,
-                    UserId = invitation.ReceiverId.Value,
-                    RoleInGroup = "Member",
-                    JoinedAt = DateTime.Now
-                };
-                await _groupRepository.AddGroupMemberAsync(newMember);
-
-                return "Successfully joined the group! Welcome aboard.";
-            }
-            catch (Exception ex)
-            {
-                return $"System error while processing group participation: {ex.Message}";
-            }
-        }
     }
 }

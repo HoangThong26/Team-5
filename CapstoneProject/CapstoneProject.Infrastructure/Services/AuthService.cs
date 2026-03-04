@@ -25,7 +25,7 @@ namespace CapstoneProject.Infrastructure.Services
         private readonly IConfiguration _config;
 
         public AuthService(IAuthRepository authRepository, IConfiguration configuration, IEmailService emailService
-            ,IPasswordResetTokenRepository passwordResetTokenRepository, IUserRepository userRepository, IConfiguration config)
+            , IPasswordResetTokenRepository passwordResetTokenRepository, IUserRepository userRepository, IConfiguration config)
         {
             _authRepository = authRepository;
             _configuration = configuration;
@@ -77,13 +77,9 @@ namespace CapstoneProject.Infrastructure.Services
 
         private async Task SendVerifyEmail(string email, string token)
         {
-<<<<<<< HEAD
-            var link = $"https://localhost:7084/api/auth/verify?token={token}";
-=======
             var baseUrl = _config["AppSettings:BaseUrl"];
             var senderEmail = _config["EmailSettings:SenderEmail"];
             var appPassword = _config["EmailSettings:AppPassword"];
->>>>>>> c461d4c1f68f0a909524422d02ea522b4ad20704
 
             var link = $"{baseUrl}/api/auth/verify?token={token}";
 
@@ -165,23 +161,7 @@ namespace CapstoneProject.Infrastructure.Services
             return "Email verified successfully!";
         }
 
-<<<<<<< HEAD
-        public async Task<TokenResponse> LoginAsync(LoginRequest request)
-        {
-            var user = await _authRepository.GetByEmailAsync(request.Email);
-            if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
-            {
-                throw new Exception("Email or password incorrect");
-            }
-            if (user.EmailVerified == false)
-            {
-                throw new Exception("Do not verify");
-            }
-            if (user.Status == "Locked")
-            {
-                throw new Exception("Account locked");
-            }
-=======
+
         public async Task<TokenResponse> LoginAsync(LoginRequest request, string ipAddress)
         {
             var user = await _authRepository.GetByEmailAsync(request.Email);
@@ -195,17 +175,17 @@ namespace CapstoneProject.Infrastructure.Services
                     LoginTime = DateTime.UtcNow,
                     IsSuccess = success
                 };
-                await _authRepository.SaveLoginHistoryAsync(history); 
+                await _authRepository.SaveLoginHistoryAsync(history);
             }
             if (user == null)
             {
-                await LogHistory(null, false); 
+                await LogHistory(null, false);
                 throw new Exception("Invalid email or password.");
             }
 
             if (user.LockUntil.HasValue && user.LockUntil > DateTime.UtcNow)
             {
-                await LogHistory(user.UserId, false); 
+                await LogHistory(user.UserId, false);
                 var remainingMinutes = Math.Ceiling((user.LockUntil.Value - DateTime.UtcNow).TotalMinutes);
                 throw new Exception($"Account is temporarily locked. Try again after {remainingMinutes} minutes.");
             }
@@ -235,7 +215,6 @@ namespace CapstoneProject.Infrastructure.Services
             await _authRepository.UpdateAsync(user);
 
             await LogHistory(user.UserId, true);
->>>>>>> c461d4c1f68f0a909524422d02ea522b4ad20704
             return await GenerateTokens(user);
         }
 
@@ -267,6 +246,7 @@ namespace CapstoneProject.Infrastructure.Services
             {
                 Subject = new ClaimsIdentity(new[]
                 {
+            new Claim("id", user.UserId.ToString()),
             new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
             new Claim(ClaimTypes.Email, user.Email ?? ""),
             new Claim(ClaimTypes.Role, user.Role ?? "Student")
@@ -282,7 +262,7 @@ namespace CapstoneProject.Infrastructure.Services
             var newRefreshToken = new RefreshToken
             {
                 UserId = user.UserId,
-                User = user, 
+                User = user,
                 Token = Guid.NewGuid().ToString() + "-" + DateTime.UtcNow.Ticks,
                 ExpiryDate = DateTime.UtcNow.AddDays(7),
                 IsRevoked = false
@@ -295,9 +275,6 @@ namespace CapstoneProject.Infrastructure.Services
             {
                 AccessToken = accessToken,
                 RefreshToken = newRefreshToken.Token,
-<<<<<<< HEAD
-                ExpiryDate = newRefreshToken.ExpiryDate
-=======
                 ExpiryDate = newRefreshToken.ExpiryDate,
                 User = new UserViewDTO
                 {
@@ -305,24 +282,18 @@ namespace CapstoneProject.Infrastructure.Services
                     FullName = user.FullName,
                     Role = user.Role
                 }
->>>>>>> c461d4c1f68f0a909524422d02ea522b4ad20704
             };
         }
 
         public async Task<bool> LogoutAsync(string refreshToken)
         {
             if (string.IsNullOrEmpty(refreshToken)) return false;
-<<<<<<< HEAD
-            await _authRepository.RevokeRefreshTokenAsync(refreshToken);
-            return true;
-        }
 
-=======
             await _authRepository.UpdateStatusByRefreshTokenAsync(refreshToken, "Inactive");
             await _authRepository.RevokeRefreshTokenAsync(refreshToken);
-
             return true;
         }
+      
 
         public async Task ForgotPasswordAsync(string email)
         {
@@ -367,6 +338,5 @@ namespace CapstoneProject.Infrastructure.Services
             await _tokenRepository.SaveChangesAsync();
         }
 
->>>>>>> c461d4c1f68f0a909524422d02ea522b4ad20704
     }
 }

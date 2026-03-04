@@ -51,11 +51,6 @@ namespace CapstoneProject.Infrastructure.Validation
                 .NotEmpty().WithMessage("Full name is required.")
                 .MaximumLength(255).WithMessage("Full name cannot exceed 255 characters.");
 
-            RuleFor(x => x.PasswordHash)
-                .MinimumLength(8).WithMessage("New password must be at least 8 characters.")
-                .Matches(@"[A-Z]").WithMessage("Password must contain at least one uppercase letter.")
-                .When(x => !string.IsNullOrEmpty(x.PasswordHash));
-
             RuleFor(x => x.Phone)
                 .Matches(@"^(03|05|07|08|09|01[2|6|8|9])([0-9]{8})$")
                 .WithMessage("Invalid Vietnamese phone number format.")

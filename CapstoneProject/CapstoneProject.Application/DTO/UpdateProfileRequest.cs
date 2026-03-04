@@ -10,9 +10,6 @@ namespace CapstoneProject.Application.DTO
         [StringLength(255)]
         public string FullName { get; set; } = null!;
 
-        [StringLength(500)]
-        public string PasswordHash { get; set; } = null!;
-
         [StringLength(20)]
         public string? Phone { get; set; }
 

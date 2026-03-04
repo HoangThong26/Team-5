@@ -8,7 +8,7 @@ namespace CapstoneProject.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class AdminController : ControllerBase
     {
         private readonly IAdminService _adminService;
@@ -54,7 +54,7 @@ namespace CapstoneProject.API.Controllers
         }
 
 
-        [HttpPatch]
+        [HttpPatch("unlock-account")]
         public async Task UnlockAcountAsync(int userId)
         {
             await _adminService.UnlockAccountAsync(userId);
