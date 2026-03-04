@@ -53,6 +53,10 @@ namespace CapstoneProject.Infrastructure.Repostitory
                 await _context.SaveChangesAsync();
             }
         }
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
 
         public async Task DeleteAsync(int userId)
         {
@@ -85,6 +89,50 @@ namespace CapstoneProject.Infrastructure.Repostitory
             }
             user.Status = "Active";
             user.LockUntil = null;
+            await _context.SaveChangesAsync();
+        }
+
+
+
+        public async Task<PasswordResetToken?> GetValidOtpByUserAsync(int userId, string otp)
+        {
+            return await _context.PasswordResetTokens
+                .FirstOrDefaultAsync(x =>
+                    x.UserId == userId &&
+                    x.Token == otp &&
+                    x.IsUsed == false &&
+                    x.ExpiryTime > DateTime.UtcNow);
+        }
+
+        public async Task MarkOtpUsedAsync(PasswordResetToken token)
+        {
+            token.IsUsed = true;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task RevokeAllRefreshTokensAsync(int userId)
+        {
+            var tokens = _context.RefreshTokens
+                .Where(x => x.UserId == userId && x.IsRevoked == false);
+
+            foreach (var token in tokens)
+            {
+                token.IsRevoked = true;
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task ChangePasswordAsync(int userId, string newPasswordHash)
+        {
+            var user = await _context.Users.FindAsync(userId);
+
+            if (user == null)
+                throw new Exception("User not found");
+
+            user.PasswordHash = newPasswordHash;
+            user.UpdatedAt = DateTime.UtcNow;
+
             await _context.SaveChangesAsync();
         }
     }

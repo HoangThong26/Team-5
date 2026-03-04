@@ -15,5 +15,13 @@ namespace CapstoneProject.Application.Interface.IRepository
         Task UpdateUserStatusAsync(int userId, string newStatus);
         Task DeleteAsync(int userId);
         Task ChangeStatusAsync(int userId);
+
+        Task SaveChangesAsync();
+
+
+        Task<PasswordResetToken?> GetValidOtpByUserAsync(int userId, string otp);
+        Task MarkOtpUsedAsync(PasswordResetToken token);
+        Task RevokeAllRefreshTokensAsync(int userId);
+        Task ChangePasswordAsync(int userId, string newPasswordHash);
     }
 }

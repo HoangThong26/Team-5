@@ -37,6 +37,8 @@ namespace CapstoneProject.API.Controllers
             try
             {
                 var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+
+                //var userIdClaim = 10;
                 if (userIdClaim == null) return Unauthorized();
 
                 int userId = int.Parse(userIdClaim.Value);
@@ -48,6 +50,43 @@ namespace CapstoneProject.API.Controllers
             {
                 return BadRequest(new { message = ex.Message });
             }
+        }
+
+
+        [HttpPut("update-password-profile")]
+        public async Task<IActionResult> UpdatePasswordProfile(
+    UpdatePasswordProfileRequest request)
+        {
+            try
+            {
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+                if (userIdClaim == null)
+                    return Unauthorized();
+
+                int userId = int.Parse(userIdClaim.Value);
+
+                //int userId = 1;
+
+                await _userService.UpdatePasswordProfileAsync(userId, request);
+
+                return Ok(new { message = "Password updated successfully." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+
+        [Authorize]
+        [HttpPost("send-otp-change-password")]
+        public async Task<IActionResult> SendOtpChangePassword()
+        {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
+            await _userService.SendOtpForChangePasswordAsync(userId);
+
+            return Ok("OTP sent to your email.");
         }
 
 
