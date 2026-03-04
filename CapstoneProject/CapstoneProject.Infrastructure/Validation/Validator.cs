@@ -55,9 +55,6 @@ namespace CapstoneProject.Infrastructure.Validation
                 .Matches(@"^(03|05|07|08|09|01[2|6|8|9])([0-9]{8})$")
                 .WithMessage("Invalid Vietnamese phone number format.")
                 .When(x => !string.IsNullOrEmpty(x.Phone));
-            RuleFor(x => x.AvatarUrl)
-                .Must(uri => string.IsNullOrEmpty(uri) || Uri.TryCreate(uri, UriKind.Absolute, out _))
-                .WithMessage("Invalid Avatar URL format.");
         }
     }
 }

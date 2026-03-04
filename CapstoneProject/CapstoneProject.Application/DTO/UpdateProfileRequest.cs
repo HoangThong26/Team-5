@@ -13,7 +13,6 @@ namespace CapstoneProject.Application.DTO
         [StringLength(20)]
         public string? Phone { get; set; }
 
-        [StringLength(500)]
         public string? AvatarUrl { get; set; }
     }
 }
