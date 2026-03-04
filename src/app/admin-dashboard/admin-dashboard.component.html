@@ -1,0 +1,117 @@
+<div class="admin-bg">
+  <div class="admin-container">
+
+    <div class="admin-header">
+      <div class="admin-icon">
+        <i class="fas fa-shield-halved"></i>
+      </div>
+      <h2>Quản trị hệ thống</h2>
+      <p class="admin-subtitle">Admin Dashboard</p>
+    </div>
+
+    @if (successMessage) {
+      <div class="alert alert-success">
+        <i class="fas fa-check-circle"></i> {{ successMessage }}
+      </div>
+    }
+
+    @if (errorMessage) {
+      <div class="alert alert-error">
+        <i class="fas fa-exclamation-circle"></i> {{ errorMessage }}
+      </div>
+    }
+
+    <!-- Action buttons -->
+    <div class="action-bar">
+      <button class="action-btn create-btn" (click)="toggleCreateForm()">
+        <i class="fas fa-user-plus"></i>
+        {{ showCreateForm ? 'Đóng' : 'Tạo người dùng' }}
+      </button>
+      <button class="action-btn refresh-btn" (click)="loadUsers()">
+        <i class="fas fa-sync-alt"></i> Làm mới
+      </button>
+      <button class="action-btn logout-btn" (click)="logout()">
+        <i class="fas fa-sign-out-alt"></i> Đăng xuất
+      </button>
+    </div>
+
+    <!-- Create user form -->
+    @if (showCreateForm) {
+      <div class="create-form">
+        <h3><i class="fas fa-user-plus"></i> Tạo người dùng mới</h3>
+        <form (ngSubmit)="createUser()" #createForm="ngForm">
+          <div class="form-grid">
+            <div class="input-group">
+              <label>Email</label>
+              <input type="email" required [(ngModel)]="newEmail" name="newEmail" placeholder="email&#64;example.com" />
+            </div>
+            <div class="input-group">
+              <label>Họ và tên</label>
+              <input type="text" required [(ngModel)]="newFullName" name="newFullName" placeholder="Nguyễn Văn A" />
+            </div>
+            <div class="input-group">
+              <label>Số điện thoại</label>
+              <input type="tel" [(ngModel)]="newPhone" name="newPhone" placeholder="0912 345 678" />
+            </div>
+            <div class="input-group">
+              <label>Vai trò</label>
+              <select [(ngModel)]="newRole" name="newRole">
+                <option value="Student">Student</option>
+                <option value="Mentor">Mentor</option>
+                <option value="Admin">Admin</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label>Mật khẩu</label>
+              <input type="password" required [(ngModel)]="newPassword" name="newPassword" placeholder="••••••••" />
+            </div>
+          </div>
+          <button class="submit-btn" type="submit" [disabled]="createForm.invalid || isCreating">
+            @if (isCreating) {
+              <i class="fas fa-spinner fa-spin"></i> Đang tạo...
+            } @else {
+              <i class="fas fa-plus"></i> Tạo
+            }
+          </button>
+        </form>
+      </div>
+    }
+
+    <!-- Users table -->
+    <div class="users-section">
+      <h3><i class="fas fa-users"></i> Danh sách người dùng ({{ users.length }})</h3>
+
+      @if (isLoadingUsers) {
+        <div class="loading">
+          <i class="fas fa-spinner fa-spin"></i> Đang tải...
+        </div>
+      } @else {
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Email</th>
+                <th>Họ và tên</th>
+                <th>Vai trò</th>
+                <th>Trạng thái</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (user of users; track user.userId || user.id) {
+                <tr>
+                  <td>{{ user.userId || user.id }}</td>
+                  <td>{{ user.email }}</td>
+                  <td>{{ user.fullName }}</td>
+                  <td><span class="role-badge">{{ user.role }}</span></td>
+                  <td><span class="status-badge" [class.active]="user.status === 'Active'" [class.inactive]="user.status !== 'Active'">{{ user.status }}</span></td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+
+  </div>
+</div>

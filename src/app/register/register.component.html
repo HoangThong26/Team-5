@@ -1,0 +1,85 @@
+<div class="register-bg">
+  <div class="register-container">
+
+    <div class="register-header">
+      <div class="register-icon">
+        <i class="fas fa-user-plus"></i>
+      </div>
+      <h2>Tạo tài khoản mới</h2>
+      <p class="register-subtitle">Đăng ký để bắt đầu</p>
+    </div>
+
+    @if (successMessage) {
+      <div class="alert alert-success">
+        <i class="fas fa-check-circle"></i> {{ successMessage }}
+      </div>
+    }
+
+    @if (errorMessage) {
+      <div class="alert alert-error">
+        <i class="fas fa-exclamation-circle"></i> {{ errorMessage }}
+      </div>
+    }
+
+    <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
+
+      <div class="input-group">
+        <label><i class="fas fa-user"></i> Họ và tên</label>
+        <input
+          type="text"
+          required
+          [(ngModel)]="fullName"
+          name="fullName"
+          placeholder="Nguyễn Văn A"
+        />
+      </div>
+
+      <div class="input-group">
+        <label><i class="fas fa-envelope"></i> Email</label>
+        <input
+          type="email"
+          required
+          [(ngModel)]="email"
+          name="email"
+          placeholder="example&#64;email.com"
+        />
+      </div>
+
+      <div class="input-group">
+        <label><i class="fas fa-lock"></i> Mật khẩu</label>
+        <input
+          type="password"
+          required
+          minlength="6"
+          [(ngModel)]="password"
+          name="password"
+          placeholder="••••••••"
+        />
+      </div>
+
+      <div class="input-group">
+        <label><i class="fas fa-phone"></i> Số điện thoại</label>
+        <input
+          type="tel"
+          [(ngModel)]="phone"
+          name="phone"
+          placeholder="0912 345 678"
+        />
+      </div>
+
+      <button class="register-btn" type="submit" [disabled]="isLoading">
+        @if (isLoading) {
+          <i class="fas fa-spinner fa-spin"></i> Đang xử lý...
+        } @else {
+          <i class="fas fa-user-plus"></i> Đăng ký
+        }
+      </button>
+
+    </form>
+
+    <div class="login-link">
+      Đã có tài khoản? <a routerLink="/login">Đăng nhập</a>
+    </div>
+
+  </div>
+</div>

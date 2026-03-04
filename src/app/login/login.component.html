@@ -1,0 +1,67 @@
+<div class="login-bg">
+  <div class="login-container">
+
+    <div class="login-header">
+      <div class="login-icon">
+        <i class="fas fa-user-circle"></i>
+      </div>
+      <h2>Chào mừng trở lại</h2>
+      <p class="login-subtitle">Đăng nhập để tiếp tục</p>
+    </div>
+
+    @if (errorMessage) {
+      <div class="alert alert-error">
+        <i class="fas fa-exclamation-circle"></i> {{ errorMessage }}
+      </div>
+    }
+
+    <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+
+      <div class="input-group">
+        <label><i class="fas fa-envelope"></i> Email</label>
+        <input
+          type="email"
+          required
+          [(ngModel)]="email"
+          name="email"
+          placeholder="example&#64;email.com"
+        />
+      </div>
+
+      <div class="input-group">
+        <label><i class="fas fa-lock"></i> Mật khẩu</label>
+        <input
+          type="password"
+          required
+          [(ngModel)]="password"
+          name="password"
+          placeholder="••••••••"
+        />
+      </div>
+
+      <div class="login-options">
+        <label class="remember-me">
+          <input type="checkbox" /> Ghi nhớ đăng nhập
+        </label>
+      </div>
+
+      <button class="sign-in-btn" type="submit" [disabled]="loginForm.invalid || isLoading">
+        @if (isLoading) {
+          <i class="fas fa-spinner fa-spin"></i> Đang xử lý...
+        } @else {
+          <i class="fas fa-sign-in-alt"></i> Đăng nhập
+        }
+      </button>
+
+    </form>
+
+    <div class="forgot-password">
+      <a routerLink="/forgot-password">Quên mật khẩu?</a>
+    </div>
+
+    <div class="register-link">
+      Chưa có tài khoản? <a routerLink="/register">Đăng ký ngay</a>
+    </div>
+
+  </div>
+</div>

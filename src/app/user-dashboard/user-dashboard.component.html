@@ -1,0 +1,373 @@
+<div class="dashboard-layout" [class.sidebar-collapsed]="sidebarCollapsed">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="avatar-circle">
+        @if (profile?.avatarUrl) {
+          <img [src]="profile!.avatarUrl" alt="Avatar" class="avatar-img" />
+        } @else {
+          <span class="avatar-initials">{{ getInitials() }}</span>
+        }
+      </div>
+      @if (!sidebarCollapsed) {
+        <p class="sidebar-name">{{ profile?.fullName || 'Người dùng' }}</p>
+        <span class="sidebar-role">{{ profile?.roleName || 'Student' }}</span>
+      }
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-item" [class.active]="activeTab === 'overview'" (click)="switchTab('overview')">
+        <i class="fas fa-th-large"></i>
+        @if (!sidebarCollapsed) { <span>Tổng quan</span> }
+      </button>
+      <button class="nav-item" [class.active]="activeTab === 'profile'" (click)="switchTab('profile')">
+        <i class="fas fa-user"></i>
+        @if (!sidebarCollapsed) { <span>Hồ sơ</span> }
+      </button>
+      <button class="nav-item" [class.active]="activeTab === 'password'" (click)="switchTab('password')">
+        <i class="fas fa-lock"></i>
+        @if (!sidebarCollapsed) { <span>Đổi mật khẩu</span> }
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="nav-item logout-item" (click)="logout()">
+        <i class="fas fa-sign-out-alt"></i>
+        @if (!sidebarCollapsed) { <span>Đăng xuất</span> }
+      </button>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="main-content">
+
+    <!-- Topbar -->
+    <div class="topbar">
+      <button class="toggle-sidebar-btn" (click)="toggleSidebar()">
+        <i class="fas" [class.fa-bars]="sidebarCollapsed" [class.fa-chevron-left]="!sidebarCollapsed"></i>
+      </button>
+      <h1 class="page-title">
+        @switch (activeTab) {
+          @case ('overview') { Tổng quan }
+          @case ('profile') { Hồ sơ cá nhân }
+          @case ('password') { Đổi mật khẩu }
+        }
+      </h1>
+    </div>
+
+    <!-- Alerts -->
+    @if (successMessage) {
+      <div class="alert alert-success">
+        <i class="fas fa-check-circle"></i>
+        <span>{{ successMessage }}</span>
+        <button class="alert-close" (click)="successMessage = ''"><i class="fas fa-times"></i></button>
+      </div>
+    }
+    @if (errorMessage) {
+      <div class="alert alert-error">
+        <i class="fas fa-exclamation-circle"></i>
+        <span>{{ errorMessage }}</span>
+        <button class="alert-close" (click)="errorMessage = ''"><i class="fas fa-times"></i></button>
+      </div>
+    }
+
+    <!-- Loading -->
+    @if (isLoading && !profile) {
+      <div class="loading-screen">
+        <div class="spinner"></div>
+        <p>Đang tải dữ liệu...</p>
+      </div>
+    }
+
+    <!-- Error fallback khi không load được profile -->
+    @if (!isLoading && !profile && errorMessage) {
+      <div class="loading-screen">
+        <i class="fas fa-exclamation-triangle" style="font-size: 2.5rem; color: #f87171;"></i>
+        <p>{{ errorMessage }}</p>
+        <button class="btn btn-primary" (click)="loadProfile()">
+          <i class="fas fa-refresh"></i> Thử lại
+        </button>
+      </div>
+    }
+
+    <!-- ===== OVERVIEW TAB ===== -->
+    @if (activeTab === 'overview' && profile) {
+      <div class="overview-content">
+
+        <!-- Welcome Card -->
+        <div class="welcome-card">
+          <div class="welcome-text">
+            <h2>Xin chào, {{ profile.fullName }}! 👋</h2>
+            <p>Chào mừng bạn trở lại hệ thống quản lý đồ án tốt nghiệp.</p>
+          </div>
+          <i class="fas fa-graduation-cap welcome-icon"></i>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon blue">
+              <i class="fas fa-envelope"></i>
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Email</span>
+              <span class="stat-value">{{ profile.email }}</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon green">
+              <i class="fas fa-user-tag"></i>
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Vai trò</span>
+              <span class="stat-value">{{ profile.roleName || 'Student' }}</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon purple">
+              <i class="fas fa-phone"></i>
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Số điện thoại</span>
+              <span class="stat-value">{{ profile.phone || 'Chưa cập nhật' }}</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon red">
+              <i class="fas fa-circle-check"></i>
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Trạng thái</span>
+              <span class="stat-value status-active">Đang hoạt động</span>
+            </div>
+          </div>
+        </div>
+
+     
+        
+
+      </div>
+    }
+
+    <!-- ===== PROFILE TAB ===== -->
+    @if (activeTab === 'profile' && profile) {
+      <div class="profile-content">
+        <div class="profile-card">
+
+          <!-- Profile Card Header -->
+          <div class="profile-card-header">
+            <div class="profile-avatar-large">
+              @if (profile.avatarUrl) {
+                <img [src]="profile.avatarUrl" alt="Avatar" />
+              } @else {
+                <span>{{ getInitials() }}</span>
+              }
+            </div>
+            <div class="profile-card-info">
+              <h2>{{ profile.fullName }}</h2>
+              <p>{{ profile.email }}</p>
+              <span class="role-badge">{{ profile.roleName || 'Student' }}</span>
+            </div>
+            <button class="edit-profile-btn" (click)="toggleEdit()">
+              <i class="fas" [class.fa-pen]="!editMode" [class.fa-times]="editMode"></i>
+              {{ editMode ? 'Hủy' : 'Chỉnh sửa' }}
+            </button>
+          </div>
+
+          <!-- Profile View Mode -->
+          @if (!editMode) {
+            <div class="profile-details">
+              <div class="detail-row">
+                <div class="detail-icon"><i class="fas fa-user"></i></div>
+                <div class="detail-content">
+                  <span class="detail-label">Họ và tên</span>
+                  <span class="detail-value">{{ profile.fullName }}</span>
+                </div>
+              </div>
+              <div class="detail-row">
+                <div class="detail-icon"><i class="fas fa-envelope"></i></div>
+                <div class="detail-content">
+                  <span class="detail-label">Email</span>
+                  <span class="detail-value">{{ profile.email }}</span>
+                </div>
+              </div>
+              <div class="detail-row">
+                <div class="detail-icon"><i class="fas fa-phone"></i></div>
+                <div class="detail-content">
+                  <span class="detail-label">Số điện thoại</span>
+                  <span class="detail-value">{{ profile.phone || 'Chưa cập nhật' }}</span>
+                </div>
+              </div>
+              <div class="detail-row">
+                <div class="detail-icon"><i class="fas fa-user-tag"></i></div>
+                <div class="detail-content">
+                  <span class="detail-label">Vai trò</span>
+                  <span class="detail-value">{{ profile.roleName || 'Student' }}</span>
+                </div>
+              </div>
+              <div class="detail-row">
+                <div class="detail-icon"><i class="fas fa-circle-check"></i></div>
+                <div class="detail-content">
+                  <span class="detail-label">Trạng thái</span>
+                  <span class="detail-value status-active">Đang hoạt động</span>
+                </div>
+              </div>
+            </div>
+          }
+
+          <!-- Profile Edit Mode -->
+          @if (editMode) {
+            <div class="edit-form">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label><i class="fas fa-user"></i>Họ và tên</label>
+                  <input type="text" [(ngModel)]="fullName" placeholder="Nhập họ và tên" />
+                </div>
+                <div class="form-group">
+                  <label><i class="fas fa-phone"></i>Số điện thoại</label>
+                  <input type="text" [(ngModel)]="phone" placeholder="Nhập số điện thoại" />
+                </div>
+                <div class="form-group full-width">
+                  <label><i class="fas fa-image"></i>Ảnh đại diện</label>
+                  <div class="avatar-upload-area">
+                    <div class="avatar-preview-box">
+                      @if (avatarPreview) {
+                        <img [src]="avatarPreview" alt="Preview" class="avatar-preview-img" />
+                        <button class="avatar-remove-btn" type="button" (click)="removeAvatar()">
+                          <i class="fas fa-times"></i>
+                        </button>
+                      } @else {
+                        <div class="avatar-placeholder">
+                          <i class="fas fa-camera"></i>
+                          <span>Chưa có ảnh</span>
+                        </div>
+                      }
+                    </div>
+                    <div class="avatar-upload-actions">
+                      <label class="btn btn-outline avatar-upload-btn">
+                        <i class="fas fa-upload"></i> Chọn ảnh từ máy
+                        <input type="file" accept="image/*" (change)="onAvatarSelected($event)" hidden />
+                      </label>
+                      <small class="avatar-hint">Định dạng: JPG, PNG, GIF. Tối đa 2MB.</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-actions">
+                <button class="btn btn-primary" (click)="saveProfile()" [disabled]="isLoading">
+                  @if (isLoading) {
+                    <i class="fas fa-spinner fa-spin"></i> Đang lưu...
+                  } @else {
+                    <i class="fas fa-check"></i> Lưu thay đổi
+                  }
+                </button>
+                <button class="btn btn-secondary" (click)="toggleEdit()">
+                  <i class="fas fa-times"></i> Hủy
+                </button>
+              </div>
+            </div>
+          }
+
+        </div>
+      </div>
+    }
+
+    <!-- ===== PASSWORD TAB ===== -->
+    @if (activeTab === 'password') {
+      <div class="password-content">
+        <div class="password-card">
+          <div class="card-header-icon">
+            <i class="fas fa-shield-halved"></i>
+          </div>
+          <h2>Đổi mật khẩu</h2>
+          <p class="card-desc">Cập nhật mật khẩu để bảo vệ tài khoản của bạn.</p>
+
+          <div class="password-form">
+            <!-- Current Password -->
+            <div class="form-group">
+              <label><i class="fas fa-lock"></i>Mật khẩu hiện tại</label>
+              <div class="password-input-wrapper">
+                <input
+                  [type]="showCurrentPassword ? 'text' : 'password'"
+                  [(ngModel)]="currentPassword"
+                  placeholder="Nhập mật khẩu hiện tại"
+                />
+                <button class="toggle-pw-btn" (click)="togglePasswordVisibility('current')">
+                  <i class="fas" [class.fa-eye]="!showCurrentPassword" [class.fa-eye-slash]="showCurrentPassword"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- New Password -->
+            <div class="form-group">
+              <label><i class="fas fa-key"></i>Mật khẩu mới</label>
+              <div class="password-input-wrapper">
+                <input
+                  [type]="showNewPassword ? 'text' : 'password'"
+                  [(ngModel)]="newPassword"
+                  placeholder="Nhập mật khẩu mới (ít nhất 6 ký tự)"
+                />
+                <button class="toggle-pw-btn" (click)="togglePasswordVisibility('new')">
+                  <i class="fas" [class.fa-eye]="!showNewPassword" [class.fa-eye-slash]="showNewPassword"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="form-group">
+              <label><i class="fas fa-check-double"></i>Xác nhận mật khẩu</label>
+              <div class="password-input-wrapper">
+                <input
+                  [type]="showConfirmPassword ? 'text' : 'password'"
+                  [(ngModel)]="confirmPassword"
+                  placeholder="Nhập lại mật khẩu mới"
+                />
+                <button class="toggle-pw-btn" (click)="togglePasswordVisibility('confirm')">
+                  <i class="fas" [class.fa-eye]="!showConfirmPassword" [class.fa-eye-slash]="showConfirmPassword"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- OTP -->
+            <div class="form-group">
+              <label><i class="fas fa-key"></i>Mã OTP</label>
+              <div class="password-input-wrapper">
+                <input
+                  type="text"
+                  [(ngModel)]="otp"
+                  placeholder="Nhập mã OTP từ email"
+                  maxlength="6"
+                />
+                <button class="toggle-pw-btn" type="button" (click)="sendOtp()" [disabled]="isSendingOtp">
+                  @if (isSendingOtp) {
+                    <i class="fas fa-spinner fa-spin"></i>
+                  } @else {
+                    <i class="fas fa-paper-plane"></i>
+                  }
+                </button>
+              </div>
+              @if (!otpSent) {
+                <small class="otp-hint">Nhấn <i class="fas fa-paper-plane"></i> để gửi mã OTP về email</small>
+              } @else {
+                <small class="otp-hint otp-sent">Mã OTP đã được gửi đến email của bạn (có hiệu lực 5 phút)</small>
+              }
+            </div>
+
+            <button class="btn btn-primary full-width-btn" (click)="changePassword()" [disabled]="isChangingPassword">
+              @if (isChangingPassword) {
+                <i class="fas fa-spinner fa-spin"></i> Đang xử lý...
+              } @else {
+                <i class="fas fa-shield-halved"></i> Đổi mật khẩu
+              }
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+
+  </main>
+</div>
