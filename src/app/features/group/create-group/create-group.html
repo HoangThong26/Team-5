@@ -1,0 +1,70 @@
+<div class="page">
+  <div class="card">
+
+    <div class="card-header">
+      <h2>Create New Group</h2>
+      <p>Fill in the information below to create your team</p>
+    </div>
+
+    @if (isInGroup) {
+      <div class="message error">
+        You are already in a group. You cannot create another one.
+      </div>
+    }
+
+    <form [formGroup]="groupForm" (ngSubmit)="onSubmit()">
+
+      <!-- Group Name -->
+      <div class="form-group">
+        <label>Group Name</label>
+        <input
+          type="text"
+          formControlName="groupName"
+          placeholder="Enter group name..."
+        />
+
+        @if (groupForm.get('groupName')?.touched &&
+             groupForm.get('groupName')?.invalid) {
+          <small class="error-text">
+            Group name must be at least 3 characters
+          </small>
+        }
+      </div>
+
+      <!-- Target Members -->
+      <div class="form-group">
+        <label>Target Members (2 - 5)</label>
+        <input
+          type="number"
+          min="2"
+          max="5"
+          formControlName="targetMembers"
+        />
+      </div>
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        class="btn-primary"
+        [disabled]="groupForm.invalid || loading || isInGroup"
+      >
+        {{ loading ? 'Creating...' : 'Create Group' }}
+      </button>
+
+      <!-- Success -->
+      @if (successMessage) {
+        <div class="message success">
+          {{ successMessage }}
+        </div>
+      }
+
+      <!-- Error -->
+      @if (errorMessage) {
+        <div class="message error">
+          {{ errorMessage }}
+        </div>
+      }
+
+    </form>
+  </div>
+</div>

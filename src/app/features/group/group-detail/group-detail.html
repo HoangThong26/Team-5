@@ -1,0 +1,55 @@
+<div class="group-container">
+
+  @if (loading) {
+    <div class="loading">Loading group information...</div>
+  }
+
+  @if (error) {
+    <div class="error-box">{{ error }}</div>
+  }
+
+  @if (group) {
+
+    <!-- HEADER -->
+    <div class="group-header">
+      <div>
+        <h2>{{ group.groupName }}</h2>
+        <p class="status">
+          <span class="status-badge">
+            {{ group.status }}
+          </span>
+        </p>
+      </div>
+
+      <div class="created-date">
+        Created: {{ group.createdAt | date:'mediumDate' }}
+      </div>
+    </div>
+
+    <!-- MEMBERS CARD -->
+    <div class="card">
+      <h3>Group Members</h3>
+
+      <div class="member-list">
+        @for (member of group.members; track member.userId) {
+          <div class="member-item">
+            <div class="avatar">
+              {{ member.userId }}
+            </div>
+
+            <div class="member-info">
+              <div class="member-role">
+                {{ member.roleInGroup }}
+              </div>
+              <div class="member-joined">
+                Joined: {{ member.joinedAt | date:'shortDate' }}
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+  }
+
+</div>
