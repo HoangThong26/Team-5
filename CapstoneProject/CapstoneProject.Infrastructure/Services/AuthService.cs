@@ -42,7 +42,7 @@ namespace CapstoneProject.Infrastructure.Services
             if (existingUser != null)
             {
                 if (existingUser.EmailVerified == true)
-                    throw new Exception("Email already exists!");
+                    return "Email already exists!";
 
                 existingUser.VerifyToken = Guid.NewGuid().ToString();
                 existingUser.VerifyTokenExpire = DateTime.UtcNow.AddHours(24);
@@ -162,10 +162,10 @@ namespace CapstoneProject.Infrastructure.Services
         }
 
 
-        public async Task<TokenResponse> LoginAsync(LoginRequest request, string ipAddress)
+        public async Task<LoginResponse> LoginAsync(LoginRequest request, string ipAddress)
         {
             var user = await _authRepository.GetByEmailAsync(request.Email);
-            bool isSuccess = false;
+
             async Task LogHistory(int? uid, bool success)
             {
                 var history = new LoginHistory
@@ -177,45 +177,72 @@ namespace CapstoneProject.Infrastructure.Services
                 };
                 await _authRepository.SaveLoginHistoryAsync(history);
             }
+
             if (user == null)
             {
                 await LogHistory(null, false);
-                throw new Exception("Invalid email or password.");
+                return new LoginResponse
+                {
+                    IsSuccess = false,
+                    Message = "Invalid email or password."
+                };
             }
 
             if (user.LockUntil.HasValue && user.LockUntil > DateTime.UtcNow)
             {
                 await LogHistory(user.UserId, false);
                 var remainingMinutes = Math.Ceiling((user.LockUntil.Value - DateTime.UtcNow).TotalMinutes);
-                throw new Exception($"Account is temporarily locked. Try again after {remainingMinutes} minutes.");
+
+                return new LoginResponse
+                {
+                    IsSuccess = false,
+                    Message = $"Account is temporarily locked. Try again after {remainingMinutes} minutes."
+                };
             }
+
             if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
             {
                 user.FailedLoginCount++;
                 if (user.FailedLoginCount >= 5)
                 {
-                    int lockMinutes = ((user.FailedLoginCount ?? 0) - 4) * 5;
+                    int lockMinutes =(int) (user.FailedLoginCount - 4) * 5;
                     user.LockUntil = DateTime.UtcNow.AddMinutes(lockMinutes);
                     user.Status = "Locked";
                 }
-                await _authRepository.UpdateAsync(user);
 
+                await _authRepository.UpdateAsync(user);
                 await LogHistory(user.UserId, false);
-                throw new Exception("Invalid email or password.");
+
+                return new LoginResponse
+                {
+                    IsSuccess = false,
+                    Message = "Invalid email or password."
+                };
             }
 
-            if (user.EmailVerified == false)
+            if (user.EmailVerified==false)
             {
                 await LogHistory(user.UserId, false);
-                throw new Exception("Email address is not verified.");
+                return new LoginResponse
+                {
+                    IsSuccess = false,
+                    Message = "Email address is not verified."
+                };
             }
+
             user.FailedLoginCount = 0;
             user.LockUntil = null;
             user.Status = "Active";
             await _authRepository.UpdateAsync(user);
 
             await LogHistory(user.UserId, true);
-            return await GenerateTokens(user);
+
+            return new LoginResponse
+            {
+                IsSuccess = true,
+                Message = "Login successful.",
+                Tokens = await GenerateTokens(user)
+            };
         }
 
         public async Task<TokenResponse> RefreshTokenAsync(string refreshToken)

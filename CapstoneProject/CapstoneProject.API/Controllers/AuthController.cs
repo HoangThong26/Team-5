@@ -27,24 +27,25 @@ namespace CapstoneProject.API.Controllers
         public async Task<IActionResult> Verify(string token)
         {
             var result = await _authService.VerifyAsync(token);
-            return Ok(result);
+
+            if (result != "Email verified successfully!")
+                return BadRequest(result);
+
+            return Redirect("http://localhost:4200/login");
         }
 
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequest request)
+        public async Task<IActionResult> Login(LoginRequest request)
         {
-            try
-            {
-                string ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "Unknown";
-                var result = await _authService.LoginAsync(request,ipAddress);
+            var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
 
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = await _authService.LoginAsync(request, ipAddress);
+
+            if (!result.IsSuccess)
+                return BadRequest(result);
+
+            return Ok(result);
         }
 
         [HttpPost("refresh-token")]
@@ -119,6 +120,9 @@ namespace CapstoneProject.API.Controllers
                 });
             }
         }
+
+
+
 
     }
 }

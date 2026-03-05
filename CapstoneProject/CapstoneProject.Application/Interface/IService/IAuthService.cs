@@ -12,7 +12,7 @@ namespace CapstoneProject.Application.Interface.IService
         Task<string> VerifyAsync(string token);
         Task<TokenResponse> RefreshTokenAsync(string refreshToken);
         Task<bool> LogoutAsync(string refreshToken);
-        Task<TokenResponse> LoginAsync(LoginRequest request, string ipAddress);
+        Task<LoginResponse> LoginAsync(LoginRequest request, string ipAddress);
         Task ForgotPasswordAsync(string email);
         Task ResetPasswordAsync(ResetPasswordRequestDto request);
 
