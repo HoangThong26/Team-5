@@ -56,11 +56,11 @@ namespace CapstoneProject.Infrastructure.Repostitory
                 // 1. Lấy thông tin lời mời
                 var invite = await _context.GroupInvitations.FindAsync(invitationId);
                 if (invite == null || invite.Status != "Pending")
-                    return "Lời mời không hợp lệ hoặc đã được xử lý.";
+                    return "The invitation is invalid or has already been processed.";
 
                 // 2. Kiểm tra xem User này đã có nhóm khác chưa (Double check an toàn)
                 bool alreadyInGroup = await _context.GroupMembers.AnyAsync(m => m.UserId == invite.ReceiverId);
-                if (alreadyInGroup) return "Bạn đã là thành viên của một nhóm khác.";
+                if (alreadyInGroup) return "You are already a member of another group.";
 
                 // 3. Thêm thành viên mới vào GroupMembers
                 var newMember = new GroupMember
@@ -105,7 +105,7 @@ namespace CapstoneProject.Infrastructure.Repostitory
                                 AssignedAt = DateTime.Now
                             };
                             await _context.MentorAssignments.AddAsync(assignment);
-                            mentorNotification = " Nhóm đã đạt đủ 4 thành viên, Mentor đã được gán tự động!";
+                            mentorNotification = "The group has reached 4 members, and a mentor has been assigned automatically!";
                         }
                     }
                 }
@@ -113,7 +113,7 @@ namespace CapstoneProject.Infrastructure.Repostitory
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
 
-                return $"Chấp nhận lời mời thành công!{mentorNotification}";
+                return $"Accepted the invitation successfully!{mentorNotification}";
             }
             catch (Exception)
             {
