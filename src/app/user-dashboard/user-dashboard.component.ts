@@ -101,7 +101,7 @@ export class UserDashboardComponent implements OnInit {
       },
       error: (err) => {
         this.isLoading = false;
-        this.errorMessage = 'Không thể tải thông tin hồ sơ.';
+        this.errorMessage = 'Unable to load profile.';
       }
     });
   }
@@ -127,19 +127,19 @@ export class UserDashboardComponent implements OnInit {
     const file = input.files[0];
 
     if (!file.type.startsWith('image/')) {
-      this.errorMessage = 'Vui lòng chọn file ảnh (jpg, png, gif,...)';
+      this.errorMessage = 'Please select an image file (jpg, png, gif, ...).';
       return;
     }
 
     if (file.size > 2 * 1024 * 1024) {
-      this.errorMessage = 'Ảnh không được vượt quá 2MB.';
+      this.errorMessage = 'Image must not exceed 2MB.';
       return;
     }
 
     this.selectedAvatarFile = file;
     this.errorMessage = '';
 
-    // Resize ảnh xuống nhỏ để base64 nằm trong giới hạn DB (500 ký tự)
+    // Resize image to fit DB base64 limit (500 chars)
     this.resizeImage(file, 64, 64).then((dataUrl) => {
       this.avatarPreview = dataUrl;
       this.avatarUrl = dataUrl;
@@ -192,7 +192,7 @@ export class UserDashboardComponent implements OnInit {
     this.errorMessage = '';
 
     if (!this.fullName.trim()) {
-      this.errorMessage = 'Vui lòng nhập họ và tên.';
+      this.errorMessage = 'Please enter your full name.';
       return;
     }
 
@@ -205,13 +205,13 @@ export class UserDashboardComponent implements OnInit {
     }).subscribe({
       next: (res: any) => {
         this.isLoading = false;
-        this.successMessage = res?.message || 'Cập nhật hồ sơ thành công!';
+        this.successMessage = res?.message || 'Profile updated successfully!';
         this.editMode = false;
         this.loadProfile();
       },
       error: (err) => {
         this.isLoading = false;
-        this.errorMessage = this.extractError(err, 'Cập nhật thất bại!');
+        this.errorMessage = this.extractError(err, 'Update failed!');
       }
     });
   }
@@ -226,11 +226,11 @@ export class UserDashboardComponent implements OnInit {
       next: (res: any) => {
         this.isSendingOtp = false;
         this.otpSent = true;
-        this.successMessage = res || 'Mã OTP đã được gửi đến email của bạn.';
+        this.successMessage = res || 'OTP has been sent to your email.';
       },
       error: (err) => {
         this.isSendingOtp = false;
-        this.errorMessage = this.extractError(err, 'Gửi OTP thất bại!');
+        this.errorMessage = this.extractError(err, 'Failed to send OTP!');
       }
     });
   }
@@ -240,22 +240,22 @@ export class UserDashboardComponent implements OnInit {
     this.errorMessage = '';
 
     if (!this.currentPassword || !this.newPassword || !this.confirmPassword) {
-      this.errorMessage = 'Vui lòng điền đầy đủ thông tin.';
+      this.errorMessage = 'Please fill in all fields.';
       return;
     }
 
     if (this.newPassword.length < 6) {
-      this.errorMessage = 'Mật khẩu mới phải có ít nhất 6 ký tự.';
+      this.errorMessage = 'New password must be at least 6 characters.';
       return;
     }
 
     if (this.newPassword !== this.confirmPassword) {
-      this.errorMessage = 'Mật khẩu xác nhận không khớp.';
+      this.errorMessage = 'Passwords do not match.';
       return;
     }
 
     if (!this.otp.trim()) {
-      this.errorMessage = 'Vui lòng nhập mã OTP.';
+      this.errorMessage = 'Please enter the OTP code.';
       return;
     }
 
@@ -268,7 +268,7 @@ export class UserDashboardComponent implements OnInit {
     }).subscribe({
       next: (res: any) => {
         this.isChangingPassword = false;
-        this.successMessage = res?.message || 'Đổi mật khẩu thành công!';
+        this.successMessage = res?.message || 'Password changed successfully!';
         this.currentPassword = '';
         this.newPassword = '';
         this.confirmPassword = '';
@@ -277,7 +277,7 @@ export class UserDashboardComponent implements OnInit {
       },
       error: (err) => {
         this.isChangingPassword = false;
-        this.errorMessage = this.extractError(err, 'Đổi mật khẩu thất bại!');
+        this.errorMessage = this.extractError(err, 'Failed to change password!');
       }
     });
   }

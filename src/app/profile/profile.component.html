@@ -5,7 +5,7 @@
       <div class="profile-icon">
         <i class="fas fa-user-circle"></i>
       </div>
-      <h2>Hồ sơ cá nhân</h2>
+      <h2>Profile</h2>
       <p class="profile-subtitle">{{ getCurrentUser()?.role }}</p>
     </div>
 
@@ -23,7 +23,7 @@
 
     @if (isLoading && !profile) {
       <div class="loading">
-        <i class="fas fa-spinner fa-spin"></i> Đang tải...
+        <i class="fas fa-spinner fa-spin"></i> Loading...
       </div>
     }
 
@@ -35,35 +35,35 @@
             <span class="info-value">{{ profile.email }}</span>
           </div>
           <div class="info-row">
-            <span class="info-label"><i class="fas fa-user"></i> Họ và tên</span>
+            <span class="info-label"><i class="fas fa-user"></i> Full Name</span>
             <span class="info-value">{{ profile.fullName }}</span>
           </div>
           <div class="info-row">
-            <span class="info-label"><i class="fas fa-phone"></i> Điện thoại</span>
-            <span class="info-value">{{ profile.phone || 'Chưa cập nhật' }}</span>
+            <span class="info-label"><i class="fas fa-phone"></i> Phone</span>
+            <span class="info-value">{{ profile.phone || 'Not updated' }}</span>
           </div>
           <div class="info-row">
-            <span class="info-label"><i class="fas fa-circle-info"></i> Trạng thái</span>
+            <span class="info-label"><i class="fas fa-circle-info"></i> Status</span>
             <span class="info-value status-badge">{{ profile.status || 'Active' }}</span>
           </div>
 
           <div class="btn-group">
             <button class="edit-btn" (click)="toggleEdit()">
-              <i class="fas fa-pen"></i> Chỉnh sửa
+              <i class="fas fa-pen"></i> Edit
             </button>
             <button class="logout-btn" (click)="logout()">
-              <i class="fas fa-sign-out-alt"></i> Đăng xuất
+              <i class="fas fa-sign-out-alt"></i> Logout
             </button>
           </div>
         </div>
       } @else {
         <form (ngSubmit)="saveProfile()" #profileForm="ngForm">
           <div class="input-group">
-            <label><i class="fas fa-user"></i> Họ và tên</label>
+            <label><i class="fas fa-user"></i> Full Name</label>
             <input type="text" required [(ngModel)]="fullName" name="fullName" />
           </div>
           <div class="input-group">
-            <label><i class="fas fa-phone"></i> Số điện thoại</label>
+            <label><i class="fas fa-phone"></i> Phone Number</label>
             <input type="tel" [(ngModel)]="phone" name="phone" />
           </div>
           <div class="input-group">
@@ -74,13 +74,13 @@
           <div class="btn-group">
             <button class="save-btn" type="submit" [disabled]="profileForm.invalid || isLoading">
               @if (isLoading) {
-                <i class="fas fa-spinner fa-spin"></i> Đang lưu...
+                <i class="fas fa-spinner fa-spin"></i> Saving...
               } @else {
-                <i class="fas fa-save"></i> Lưu
+                <i class="fas fa-save"></i> Save
               }
             </button>
             <button class="cancel-btn" type="button" (click)="toggleEdit()">
-              <i class="fas fa-times"></i> Hủy
+              <i class="fas fa-times"></i> Cancel
             </button>
           </div>
         </form>

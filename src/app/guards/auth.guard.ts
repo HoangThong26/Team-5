@@ -27,12 +27,12 @@ export const adminGuard: CanActivateFn = () => {
 
   const user = authService.getCurrentUser();
   
-  // LOG THỰC TẾ ĐỂ SOI LỖI
-  console.log('Dữ liệu User lấy từ LocalStorage:', user);
+  // Debug logging
+  console.log('User from LocalStorage:', user);
 
-  // Thử cho qua mọi trường hợp nếu có Token để test
+  // Allow access if token exists (for testing)
   if (authService.getAccessToken()) {
-      console.log('Có Token, tạm thời cho phép vào Admin để test...');
+      console.log('Token found, allowing Admin access for testing...');
       return true;
   }
 
@@ -40,7 +40,7 @@ export const adminGuard: CanActivateFn = () => {
   return false;
 };
 
-/** Guard ngăn user đã đăng nhập truy cập lại trang login/register */
+/** Guard to prevent logged-in users from accessing login/register pages */
 export const guestGuard: CanActivateFn = () => {
   const platformId = inject(PLATFORM_ID);
   if (!isPlatformBrowser(platformId)) return true;

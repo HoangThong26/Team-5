@@ -59,7 +59,7 @@ export class ProfileComponent implements OnInit {
       },
       error: (err) => {
         this.isLoading = false;
-        this.errorMessage = 'Không thể tải thông tin hồ sơ.';
+        this.errorMessage = 'Unable to load profile.';
       }
     });
   }
@@ -75,7 +75,7 @@ export class ProfileComponent implements OnInit {
     this.errorMessage = '';
 
     if (!this.fullName.trim()) {
-      this.errorMessage = 'Vui lòng nhập họ và tên.';
+      this.errorMessage = 'Please enter your full name.';
       return;
     }
 
@@ -88,13 +88,13 @@ export class ProfileComponent implements OnInit {
     }).subscribe({
       next: (res: any) => {
         this.isLoading = false;
-        this.successMessage = res?.message || 'Cập nhật hồ sơ thành công!';
+        this.successMessage = res?.message || 'Profile updated successfully!';
         this.editMode = false;
         this.loadProfile();
       },
       error: (err) => {
         this.isLoading = false;
-        this.errorMessage = this.extractError(err, 'Cập nhật thất bại!');
+        this.errorMessage = this.extractError(err, 'Update failed!');
       }
     });
   }

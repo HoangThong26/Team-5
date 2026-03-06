@@ -20,20 +20,35 @@ export class LoginComponent {
   constructor(private authService: AuthService, private router: Router) {}
 
   private extractError(err: any): string {
-    const error = err?.error;
-    // Backend trả về BadRequest(string) → plain text, HttpClient parse JSON thất bại
-    // Trong trường hợp đó err.status vẫn có, dùng status để trả message phù hợp
-    if (err?.status === 400 || err?.status === 401) {
-      if (typeof error === 'string') return error;
-      if (error?.errors) {
-        const messages = Object.values(error.errors).flat();
-        return (messages as string[]).join(' ');
-      }
-      if (error?.message && !(error instanceof Error)) return error.message;
-      if (error?.title) return error.title;
-      return 'Sai email hoặc mật khẩu!';
+    console.log('[Login Error]', err?.status, err?.error, err);
+
+    if (!err?.status || err.status === 0) {
+      return 'Unable to connect to server.';
     }
-    return 'Sai email hoặc mật khẩu!';
+
+    const error = err?.error;
+
+    let msg: string | undefined;
+    if (typeof error === 'string') {
+      msg = error;
+    } else if (error?.detail) {
+      msg = error.detail;
+    } else if (error?.message && !(error instanceof Error)) {
+      msg = error.message;
+    } else if (error?.title) {
+      msg = error.title;
+    }
+
+    if (error?.errors) {
+      const messages = Object.values(error.errors).flat();
+      return (messages as string[]).join(' ');
+    }
+
+    if (msg) {
+      return msg;
+    }
+
+    return 'Invalid email or password.';
   }
 
   onSubmit() {
@@ -53,7 +68,7 @@ export class LoginComponent {
         // Verify token was saved
         const savedUser = this.authService.getCurrentUser();
         if (!savedUser) {
-          this.errorMessage = 'Lỗi lưu phiên đăng nhập. Vui lòng thử lại.';
+          this.errorMessage = 'Failed to save session. Please try again.';
           return;
         }
 

@@ -45,19 +45,20 @@ export class RegisterComponent {
     this.errorMessage = '';
 
     if (!this.fullName.trim()) {
-      this.errorMessage = 'Vui lòng nhập họ và tên.';
+      this.errorMessage = 'Please enter your full name.';
       return;
     }
     if (this.fullName.trim().length < 2) {
-      this.errorMessage = 'Họ tên phải có 2 ký tự trở lên.';
+      this.errorMessage = 'Full name must be at least 2 characters.';
       return;
     }
     if (!this.email.trim()) {
-      this.errorMessage = 'Vui lòng nhập email.';
+      this.errorMessage = 'Please enter your email.';
       return;
     }
-    if (!this.password || this.password.length < 6) {
-      this.errorMessage = 'Mật khẩu phải có ít nhất 6 ký tự.';
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+    if (!this.password || !passwordRegex.test(this.password)) {
+      this.errorMessage = 'Password must be at least 8 characters, including 1 uppercase letter, 1 number, and 1 special character.';
       return;
     }
 
@@ -73,7 +74,7 @@ export class RegisterComponent {
     this.authService.register(request).subscribe({
       next: (res: any) => {
         this.isLoading = false;
-        this.successMessage = res?.message || res || 'Đăng ký thành công! Vui lòng kiểm tra email để xác minh.';
+        this.successMessage = res?.message || res || 'Registration successful! Please check your email to verify.';
         this.fullName = '';
         this.email = '';
         this.password = '';
@@ -81,7 +82,7 @@ export class RegisterComponent {
       },
       error: (err) => {
         this.isLoading = false;
-        this.errorMessage = this.extractError(err, 'Đăng ký thất bại! Vui lòng thử lại.');
+        this.errorMessage = this.extractError(err, 'Registration failed! Please try again.');
       }
     });
   }

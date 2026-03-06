@@ -36,7 +36,7 @@ export class ForgotPasswordComponent {
     this.errorMessage = '';
 
     if (!this.email.trim()) {
-      this.errorMessage = 'Vui lòng nhập email.';
+      this.errorMessage = 'Please enter your email.';
       return;
     }
 
@@ -45,11 +45,11 @@ export class ForgotPasswordComponent {
     this.authService.forgotPassword({ email: this.email }).subscribe({
       next: (res: any) => {
         this.isLoading = false;
-        this.successMessage = res?.message || 'OTP đã được gửi đến email của bạn!';
+        this.successMessage = res?.message || 'OTP has been sent to your email!';
       },
       error: (err) => {
         this.isLoading = false;
-        this.errorMessage = this.extractError(err, 'Gửi OTP thất bại! Vui lòng thử lại.');
+        this.errorMessage = this.extractError(err, 'Failed to send OTP! Please try again.');
       }
     });
   }

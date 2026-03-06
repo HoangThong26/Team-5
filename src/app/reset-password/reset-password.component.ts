@@ -39,19 +39,19 @@ export class ResetPasswordComponent {
     this.errorMessage = '';
 
     if (!this.email.trim()) {
-      this.errorMessage = 'Vui lòng nhập email.';
+      this.errorMessage = 'Please enter your email.';
       return;
     }
     if (!this.token.trim()) {
-      this.errorMessage = 'Vui lòng nhập mã OTP.';
+      this.errorMessage = 'Please enter the OTP code.';
       return;
     }
     if (!this.newPassword || this.newPassword.length < 6) {
-      this.errorMessage = 'Mật khẩu mới phải có ít nhất 6 ký tự.';
+      this.errorMessage = 'New password must be at least 6 characters.';
       return;
     }
     if (this.newPassword !== this.confirmPassword) {
-      this.errorMessage = 'Mật khẩu xác nhận không khớp.';
+      this.errorMessage = 'Passwords do not match.';
       return;
     }
 
@@ -64,12 +64,12 @@ export class ResetPasswordComponent {
     }).subscribe({
       next: (res: any) => {
         this.isLoading = false;
-        this.successMessage = res?.message || 'Đổi mật khẩu thành công!';
+        this.successMessage = res?.message || 'Password changed successfully!';
         setTimeout(() => this.router.navigate(['/login']), 2000);
       },
       error: (err) => {
         this.isLoading = false;
-        this.errorMessage = this.extractError(err, 'Đổi mật khẩu thất bại! Vui lòng thử lại.');
+        this.errorMessage = this.extractError(err, 'Failed to change password! Please try again.');
       }
     });
   }

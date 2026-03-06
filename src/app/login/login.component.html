@@ -5,8 +5,8 @@
       <div class="login-icon">
         <i class="fas fa-user-circle"></i>
       </div>
-      <h2>Chào mừng trở lại</h2>
-      <p class="login-subtitle">Đăng nhập để tiếp tục</p>
+      <h2>Welcome Back</h2>
+      <p class="login-subtitle">Sign in to continue</p>
     </div>
 
     @if (errorMessage) {
@@ -29,7 +29,7 @@
       </div>
 
       <div class="input-group">
-        <label><i class="fas fa-lock"></i> Mật khẩu</label>
+        <label><i class="fas fa-lock"></i> Password</label>
         <input
           type="password"
           required
@@ -41,26 +41,26 @@
 
       <div class="login-options">
         <label class="remember-me">
-          <input type="checkbox" /> Ghi nhớ đăng nhập
+          <input type="checkbox" /> Remember me
         </label>
       </div>
 
       <button class="sign-in-btn" type="submit" [disabled]="loginForm.invalid || isLoading">
         @if (isLoading) {
-          <i class="fas fa-spinner fa-spin"></i> Đang xử lý...
+          <i class="fas fa-spinner fa-spin"></i> Processing...
         } @else {
-          <i class="fas fa-sign-in-alt"></i> Đăng nhập
+          <i class="fas fa-sign-in-alt"></i> Sign In
         }
       </button>
 
     </form>
 
     <div class="forgot-password">
-      <a routerLink="/forgot-password">Quên mật khẩu?</a>
+      <a routerLink="/forgot-password">Forgot password?</a>
     </div>
 
     <div class="register-link">
-      Chưa có tài khoản? <a routerLink="/register">Đăng ký ngay</a>
+      Don't have an account? <a routerLink="/register">Register now</a>
     </div>
 
   </div>

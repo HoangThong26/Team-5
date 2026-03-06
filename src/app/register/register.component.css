@@ -161,6 +161,13 @@
   box-shadow: 0 0 0 3px rgba(255, 230, 0, 0.15);
 }
 
+.password-hint {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
 /* ===== Submit button ===== */
 .register-btn {
   width: 100%;

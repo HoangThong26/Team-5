@@ -24,11 +24,15 @@ export class AuthService {
 
   // ===== Auth endpoints =====
 
-  login(request: LoginRequest): Observable<TokenResponse> {
-    return this.http.post<TokenResponse>(`${this.apiUrl}/login`, request).pipe(
-      tap(res => this.saveToken(res))
-    );
-  }
+login(request: LoginRequest): Observable<any> {
+  return this.http.post<any>(`${this.apiUrl}/login`, request).pipe(
+    tap(res => {
+      if (res?.tokens) {
+        this.saveToken(res.tokens);
+      }
+    })
+  );
+}
 
   register(request: RegisterRequest): Observable<string> {
     return this.http.post(`${this.apiUrl}/register`, request, { responseType: 'text' });
@@ -70,14 +74,18 @@ saveToken(response: TokenResponse): void {
 
   localStorage.setItem('accessToken', response.accessToken);
   localStorage.setItem('refreshToken', response.refreshToken);
-  localStorage.setItem('user', JSON.stringify(response.user));
+
+  if (response.user && typeof response.user === 'object') {
+    localStorage.setItem('user', JSON.stringify(response.user));
+  } else {
+    localStorage.removeItem('user');
+  }
 
   try {
     const payload = JSON.parse(atob(response.accessToken.split('.')[1]));
-    const exp = payload.exp * 1000; // convert seconds → ms
+    const exp = payload.exp * 1000;
     localStorage.setItem('accessTokenExpiry', exp.toString());
   } catch {
-    console.error("Cannot decode access token!");
     localStorage.setItem('accessTokenExpiry', '0');
   }
 }
@@ -92,11 +100,22 @@ saveToken(response: TokenResponse): void {
     return localStorage.getItem('refreshToken');
   }
 
-  getCurrentUser(): { email: string; fullName: string; role: string } | null {
-    if (!this.isBrowser) return null;
-    const user = localStorage.getItem('user');
-    return user ? JSON.parse(user) : null;
+getCurrentUser(): { email: string; fullName: string; role: string } | null {
+  if (!this.isBrowser) return null;
+
+  const user = localStorage.getItem('user');
+
+  if (!user || user === 'undefined' || user === 'null') {
+    return null;
   }
+
+  try {
+    return JSON.parse(user);
+  } catch {
+    localStorage.removeItem('user');
+    return null;
+  }
+}
 
 isLoggedIn(): boolean {
   if (!this.isBrowser) return false;

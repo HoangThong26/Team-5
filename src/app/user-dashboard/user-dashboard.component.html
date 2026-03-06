@@ -11,30 +11,29 @@
         }
       </div>
       @if (!sidebarCollapsed) {
-        <p class="sidebar-name">{{ profile?.fullName || 'Người dùng' }}</p>
-        <span class="sidebar-role">{{ profile?.roleName || 'Student' }}</span>
+        <p class="sidebar-name">{{ profile?.fullName || 'User' }}</p>
       }
     </div>
 
     <nav class="sidebar-nav">
       <button class="nav-item" [class.active]="activeTab === 'overview'" (click)="switchTab('overview')">
         <i class="fas fa-th-large"></i>
-        @if (!sidebarCollapsed) { <span>Tổng quan</span> }
+        @if (!sidebarCollapsed) { <span>Overview</span> }
       </button>
       <button class="nav-item" [class.active]="activeTab === 'profile'" (click)="switchTab('profile')">
         <i class="fas fa-user"></i>
-        @if (!sidebarCollapsed) { <span>Hồ sơ</span> }
+        @if (!sidebarCollapsed) { <span>Profile</span> }
       </button>
       <button class="nav-item" [class.active]="activeTab === 'password'" (click)="switchTab('password')">
         <i class="fas fa-lock"></i>
-        @if (!sidebarCollapsed) { <span>Đổi mật khẩu</span> }
+        @if (!sidebarCollapsed) { <span>Change Password</span> }
       </button>
     </nav>
 
     <div class="sidebar-footer">
       <button class="nav-item logout-item" (click)="logout()">
         <i class="fas fa-sign-out-alt"></i>
-        @if (!sidebarCollapsed) { <span>Đăng xuất</span> }
+        @if (!sidebarCollapsed) { <span>Logout</span> }
       </button>
     </div>
   </aside>
@@ -49,9 +48,9 @@
       </button>
       <h1 class="page-title">
         @switch (activeTab) {
-          @case ('overview') { Tổng quan }
-          @case ('profile') { Hồ sơ cá nhân }
-          @case ('password') { Đổi mật khẩu }
+          @case ('overview') { Overview }
+          @case ('profile') { Profile }
+          @case ('password') { Change Password }
         }
       </h1>
     </div>
@@ -76,17 +75,17 @@
     @if (isLoading && !profile) {
       <div class="loading-screen">
         <div class="spinner"></div>
-        <p>Đang tải dữ liệu...</p>
+        <p>Loading...</p>
       </div>
     }
 
-    <!-- Error fallback khi không load được profile -->
+    <!-- Error fallback when profile fails to load -->
     @if (!isLoading && !profile && errorMessage) {
       <div class="loading-screen">
         <i class="fas fa-exclamation-triangle" style="font-size: 2.5rem; color: #f87171;"></i>
         <p>{{ errorMessage }}</p>
         <button class="btn btn-primary" (click)="loadProfile()">
-          <i class="fas fa-refresh"></i> Thử lại
+          <i class="fas fa-refresh"></i> Retry
         </button>
       </div>
     }
@@ -98,8 +97,8 @@
         <!-- Welcome Card -->
         <div class="welcome-card">
           <div class="welcome-text">
-            <h2>Xin chào, {{ profile.fullName }}! 👋</h2>
-            <p>Chào mừng bạn trở lại hệ thống quản lý đồ án tốt nghiệp.</p>
+            <h2>Hello, {{ profile.fullName }}! 👋</h2>
+            <p>Welcome back to the Capstone Project Management System.</p>
           </div>
           <i class="fas fa-graduation-cap welcome-icon"></i>
         </div>
@@ -118,31 +117,21 @@
 
           <div class="stat-card">
             <div class="stat-icon green">
-              <i class="fas fa-user-tag"></i>
+              <i class="fas fa-phone"></i>
             </div>
             <div class="stat-info">
-              <span class="stat-label">Vai trò</span>
-              <span class="stat-value">{{ profile.roleName || 'Student' }}</span>
+              <span class="stat-label">Phone</span>
+              <span class="stat-value">{{ profile.phone || 'Not updated' }}</span>
             </div>
           </div>
 
           <div class="stat-card">
             <div class="stat-icon purple">
-              <i class="fas fa-phone"></i>
-            </div>
-            <div class="stat-info">
-              <span class="stat-label">Số điện thoại</span>
-              <span class="stat-value">{{ profile.phone || 'Chưa cập nhật' }}</span>
-            </div>
-          </div>
-
-          <div class="stat-card">
-            <div class="stat-icon red">
               <i class="fas fa-circle-check"></i>
             </div>
             <div class="stat-info">
-              <span class="stat-label">Trạng thái</span>
-              <span class="stat-value status-active">Đang hoạt động</span>
+              <span class="stat-label">Status</span>
+              <span class="stat-value status-active">Active</span>
             </div>
           </div>
         </div>
@@ -170,11 +159,10 @@
             <div class="profile-card-info">
               <h2>{{ profile.fullName }}</h2>
               <p>{{ profile.email }}</p>
-              <span class="role-badge">{{ profile.roleName || 'Student' }}</span>
             </div>
             <button class="edit-profile-btn" (click)="toggleEdit()">
               <i class="fas" [class.fa-pen]="!editMode" [class.fa-times]="editMode"></i>
-              {{ editMode ? 'Hủy' : 'Chỉnh sửa' }}
+              {{ editMode ? 'Cancel' : 'Edit' }}
             </button>
           </div>
 
@@ -184,7 +172,7 @@
               <div class="detail-row">
                 <div class="detail-icon"><i class="fas fa-user"></i></div>
                 <div class="detail-content">
-                  <span class="detail-label">Họ và tên</span>
+                  <span class="detail-label">Full Name</span>
                   <span class="detail-value">{{ profile.fullName }}</span>
                 </div>
               </div>
@@ -198,22 +186,15 @@
               <div class="detail-row">
                 <div class="detail-icon"><i class="fas fa-phone"></i></div>
                 <div class="detail-content">
-                  <span class="detail-label">Số điện thoại</span>
-                  <span class="detail-value">{{ profile.phone || 'Chưa cập nhật' }}</span>
-                </div>
-              </div>
-              <div class="detail-row">
-                <div class="detail-icon"><i class="fas fa-user-tag"></i></div>
-                <div class="detail-content">
-                  <span class="detail-label">Vai trò</span>
-                  <span class="detail-value">{{ profile.roleName || 'Student' }}</span>
+              <span class="detail-label">Phone</span>
+                  <span class="detail-value">{{ profile.phone || 'Not updated' }}</span>
                 </div>
               </div>
               <div class="detail-row">
                 <div class="detail-icon"><i class="fas fa-circle-check"></i></div>
                 <div class="detail-content">
-                  <span class="detail-label">Trạng thái</span>
-                  <span class="detail-value status-active">Đang hoạt động</span>
+                  <span class="detail-label">Status</span>
+                  <span class="detail-value status-active">Active</span>
                 </div>
               </div>
             </div>
@@ -224,15 +205,15 @@
             <div class="edit-form">
               <div class="form-grid">
                 <div class="form-group">
-                  <label><i class="fas fa-user"></i>Họ và tên</label>
-                  <input type="text" [(ngModel)]="fullName" placeholder="Nhập họ và tên" />
+                  <label><i class="fas fa-user"></i>Full Name</label>
+                  <input type="text" [(ngModel)]="fullName" placeholder="Enter full name" />
                 </div>
                 <div class="form-group">
-                  <label><i class="fas fa-phone"></i>Số điện thoại</label>
-                  <input type="text" [(ngModel)]="phone" placeholder="Nhập số điện thoại" />
+                  <label><i class="fas fa-phone"></i>Phone Number</label>
+                  <input type="text" [(ngModel)]="phone" placeholder="Enter phone number" />
                 </div>
                 <div class="form-group full-width">
-                  <label><i class="fas fa-image"></i>Ảnh đại diện</label>
+                  <label><i class="fas fa-image"></i>Avatar</label>
                   <div class="avatar-upload-area">
                     <div class="avatar-preview-box">
                       @if (avatarPreview) {
@@ -243,16 +224,16 @@
                       } @else {
                         <div class="avatar-placeholder">
                           <i class="fas fa-camera"></i>
-                          <span>Chưa có ảnh</span>
+                          <span>No image</span>
                         </div>
                       }
                     </div>
                     <div class="avatar-upload-actions">
                       <label class="btn btn-outline avatar-upload-btn">
-                        <i class="fas fa-upload"></i> Chọn ảnh từ máy
+                        <i class="fas fa-upload"></i> Choose image
                         <input type="file" accept="image/*" (change)="onAvatarSelected($event)" hidden />
                       </label>
-                      <small class="avatar-hint">Định dạng: JPG, PNG, GIF. Tối đa 2MB.</small>
+                      <small class="avatar-hint">Format: JPG, PNG, GIF. Max 2MB.</small>
                     </div>
                   </div>
                 </div>
@@ -260,13 +241,13 @@
               <div class="form-actions">
                 <button class="btn btn-primary" (click)="saveProfile()" [disabled]="isLoading">
                   @if (isLoading) {
-                    <i class="fas fa-spinner fa-spin"></i> Đang lưu...
+                    <i class="fas fa-spinner fa-spin"></i> Saving...
                   } @else {
-                    <i class="fas fa-check"></i> Lưu thay đổi
+                    <i class="fas fa-check"></i> Save Changes
                   }
                 </button>
                 <button class="btn btn-secondary" (click)="toggleEdit()">
-                  <i class="fas fa-times"></i> Hủy
+                  <i class="fas fa-times"></i> Cancel
                 </button>
               </div>
             </div>
@@ -283,18 +264,18 @@
           <div class="card-header-icon">
             <i class="fas fa-shield-halved"></i>
           </div>
-          <h2>Đổi mật khẩu</h2>
-          <p class="card-desc">Cập nhật mật khẩu để bảo vệ tài khoản của bạn.</p>
+          <h2>Change Password</h2>
+          <p class="card-desc">Update your password to keep your account secure.</p>
 
           <div class="password-form">
             <!-- Current Password -->
             <div class="form-group">
-              <label><i class="fas fa-lock"></i>Mật khẩu hiện tại</label>
+              <label><i class="fas fa-lock"></i>Current Password</label>
               <div class="password-input-wrapper">
                 <input
                   [type]="showCurrentPassword ? 'text' : 'password'"
                   [(ngModel)]="currentPassword"
-                  placeholder="Nhập mật khẩu hiện tại"
+                  placeholder="Enter current password"
                 />
                 <button class="toggle-pw-btn" (click)="togglePasswordVisibility('current')">
                   <i class="fas" [class.fa-eye]="!showCurrentPassword" [class.fa-eye-slash]="showCurrentPassword"></i>
@@ -304,12 +285,12 @@
 
             <!-- New Password -->
             <div class="form-group">
-              <label><i class="fas fa-key"></i>Mật khẩu mới</label>
+              <label><i class="fas fa-key"></i>New Password</label>
               <div class="password-input-wrapper">
                 <input
                   [type]="showNewPassword ? 'text' : 'password'"
                   [(ngModel)]="newPassword"
-                  placeholder="Nhập mật khẩu mới (ít nhất 6 ký tự)"
+                  placeholder="Enter new password (at least 6 characters)"
                 />
                 <button class="toggle-pw-btn" (click)="togglePasswordVisibility('new')">
                   <i class="fas" [class.fa-eye]="!showNewPassword" [class.fa-eye-slash]="showNewPassword"></i>
@@ -319,12 +300,12 @@
 
             <!-- Confirm Password -->
             <div class="form-group">
-              <label><i class="fas fa-check-double"></i>Xác nhận mật khẩu</label>
+              <label><i class="fas fa-check-double"></i>Confirm Password</label>
               <div class="password-input-wrapper">
                 <input
                   [type]="showConfirmPassword ? 'text' : 'password'"
                   [(ngModel)]="confirmPassword"
-                  placeholder="Nhập lại mật khẩu mới"
+                  placeholder="Re-enter new password"
                 />
                 <button class="toggle-pw-btn" (click)="togglePasswordVisibility('confirm')">
                   <i class="fas" [class.fa-eye]="!showConfirmPassword" [class.fa-eye-slash]="showConfirmPassword"></i>
@@ -334,12 +315,12 @@
 
             <!-- OTP -->
             <div class="form-group">
-              <label><i class="fas fa-key"></i>Mã OTP</label>
+              <label><i class="fas fa-key"></i>OTP Code</label>
               <div class="password-input-wrapper">
                 <input
                   type="text"
                   [(ngModel)]="otp"
-                  placeholder="Nhập mã OTP từ email"
+                  placeholder="Enter OTP from email"
                   maxlength="6"
                 />
                 <button class="toggle-pw-btn" type="button" (click)="sendOtp()" [disabled]="isSendingOtp">
@@ -351,17 +332,17 @@
                 </button>
               </div>
               @if (!otpSent) {
-                <small class="otp-hint">Nhấn <i class="fas fa-paper-plane"></i> để gửi mã OTP về email</small>
+                <small class="otp-hint">Click <i class="fas fa-paper-plane"></i> to send OTP to your email</small>
               } @else {
-                <small class="otp-hint otp-sent">Mã OTP đã được gửi đến email của bạn (có hiệu lực 5 phút)</small>
+                <small class="otp-hint otp-sent">OTP has been sent to your email (valid for 5 minutes)</small>
               }
             </div>
 
             <button class="btn btn-primary full-width-btn" (click)="changePassword()" [disabled]="isChangingPassword">
               @if (isChangingPassword) {
-                <i class="fas fa-spinner fa-spin"></i> Đang xử lý...
+                <i class="fas fa-spinner fa-spin"></i> Processing...
               } @else {
-                <i class="fas fa-shield-halved"></i> Đổi mật khẩu
+                <i class="fas fa-shield-halved"></i> Change Password
               }
             </button>
           </div>

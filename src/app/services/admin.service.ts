@@ -19,4 +19,10 @@ export class AdminService {
   getAllUsers(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/all-users`);
   }
+
+  searchUsers(keyword: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/search-users`, {
+      params: { keyword }
+    });
+  }
 }

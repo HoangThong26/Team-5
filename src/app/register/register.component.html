@@ -5,8 +5,8 @@
       <div class="register-icon">
         <i class="fas fa-user-plus"></i>
       </div>
-      <h2>Tạo tài khoản mới</h2>
-      <p class="register-subtitle">Đăng ký để bắt đầu</p>
+      <h2>Create New Account</h2>
+      <p class="register-subtitle">Register to get started</p>
     </div>
 
     @if (successMessage) {
@@ -24,13 +24,13 @@
     <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
 
       <div class="input-group">
-        <label><i class="fas fa-user"></i> Họ và tên</label>
+        <label><i class="fas fa-user"></i> Full Name</label>
         <input
           type="text"
           required
           [(ngModel)]="fullName"
           name="fullName"
-          placeholder="Nguyễn Văn A"
+          placeholder="John Doe"
         />
       </div>
 
@@ -46,19 +46,20 @@
       </div>
 
       <div class="input-group">
-        <label><i class="fas fa-lock"></i> Mật khẩu</label>
+        <label><i class="fas fa-lock"></i> Password</label>
         <input
           type="password"
           required
-          minlength="6"
+          minlength="8"
           [(ngModel)]="password"
           name="password"
           placeholder="••••••••"
         />
+        <small class="password-hint">At least 8 characters, 1 uppercase, 1 number, 1 special character.</small>
       </div>
 
       <div class="input-group">
-        <label><i class="fas fa-phone"></i> Số điện thoại</label>
+        <label><i class="fas fa-phone"></i> Phone Number</label>
         <input
           type="tel"
           [(ngModel)]="phone"
@@ -69,16 +70,16 @@
 
       <button class="register-btn" type="submit" [disabled]="isLoading">
         @if (isLoading) {
-          <i class="fas fa-spinner fa-spin"></i> Đang xử lý...
+          <i class="fas fa-spinner fa-spin"></i> Processing...
         } @else {
-          <i class="fas fa-user-plus"></i> Đăng ký
+          <i class="fas fa-user-plus"></i> Register
         }
       </button>
 
     </form>
 
     <div class="login-link">
-      Đã có tài khoản? <a routerLink="/login">Đăng nhập</a>
+      Already have an account? <a routerLink="/login">Sign In</a>
     </div>
 
   </div>

@@ -17,6 +17,10 @@ export class AdminDashboardComponent implements OnInit {
   users: any[] = [];
   isLoadingUsers = false;
 
+  // Search
+  searchKeyword = '';
+  isSearching = false;
+
   // Create user form
   showCreateForm = false;
   newEmail = '';
@@ -59,7 +63,7 @@ export class AdminDashboardComponent implements OnInit {
       },
       error: (err) => {
         this.isLoadingUsers = false;
-        this.errorMessage = 'Không thể tải danh sách người dùng.';
+        this.errorMessage = 'Unable to load user list.';
       }
     });
   }
@@ -75,7 +79,7 @@ export class AdminDashboardComponent implements OnInit {
     this.errorMessage = '';
 
     if (!this.newEmail.trim() || !this.newFullName.trim() || !this.newPassword.trim()) {
-      this.errorMessage = 'Vui lòng điền đầy đủ thông tin.';
+      this.errorMessage = 'Please fill in all required fields.';
       return;
     }
 
@@ -90,13 +94,13 @@ export class AdminDashboardComponent implements OnInit {
     }).subscribe({
       next: (res: any) => {
         this.isCreating = false;
-        this.successMessage = res?.message || 'Tạo người dùng thành công!';
+        this.successMessage = res?.message || 'User created successfully!';
         this.resetForm();
         this.loadUsers();
       },
       error: (err) => {
         this.isCreating = false;
-        this.errorMessage = this.extractError(err, 'Tạo người dùng thất bại!');
+        this.errorMessage = this.extractError(err, 'Failed to create user!');
       }
     });
   }
@@ -107,6 +111,37 @@ export class AdminDashboardComponent implements OnInit {
     this.newPhone = '';
     this.newRole = 'Student';
     this.newPassword = '';
+  }
+
+  searchUsers() {
+    const keyword = this.searchKeyword.trim();
+    if (!keyword) {
+      this.loadUsers();
+      return;
+    }
+
+    this.isSearching = true;
+    this.successMessage = '';
+    this.errorMessage = '';
+
+    this.adminService.searchUsers(keyword).subscribe({
+      next: (res) => {
+        this.users = res;
+        this.isSearching = false;
+        this.successMessage = `Found ${res.length} results for "${keyword}".`;
+      },
+      error: (err) => {
+        this.isSearching = false;
+        this.errorMessage = this.extractError(err, 'Search failed!');
+      }
+    });
+  }
+
+  clearSearch() {
+    this.searchKeyword = '';
+    this.successMessage = '';
+    this.errorMessage = '';
+    this.loadUsers();
   }
 
   logout() {
