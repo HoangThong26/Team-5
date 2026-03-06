@@ -113,3 +113,14 @@
   border-radius: 8px;
   margin-bottom: 20px;
 }
+.pending-card {
+  border: 1px dashed #ffa500; 
+  background-color: #fff9f0;
+}
+
+.status-tag {
+  color: #ffa500;
+  font-weight: bold;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}

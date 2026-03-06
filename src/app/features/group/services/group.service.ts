@@ -29,4 +29,7 @@ export class GroupService {
   getUserGroup(userId: number) {
   return this.http.get<any>(`${this.apiUrl}/user/${userId}`);
 }
+  inviteMember(data: { groupId: number, inviteeEmail: string }): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/invite`, data);
+  }
 }

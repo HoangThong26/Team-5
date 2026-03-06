@@ -4,52 +4,64 @@
     <div class="loading">Loading group information...</div>
   }
 
-  @if (error) {
+  @else if (error) {
     <div class="error-box">{{ error }}</div>
   }
 
-  @if (group) {
-
-    <!-- HEADER -->
+  @else if (group) {
     <div class="group-header">
       <div>
         <h2>{{ group.groupName }}</h2>
         <p class="status">
-          <span class="status-badge">
-            {{ group.status }}
-          </span>
+          <span class="status-badge">{{ group.status }}</span>
         </p>
       </div>
-
       <div class="created-date">
         Created: {{ group.createdAt | date:'mediumDate' }}
       </div>
     </div>
 
-    <!-- MEMBERS CARD -->
     <div class="card">
-      <h3>Group Members</h3>
-
+      <h3>Official Members</h3>
       <div class="member-list">
         @for (member of group.members; track member.userId) {
           <div class="member-item">
-            <div class="avatar">
-              {{ member.userId }}
-            </div>
-
+            <div class="avatar">{{ member.userId }}</div>
             <div class="member-info">
-              <div class="member-role">
-                {{ member.roleInGroup }}
-              </div>
-              <div class="member-joined">
-                Joined: {{ member.joinedAt | date:'shortDate' }}
-              </div>
+              <div class="member-role">{{ member.roleInGroup }}</div>
+              <div class="member-joined">Joined: {{ member.joinedAt | date:'shortDate' }}</div>
             </div>
           </div>
         }
       </div>
     </div>
 
-  }
+    @if (group.pendingInvitations && group.pendingInvitations.length > 0) {
+      <div class="card pending-card">
+        <h3>Pending Invitations</h3>
+        <div class="member-list">
+          @for (invite of group.pendingInvitations; track invite.invitationId) {
+            <div class="member-item pending">
+              <div class="member-info">
+                <strong>{{ invite.inviteeName || 'Unknown Student' }}</strong>
+                <small>{{ invite.inviteeEmail }}</small>
+                <div class="status-tag">Sent at: {{ invite.sentAt | date:'shortDate' }}</div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
 
+    <div class="card invite-section">
+      <h3>Invite Member</h3>
+      <div class="input-group">
+        <input #emailInput type="email" placeholder="Enter student email..." class="form-control">
+        <button class="btn-primary" (click)="inviteMember(emailInput.value); emailInput.value=''">Invite</button>
+      </div>
+    </div>
+
+  } @else {
+    <div class="error-box">No group data found.</div>
+  }
 </div>

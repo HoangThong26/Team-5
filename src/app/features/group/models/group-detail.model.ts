@@ -6,8 +6,14 @@ export interface GroupDetail {
   leaderName?: string;
   topic?: Topic;
   members: GroupMember[];
+  pendingInvitations: PendingInvitation[];
 }
-
+export interface PendingInvitation {
+  invitationId: number;
+  inviteeEmail: string;
+  inviteeName: string;
+  sentAt: string;
+}
 export interface Topic {
   title: string;
   description?: string;

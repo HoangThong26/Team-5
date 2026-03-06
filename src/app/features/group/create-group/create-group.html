@@ -1,6 +1,5 @@
 <div class="page">
   <div class="card">
-
     <div class="card-header">
       <h2>Create New Group</h2>
       <p>Fill in the information below to create your team</p>
@@ -13,58 +12,80 @@
     }
 
     <form [formGroup]="groupForm" (ngSubmit)="onSubmit()">
-
-      <!-- Group Name -->
+      
       <div class="form-group">
-        <label>Group Name</label>
+        <label for="groupName">Group Name</label>
         <input
+          id="groupName"
           type="text"
           formControlName="groupName"
           placeholder="Enter group name..."
+          [class.invalid]="groupForm.get('groupName')?.touched && groupForm.get('groupName')?.invalid"
         />
-
-        @if (groupForm.get('groupName')?.touched &&
-             groupForm.get('groupName')?.invalid) {
-          <small class="error-text">
-            Group name must be at least 3 characters
-          </small>
+        @if (groupForm.get('groupName')?.touched && groupForm.get('groupName')?.invalid) {
+          <small class="error-text">Group name must be at least 3 characters</small>
         }
       </div>
 
-      <!-- Target Members -->
       <div class="form-group">
-        <label>Target Members (2 - 5)</label>
+        <label for="targetMembers">Target Members (2 - 5)</label>
         <input
+          id="targetMembers"
           type="number"
-          min="2"
-          max="5"
           formControlName="targetMembers"
         />
+        @if (groupForm.get('targetMembers')?.touched && groupForm.get('targetMembers')?.invalid) {
+          <small class="error-text">Limit must be between 2 and 5 members</small>
+        }
       </div>
 
-      <!-- Submit Button -->
+      <div class="form-group">
+        <label>Invite Members (Optional)</label>
+        <div class="member-selector">
+          <div class="input-with-btn">
+            <input 
+              #memberInput 
+              type="email" 
+              placeholder="Enter student email..." 
+              (keyup.enter)="addMember(memberInput.value); memberInput.value=''"
+            />
+            <button type="button" (click)="addMember(memberInput.value); memberInput.value=''" class="btn-add">
+              Add
+            </button>
+          </div>
+          
+          <div class="selected-members">
+            @for (email of invitedEmails; track email; let i = $index) {
+              <div class="member-tag">
+                {{ email }}
+                <span class="remove-btn" (click)="removeMember(i)">×</span>
+              </div>
+            }
+          </div>
+        </div>
+
+        @if (invitedEmails.length + 1 > groupForm.get('targetMembers')?.value) {
+          <div class="error-text mt-1">
+            ⚠️ Invited members exceed the target limit!
+          </div>
+        }
+      </div>
+
       <button
         type="submit"
         class="btn-primary"
-        [disabled]="groupForm.invalid || loading || isInGroup"
+        [disabled]="groupForm.invalid || loading || isInGroup || (invitedEmails.length + 1 > groupForm.get('targetMembers')?.value)"
       >
         {{ loading ? 'Creating...' : 'Create Group' }}
       </button>
 
-      <!-- Success -->
       @if (successMessage) {
-        <div class="message success">
-          {{ successMessage }}
-        </div>
+        <div class="message success">{{ successMessage }}</div>
       }
 
-      <!-- Error -->
       @if (errorMessage) {
-        <div class="message error">
-          {{ errorMessage }}
-        </div>
+        <div class="message error">{{ errorMessage }}</div>
       }
-
     </form>
   </div>
 </div>
