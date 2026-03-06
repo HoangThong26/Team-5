@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="CapstoneProject.API/CapstoneProject.API.csproj" />
+  <Project Path="CapstoneProject.Application/CapstoneProject.Application.csproj" />
+  <Project Path="CapstoneProject.Domain/CapstoneProject.Domain.csproj" />
+  <Project Path="CapstoneProject.Infrastructure/CapstoneProject.Infrastructure.csproj" />
+</Solution>
