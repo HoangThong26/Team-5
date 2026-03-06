@@ -12,5 +12,6 @@ namespace CapstoneProject.Application.Interface.IService
         Task<List<User>> GetAllUsersAsync();
         Task DeleteAsync(int userId);
         Task UnlockAccountAsync(int userId);
+        Task<List<AdminUserResponse>> SearchUsersAsync(string keyword);
     }
 }

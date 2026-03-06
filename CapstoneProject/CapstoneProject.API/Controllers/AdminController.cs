@@ -59,5 +59,16 @@ namespace CapstoneProject.API.Controllers
         {
             await _adminService.UnlockAccountAsync(userId);
         }
+
+        [HttpGet("search-users")]
+        public async Task<IActionResult> SearchUsers(string keyword)
+        {
+            if (string.IsNullOrEmpty(keyword))
+                return BadRequest("Keyword is required");
+
+            var result = await _adminService.SearchUsersAsync(keyword);
+
+            return Ok(result);
+        }
     }
 }

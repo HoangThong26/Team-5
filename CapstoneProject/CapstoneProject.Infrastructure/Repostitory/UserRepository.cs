@@ -135,5 +135,16 @@ namespace CapstoneProject.Infrastructure.Repostitory
 
             await _context.SaveChangesAsync();
         }
+
+        public async Task<List<User>> SearchUsersAsync(string keyword)
+        {
+            keyword = keyword.ToLower();
+
+            return await _context.Users
+                .Where(u =>
+                    //u.FullName.ToLower().Contains(keyword) ||
+                    u.Email.ToLower().Contains(keyword))
+                .ToListAsync();
+        }
     }
 }

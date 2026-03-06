@@ -23,5 +23,6 @@ namespace CapstoneProject.Application.Interface.IRepository
         Task MarkOtpUsedAsync(PasswordResetToken token);
         Task RevokeAllRefreshTokensAsync(int userId);
         Task ChangePasswordAsync(int userId, string newPasswordHash);
+        Task<List<User>> SearchUsersAsync(string keyword);
     }
 }
