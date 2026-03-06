@@ -1,0 +1,91 @@
+<div class="profile-bg">
+  <div class="profile-container">
+
+    <div class="profile-header">
+      <div class="profile-icon">
+        <i class="fas fa-user-circle"></i>
+      </div>
+      <h2>Profile</h2>
+      <p class="profile-subtitle">{{ getCurrentUser()?.role }}</p>
+    </div>
+
+    @if (successMessage) {
+      <div class="alert alert-success">
+        <i class="fas fa-check-circle"></i> {{ successMessage }}
+      </div>
+    }
+
+    @if (errorMessage) {
+      <div class="alert alert-error">
+        <i class="fas fa-exclamation-circle"></i> {{ errorMessage }}
+      </div>
+    }
+
+    @if (isLoading && !profile) {
+      <div class="loading">
+        <i class="fas fa-spinner fa-spin"></i> Loading...
+      </div>
+    }
+
+    @if (profile) {
+      @if (!editMode) {
+        <div class="profile-info">
+          <div class="info-row">
+            <span class="info-label"><i class="fas fa-envelope"></i> Email</span>
+            <span class="info-value">{{ profile.email }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label"><i class="fas fa-user"></i> Full Name</span>
+            <span class="info-value">{{ profile.fullName }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label"><i class="fas fa-phone"></i> Phone</span>
+            <span class="info-value">{{ profile.phone || 'Not updated' }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label"><i class="fas fa-circle-info"></i> Status</span>
+            <span class="info-value status-badge">{{ profile.status || 'Active' }}</span>
+          </div>
+
+          <div class="btn-group">
+            <button class="edit-btn" (click)="toggleEdit()">
+              <i class="fas fa-pen"></i> Edit
+            </button>
+            <button class="logout-btn" (click)="logout()">
+              <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+          </div>
+        </div>
+      } @else {
+        <form (ngSubmit)="saveProfile()" #profileForm="ngForm">
+          <div class="input-group">
+            <label><i class="fas fa-user"></i> Full Name</label>
+            <input type="text" required [(ngModel)]="fullName" name="fullName" />
+          </div>
+          <div class="input-group">
+            <label><i class="fas fa-phone"></i> Phone Number</label>
+            <input type="tel" [(ngModel)]="phone" name="phone" />
+          </div>
+          <div class="input-group">
+            <label><i class="fas fa-image"></i> Avatar URL</label>
+            <input type="text" [(ngModel)]="avatarUrl" name="avatarUrl" placeholder="https://..." />
+          </div>
+
+          <div class="btn-group">
+            <button class="save-btn" type="submit" [disabled]="profileForm.invalid || isLoading">
+              @if (isLoading) {
+                <i class="fas fa-spinner fa-spin"></i> Saving...
+              } @else {
+                <i class="fas fa-save"></i> Save
+              }
+            </button>
+            <button class="cancel-btn" type="button" (click)="toggleEdit()">
+              <i class="fas fa-times"></i> Cancel
+            </button>
+          </div>
+        </form>
+      }
+    }
+
+  </div>
+</div>

@@ -1,0 +1,144 @@
+<div class="admin-bg">
+  <div class="admin-container">
+
+    <div class="admin-header">
+      <div class="admin-icon">
+        <i class="fas fa-shield-halved"></i>
+      </div>
+      <h2>System Administration</h2>
+      <p class="admin-subtitle">Admin Dashboard</p>
+    </div>
+
+    @if (successMessage) {
+      <div class="alert alert-success">
+        <i class="fas fa-check-circle"></i> {{ successMessage }}
+      </div>
+    }
+
+    @if (errorMessage) {
+      <div class="alert alert-error">
+        <i class="fas fa-exclamation-circle"></i> {{ errorMessage }}
+      </div>
+    }
+
+    <!-- Action buttons -->
+    <div class="action-bar">
+      <button class="action-btn create-btn" (click)="toggleCreateForm()">
+        <i class="fas fa-user-plus"></i>
+        {{ showCreateForm ? 'Close' : 'Create User' }}
+      </button>
+      <button class="action-btn refresh-btn" (click)="loadUsers()">
+        <i class="fas fa-sync-alt"></i> Refresh
+      </button>
+      <button class="action-btn logout-btn" (click)="logout()">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </button>
+    </div>
+
+    <!-- Create user form -->
+    @if (showCreateForm) {
+      <div class="create-form">
+        <h3><i class="fas fa-user-plus"></i> Create New User</h3>
+        <form (ngSubmit)="createUser()" #createForm="ngForm">
+          <div class="form-grid">
+            <div class="input-group">
+              <label>Email</label>
+              <input type="email" required [(ngModel)]="newEmail" name="newEmail" placeholder="email&#64;example.com" />
+            </div>
+            <div class="input-group">
+              <label>Full Name</label>
+              <input type="text" required [(ngModel)]="newFullName" name="newFullName" placeholder="John Doe" />
+            </div>
+            <div class="input-group">
+              <label>Phone Number</label>
+              <input type="tel" [(ngModel)]="newPhone" name="newPhone" placeholder="0912 345 678" />
+            </div>
+            <div class="input-group">
+              <label>Role</label>
+              <select [(ngModel)]="newRole" name="newRole">
+                <option value="Student">Student</option>
+                <option value="Mentor">Mentor</option>
+                <option value="Council">Council</option>
+                <option value="Admin">Admin</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label>Password</label>
+              <input type="password" required [(ngModel)]="newPassword" name="newPassword" placeholder="••••••••" />
+            </div>
+          </div>
+          <button class="submit-btn" type="submit" [disabled]="createForm.invalid || isCreating">
+            @if (isCreating) {
+              <i class="fas fa-spinner fa-spin"></i> Creating...
+            } @else {
+              <i class="fas fa-plus"></i> Create
+            }
+          </button>
+        </form>
+      </div>
+    }
+
+    <!-- Search bar -->
+    <div class="search-bar">
+      <div class="search-input-wrapper">
+        <i class="fas fa-search search-icon"></i>
+        <input
+          type="text"
+          [(ngModel)]="searchKeyword"
+          name="searchKeyword"
+          placeholder="Search by email..."
+          (keyup.enter)="searchUsers()"
+        />
+        @if (searchKeyword) {
+          <button class="clear-search-btn" (click)="clearSearch()" title="Clear search">
+            <i class="fas fa-times"></i>
+          </button>
+        }
+      </div>
+      <button class="action-btn search-btn" (click)="searchUsers()" [disabled]="isSearching">
+        @if (isSearching) {
+          <i class="fas fa-spinner fa-spin"></i> Searching...
+        } @else {
+          <i class="fas fa-search"></i> Search
+        }
+      </button>
+    </div>
+
+    <!-- Users table -->
+    <div class="users-section">
+      <h3><i class="fas fa-users"></i> User List ({{ users.length }})</h3>
+
+      @if (isLoadingUsers) {
+        <div class="loading">
+          <i class="fas fa-spinner fa-spin"></i> Loading...
+        </div>
+      } @else {
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Email</th>
+                <th>Full Name</th>
+                <th>Role</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (user of users; track user.userId || user.id) {
+                <tr>
+                  <td>{{ user.userId || user.id }}</td>
+                  <td>{{ user.email }}</td>
+                  <td>{{ user.fullName }}</td>
+                  <td><span class="role-badge">{{ user.role }}</span></td>
+                  <td><span class="status-badge" [class.active]="user.status === 'Active'" [class.inactive]="user.status !== 'Active'">{{ user.status }}</span></td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+
+  </div>
+</div>
