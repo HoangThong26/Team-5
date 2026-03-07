@@ -13,5 +13,7 @@ namespace CapstoneProject.Application.Interface.IService
         Task DeleteAsync(int userId);
         Task UnlockAccountAsync(int userId);
         Task<List<AdminUserResponse>> SearchUsersAsync(string keyword);
+
+        Task<int> ImportUsersFromExcelAsync(Stream excelStream);
     }
 }

@@ -35,45 +35,7 @@ namespace CapstoneProject.Infrastructure.Services
             _config = config;
         }
 
-        public async Task<string> RegisterAsync(RegisterRequest request)
-        {
-            var existingUser = await _authRepository.GetByEmailAsync(request.Email);
-
-            if (existingUser != null)
-            {
-                if (existingUser.EmailVerified == true)
-                    return "Email already exists!";
-
-                existingUser.VerifyToken = Guid.NewGuid().ToString();
-                existingUser.VerifyTokenExpire = DateTime.UtcNow.AddHours(24);
-
-                await _authRepository.UpdateAsync(existingUser);
-                await SendVerifyEmail(existingUser.Email, existingUser.VerifyToken);
-
-                return "Verification email resent.";
-            }
-
-            var token = Guid.NewGuid().ToString();
-
-            var user = new User
-            {
-                Email = request.Email,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
-                FullName = request.FullName,
-                Phone = request.Phone,
-                EmailVerified = false,
-                Role = "Student",
-                Status = "Active",
-                VerifyToken = token,
-                VerifyTokenExpire = DateTime.UtcNow.AddHours(24),
-                CreatedAt = DateTime.UtcNow
-            };
-
-            await _authRepository.AddAsync(user);
-            await SendVerifyEmail(user.Email, token);
-
-            return "Register successfully. Please verify your email.";
-        }
+    
 
         private async Task SendVerifyEmail(string email, string token)
         {

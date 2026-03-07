@@ -16,25 +16,6 @@ namespace CapstoneProject.API.Controllers
             _authService = authService;
         }
 
-        [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterRequest request)
-        {
-            var result = await _authService.RegisterAsync(request);
-            return Ok(result);
-        }
-
-        [HttpGet("verify")]
-        public async Task<IActionResult> Verify(string token)
-        {
-            var result = await _authService.VerifyAsync(token);
-
-            if (result != "Email verified successfully!")
-                return BadRequest(result);
-
-            return Redirect("http://localhost:4200/login");
-        }
-
-
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginRequest request)
         {
