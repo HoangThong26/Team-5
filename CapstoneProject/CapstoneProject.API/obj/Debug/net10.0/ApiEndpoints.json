@@ -43,6 +43,22 @@
   },
   {
     "ContainingType": "CapstoneProject.API.Controllers.AdminController",
+    "Method": "ImportUsersFromExcel",
+    "RelativePath": "api/Admin/import-users",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "file",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CapstoneProject.API.Controllers.AdminController",
     "Method": "SearchUsers",
     "RelativePath": "api/Admin/search-users",
     "HttpMethod": "GET",
@@ -145,22 +161,6 @@
   },
   {
     "ContainingType": "CapstoneProject.API.Controllers.AuthController",
-    "Method": "Register",
-    "RelativePath": "api/Auth/register",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "request",
-        "Type": "CapstoneProject.Application.DTO.RegisterRequest",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "CapstoneProject.API.Controllers.AuthController",
     "Method": "ResetPassword",
     "RelativePath": "api/Auth/reset-password",
     "HttpMethod": "POST",
@@ -171,22 +171,6 @@
         "Name": "request",
         "Type": "CapstoneProject.Application.DTO.ResetPasswordRequestDto",
         "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "CapstoneProject.API.Controllers.AuthController",
-    "Method": "Verify",
-    "RelativePath": "api/Auth/verify",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "token",
-        "Type": "System.String",
-        "IsRequired": false
       }
     ],
     "ReturnTypes": []

@@ -1,12 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "WNwGtvse21c=",
+  "dgSpecHash": "wk9a+VPdGrg=",
   "success": true,
   "projectFilePath": "C:\\Users\\hbt2k\\OneDrive\\Documents\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\hbt2k\\.nuget\\packages\\azure.core\\1.47.1\\azure.core.1.47.1.nupkg.sha512",
     "C:\\Users\\hbt2k\\.nuget\\packages\\azure.identity\\1.14.2\\azure.identity.1.14.2.nupkg.sha512",
     "C:\\Users\\hbt2k\\.nuget\\packages\\bcrypt.net-next\\4.1.0\\bcrypt.net-next.4.1.0.nupkg.sha512",
+    "C:\\Users\\hbt2k\\.nuget\\packages\\exceldatareader\\3.8.0\\exceldatareader.3.8.0.nupkg.sha512",
+    "C:\\Users\\hbt2k\\.nuget\\packages\\exceldatareader.dataset\\3.8.0\\exceldatareader.dataset.3.8.0.nupkg.sha512",
     "C:\\Users\\hbt2k\\.nuget\\packages\\fluentvalidation\\12.1.1\\fluentvalidation.12.1.1.nupkg.sha512",
     "C:\\Users\\hbt2k\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\hbt2k\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\10.0.3\\microsoft.aspnetcore.authentication.jwtbearer.10.0.3.nupkg.sha512",

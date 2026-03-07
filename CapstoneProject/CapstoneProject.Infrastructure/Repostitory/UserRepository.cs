@@ -146,5 +146,16 @@ namespace CapstoneProject.Infrastructure.Repostitory
                     u.Email.ToLower().Contains(keyword))
                 .ToListAsync();
         }
+
+        public async Task<List<string>> GetAllEmailsAsync()
+        {
+            return await _context.Users.Select(u => u.Email).ToListAsync();
+        }
+
+        public async Task AddRangeAsync(IEnumerable<User> users)
+        {
+            await _context.Users.AddRangeAsync(users);
+            await _context.SaveChangesAsync();
+        }
     }
 }

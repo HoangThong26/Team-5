@@ -24,5 +24,8 @@ namespace CapstoneProject.Application.Interface.IRepository
         Task RevokeAllRefreshTokensAsync(int userId);
         Task ChangePasswordAsync(int userId, string newPasswordHash);
         Task<List<User>> SearchUsersAsync(string keyword);
+
+        Task<List<string>> GetAllEmailsAsync();
+        Task AddRangeAsync(IEnumerable<User> users);
     }
 }

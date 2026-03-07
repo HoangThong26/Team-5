@@ -348,3 +348,5 @@ C:\Users\hbt2k\OneDrive\Documents\Team-5\CapstoneProject\CapstoneProject.API\obj
 C:\Users\hbt2k\OneDrive\Documents\Team-5\CapstoneProject\CapstoneProject.API\obj\Debug\net10.0\CapstoneProject.API.pdb
 C:\Users\hbt2k\OneDrive\Documents\Team-5\CapstoneProject\CapstoneProject.API\obj\Debug\net10.0\CapstoneProject.API.genruntimeconfig.cache
 C:\Users\hbt2k\OneDrive\Documents\Team-5\CapstoneProject\CapstoneProject.API\obj\Debug\net10.0\ref\CapstoneProject.API.dll
+C:\Users\hbt2k\OneDrive\Documents\Team-5\CapstoneProject\CapstoneProject.API\bin\Debug\net10.0\ExcelDataReader.dll
+C:\Users\hbt2k\OneDrive\Documents\Team-5\CapstoneProject\CapstoneProject.API\bin\Debug\net10.0\ExcelDataReader.DataSet.dll

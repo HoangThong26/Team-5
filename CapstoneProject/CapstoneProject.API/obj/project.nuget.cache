@@ -1,12 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "x84nrNUeX1w=",
+  "dgSpecHash": "xyQ2jPPwtvQ=",
   "success": true,
   "projectFilePath": "C:\\Users\\hbt2k\\OneDrive\\Documents\\Team-5\\CapstoneProject\\CapstoneProject.API\\CapstoneProject.API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\hbt2k\\.nuget\\packages\\azure.core\\1.47.1\\azure.core.1.47.1.nupkg.sha512",
     "C:\\Users\\hbt2k\\.nuget\\packages\\azure.identity\\1.14.2\\azure.identity.1.14.2.nupkg.sha512",
     "C:\\Users\\hbt2k\\.nuget\\packages\\bcrypt.net-next\\4.1.0\\bcrypt.net-next.4.1.0.nupkg.sha512",
+    "C:\\Users\\hbt2k\\.nuget\\packages\\exceldatareader\\3.8.0\\exceldatareader.3.8.0.nupkg.sha512",
+    "C:\\Users\\hbt2k\\.nuget\\packages\\exceldatareader.dataset\\3.8.0\\exceldatareader.dataset.3.8.0.nupkg.sha512",
     "C:\\Users\\hbt2k\\.nuget\\packages\\fluentvalidation\\12.1.1\\fluentvalidation.12.1.1.nupkg.sha512",
     "C:\\Users\\hbt2k\\.nuget\\packages\\fluentvalidation.aspnetcore\\11.3.1\\fluentvalidation.aspnetcore.11.3.1.nupkg.sha512",
     "C:\\Users\\hbt2k\\.nuget\\packages\\fluentvalidation.dependencyinjectionextensions\\11.11.0\\fluentvalidation.dependencyinjectionextensions.11.11.0.nupkg.sha512",

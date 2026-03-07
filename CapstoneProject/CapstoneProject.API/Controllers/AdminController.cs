@@ -70,5 +70,55 @@ namespace CapstoneProject.API.Controllers
 
             return Ok(result);
         }
-    }
+
+
+            [HttpPost("import-users")]
+            public async Task<IActionResult> ImportUsersFromExcel(IFormFile file)
+            {
+                if (file == null)
+                {
+                    return BadRequest(new { Message = "No file was uploaded. Please provide an Excel file." });
+                }
+
+                if (file.Length == 0)
+                {
+                    return BadRequest(new { Message = "The uploaded file is empty." });
+                }
+
+                var extension = Path.GetExtension(file.FileName).ToLower();
+                if (extension != ".xls" && extension != ".xlsx")
+                {
+                    return BadRequest(new { Message = "Invalid file format. Please upload a valid Excel file (.xls or .xlsx)." });
+                }
+
+                try
+                {
+                    using (var stream = file.OpenReadStream())
+                    {
+                        int importedCount = await _adminService.ImportUsersFromExcelAsync(stream);
+                        if (importedCount == 0)
+                        {
+                            return Ok(new
+                            {
+                                Message = "No new users were imported. The data might be empty or all emails already exist in the system.",
+                                ImportedCount = 0
+                            });
+                        }
+                        return Ok(new
+                        {
+                            Message = $"Successfully imported {importedCount} user(s).",
+                            ImportedCount = importedCount
+                        });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new
+                    {
+                        Message = "An error occurred while processing the Excel file.",
+                        Details = ex.Message 
+                    });
+                }
+            }
+        }
 }
