@@ -50,10 +50,7 @@ namespace CapstoneProject.Infrastructure.Services
 
             try
             {
-                // Repository này hiện tại chỉ tạo Group + Leader
                 var result = await _groupRepository.CreateGroupWithLeaderAsync(group, member);
-
-                // THAY ĐỔI: Thông báo đúng thực tế (chưa có mentor)
                 return "Group created successfully! Invite more members to reach 4 for mentor assignment.";
             }
             catch (Exception)
@@ -76,6 +73,7 @@ namespace CapstoneProject.Infrastructure.Services
                 Members = group.GroupMembers.Select(m => new GroupMemberDto
                 {
                     UserId = m.UserId,
+                    FullName = m.User?.FullName,
                     RoleInGroup = m.RoleInGroup,
                     JoinedAt = m.JoinedAt
                 }).ToList()
@@ -86,11 +84,8 @@ namespace CapstoneProject.Infrastructure.Services
 
         public async Task<string> AcceptInviteAsync(int invitationId)
         {
-            // Chúng ta không kiểm tra rời rạc nữa mà gọi hàm xử lý Transaction 
-            // bên trong Repository để đảm bảo tính an toàn dữ liệu (Atomic)
             try
             {
-                // Hàm này sẽ tự động: Thêm member -> Check count -> Gán Mentor nếu count == 4
                 var result = await _groupRepository.AcceptInvitationWithMentorCheckAsync(invitationId);
                 return result;
             }
@@ -189,6 +184,35 @@ namespace CapstoneProject.Infrastructure.Services
             };
 
             await smtpClient.SendMailAsync(mailMessage);
+        }
+
+
+        public async Task<GroupDetailResponse?> GetMyGroupAsync(int userId)
+        {
+            var group = await _groupRepository.GetGroupWithDetailsByUserIdAsync(userId);
+
+            if (group == null) return null;
+            var assignment = group.MentorAssignment;
+
+            var response = new GroupDetailResponse
+            {
+                GroupId = group.GroupId,
+                GroupName = group.GroupName,
+                Status = group.Status,
+                CreatedAt = group.CreatedAt,
+                MentorId = assignment?.MentorId,
+                MentorName = assignment?.Mentor?.FullName,
+
+                Members = group.GroupMembers?.Select(m => new GroupMemberDto
+                {
+                    UserId = m.UserId,
+                    FullName = m.User?.FullName,
+                    RoleInGroup = m.RoleInGroup,
+                    JoinedAt = m.JoinedAt
+                }).ToList() ?? new List<GroupMemberDto>()
+            };
+
+            return response;
         }
 
     }

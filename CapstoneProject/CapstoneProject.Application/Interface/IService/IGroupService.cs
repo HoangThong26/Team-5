@@ -9,6 +9,6 @@ namespace CapstoneProject.Application.Interface.IService
         Task<GroupDetailResponse?> GetGroupDetailsAsync(int groupId);
         Task<string> InviteMemberAsync(int leaderId, InviteMemberRequest request);
         Task<string> AcceptInviteAsync(int invitationId);
-        
+        Task<GroupDetailResponse?> GetMyGroupAsync(int userId);
     }
 }

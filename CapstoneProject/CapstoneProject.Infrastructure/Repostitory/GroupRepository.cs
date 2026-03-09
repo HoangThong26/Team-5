@@ -72,25 +72,19 @@ namespace CapstoneProject.Infrastructure.Repostitory
                 };
                 await _context.GroupMembers.AddAsync(newMember);
 
-                // 4. Cập nhật trạng thái lời mời
                 invite.Status = "Accepted";
                 _context.GroupInvitations.Update(invite);
                 await _context.SaveChangesAsync();
-
-                // 5. ĐẾM SỐ THÀNH VIÊN HIỆN TẠI (Tính cả người vừa vào)
                 int memberCount = await _context.GroupMembers.CountAsync(m => m.GroupId == invite.GroupId);
 
                 string mentorNotification = "";
 
-                // 6. NẾU ĐỦ 4 NGƯỜI THÌ GÁN MENTOR
-                if (memberCount == 4)
+                if (memberCount >= 4)
                 {
-                    // Kiểm tra xem nhóm đã có Mentor chưa (đề phòng)
                     bool hasMentor = await _context.MentorAssignments.AnyAsync(a => a.GroupId == invite.GroupId);
 
                     if (!hasMentor)
                     {
-                        // Tìm Mentor ngẫu nhiên đang hoạt động
                         var randomMentor = await _context.Users
                             .Where(u => u.Role == "Mentor" && u.Status == "Active")
                             .OrderBy(u => Guid.NewGuid())
@@ -118,23 +112,21 @@ namespace CapstoneProject.Infrastructure.Repostitory
             catch (Exception)
             {
                 await transaction.RollbackAsync();
-                throw; // Để Service xử lý hoặc Log lỗi
+                throw; 
             }
         }
 
         public async Task<int> GetMemberCountAsync(int groupId)
         {
-            // Đếm số lượng thành viên hiện tại của một nhóm
             return await _context.GroupMembers.CountAsync(m => m.GroupId == groupId);
         }
         public async Task<Group?> GetGroupByIdAsync(int groupId)
         {
-            // Dùng Include để lấy Group kèm theo danh sách GroupMembers
             return await _context.Groups
                 .Include(g => g.GroupMembers)
+                    .ThenInclude(gm => gm.User) 
                 .FirstOrDefaultAsync(g => g.GroupId == groupId);
         }
-        // Copy 3 hàm này dán vào bên trong class GroupRepository
         public async Task<User?> GetUserByEmailAsync(string email)
         {
             return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
@@ -142,7 +134,6 @@ namespace CapstoneProject.Infrastructure.Repostitory
 
         public async Task<bool> HasPendingInvitationAsync(int groupId, int receiverId)
         {
-            // Kiểm tra xem lời mời đã tồn tại và đang ở trạng thái Pending chưa
             return await _context.GroupInvitations
                 .AnyAsync(i => i.GroupId == groupId && i.ReceiverId == receiverId && i.Status == "Pending");
         }
@@ -153,25 +144,40 @@ namespace CapstoneProject.Infrastructure.Repostitory
             await _context.SaveChangesAsync();
             return invitation;
         }
-
-        // 1. Lấy thông tin thư mời
         public async Task<GroupInvitation?> GetInvitationByIdAsync(int invitationId)
         {
             return await _context.GroupInvitations.FirstOrDefaultAsync(i => i.InvitationId == invitationId);
         }
 
-        // 2. Cập nhật trạng thái thư mời (từ Pending sang Accepted)
         public async Task UpdateInvitationAsync(GroupInvitation invitation)
         {
             _context.GroupInvitations.Update(invitation);
             await _context.SaveChangesAsync();
         }
 
-        // 3. Thêm sinh viên vào nhóm
         public async Task AddGroupMemberAsync(GroupMember member)
         {
             await _context.GroupMembers.AddAsync(member);
             await _context.SaveChangesAsync();
+        }
+        public async Task<Group?> GetGroupByUserIdAsync(int userId)
+        {
+            return await _context.Groups
+                .Include(g => g.GroupMembers)
+                    .ThenInclude(gm => gm.User) 
+                .FirstOrDefaultAsync(g => g.GroupMembers.Any(m => m.UserId == userId));
+        }
+
+        public async Task<Group?> GetGroupWithDetailsByUserIdAsync(int userId)
+        {
+            return await _context.Groups
+  
+                .Include(g => g.GroupMembers)
+                    .ThenInclude(gm => gm.User)
+
+                .Include(g => g.MentorAssignment)
+                    .ThenInclude(ma => ma.Mentor) 
+                .FirstOrDefaultAsync(g => g.GroupMembers.Any(m => m.UserId == userId));
         }
     }
 }

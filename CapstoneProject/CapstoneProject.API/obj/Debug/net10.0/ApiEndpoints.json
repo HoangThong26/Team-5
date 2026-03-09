@@ -177,6 +177,16 @@
   },
   {
     "ContainingType": "CapstoneProject.API.Controllers.GroupsController",
+    "Method": "GetMyGroup",
+    "RelativePath": "api/Groups",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CapstoneProject.API.Controllers.GroupsController",
     "Method": "GetGroupDetails",
     "RelativePath": "api/Groups/{id}",
     "HttpMethod": "GET",
@@ -234,38 +244,6 @@
       {
         "Name": "request",
         "Type": "CapstoneProject.Application.DTO.InviteMemberRequest",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "CapstoneProject.API.Controllers.TopicsController",
-    "Method": "ApproveTopic",
-    "RelativePath": "api/Topics/approve",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "request",
-        "Type": "CapstoneProject.Application.DTO.TopicApprovalRequest",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "CapstoneProject.API.Controllers.TopicsController",
-    "Method": "SubmitTopic",
-    "RelativePath": "api/Topics/submit",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "request",
-        "Type": "CapstoneProject.Application.DTO.TopicSubmitRequest",
         "IsRequired": true
       }
     ],

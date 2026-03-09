@@ -8,7 +8,7 @@ namespace CapstoneProject.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class GroupsController : ControllerBase
     {
         private readonly IGroupService _groupService;
@@ -93,6 +93,23 @@ namespace CapstoneProject.API.Controllers
                     <p style='font-size:18px;'>{result}</p>
                 </div>";
             return Content(htmlError, "text/html");
+        }
+
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetMyGroup()
+        {
+            var userIdClaim = int.Parse(User.FindFirst("id")?.Value);
+            //var userIdClaim = 47;
+            var result = await _groupService.GetMyGroupAsync(userIdClaim);
+
+            if (result == null)
+            {
+                return NotFound(new { message = "You are not in any group yet." });
+            }
+
+            return Ok(result);
         }
     }
 }
