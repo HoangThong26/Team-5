@@ -152,21 +152,31 @@ namespace CapstoneProject.Infrastructure.Services
             int smtpPort = 587;
             string senderName = "Capstone Project System";
 
+            // Tạo Link cho Accept và Reject
             string acceptLink = $"{baseUrl}/api/groups/accept-invite?invitationId={invitationId}";
+            string rejectLink = $"{baseUrl}/api/groups/reject-invite?invitationId={invitationId}";
 
             string subject = $"Invitation to join Capstone Group: {groupName}";
             string body = $@"
-                <div style='font-family: Arial, sans-serif; line-height: 1.6; color: #333;'>
-                    <h3 style='color: #0056b3;'>Hello {fullName},</h3>
-                    <p>You have received an invitation to join the group <strong>{groupName}</strong> for the Capstone Project.</p>
-                    <p>Please click the button below to confirm your participation:</p>
-                    <p style='margin: 20px 0;'>
-                        <a href='{acceptLink}' style='padding: 10px 20px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;'>Confirm Participation</a>
-                    </p>
-                    <p>If you do not wish to join, please ignore this email.</p>
-                    <hr style='border: none; border-top: 1px solid #eee; margin-top: 20px;' />
-                    <p style='font-size: 12px; color: #999;'>This is an automated email from the system, please do not reply to this message.</p>
-                </div>";
+        <div style='font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: auto; border: 1px solid #eee; padding: 20px; border-radius: 10px;'>
+            <h3 style='color: #0056b3;'>Hello {fullName},</h3>
+            <p>You have received an invitation to join the group <strong>{groupName}</strong> for the Capstone Project.</p>
+            <p>Please choose one of the options below:</p>
+            
+            <div style='margin: 30px 0; text-align: center;'>
+                <a href='{acceptLink}' style='padding: 12px 25px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block; margin-right: 10px;'>
+                    Confirm Participation
+                </a>
+
+                <a href='{rejectLink}' style='padding: 12px 25px; background-color: #dc3545; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;'>
+                    Reject Invitation
+                </a>
+            </div>
+
+            <p style='font-size: 0.9em; color: #666;'>If you didn't expect this invitation, you can safely click Reject or ignore this email.</p>
+            <hr style='border: none; border-top: 1px solid #eee; margin-top: 20px;' />
+            <p style='font-size: 12px; color: #999; text-align: center;'>This is an automated email from the system, please do not reply to this message.</p>
+        </div>";
 
             var mailMessage = new MailMessage
             {
@@ -185,7 +195,6 @@ namespace CapstoneProject.Infrastructure.Services
 
             await smtpClient.SendMailAsync(mailMessage);
         }
-
 
         public async Task<GroupDetailResponse?> GetMyGroupAsync(int userId)
         {
@@ -213,6 +222,36 @@ namespace CapstoneProject.Infrastructure.Services
             };
 
             return response;
+        }
+
+        public async Task<string> RejectInviteAsync(int invitationId)
+        {
+            // 1. Tìm bản ghi lời mời dựa trên ID
+            var invitation = await _groupRepository.GetInvitationByIdAsync(invitationId);
+
+            if (invitation == null)
+            {
+                return "Invitation not found or has been deleted.";
+            }
+
+            // 2. Kiểm tra xem lời mời đã được xử lý chưa (tránh việc reject một lời mời đã accept)
+            if (invitation.Status != "Pending")
+            {
+                return $"This invitation has already been {invitation.Status.ToLower()}.";
+            }
+
+            // 3. Cập nhật trạng thái thành 'Rejected'
+            invitation.Status = "Rejected";
+
+            // 4. Lưu vào Database thông qua Repository
+            bool isUpdated = await _groupRepository.UpdateInvitationStatusAsync(invitation);
+
+            if (isUpdated)
+            {
+                return "You have successfully rejected the invitation.";
+            }
+
+            return "An error occurred while processing your request.";
         }
 
     }

@@ -19,5 +19,6 @@ namespace CapstoneProject.Application.Interface.IRepository
         Task<string> AcceptInvitationWithMentorCheckAsync(int invitationId);
         Task<Group?> GetGroupByUserIdAsync(int userId);
         Task<Group?> GetGroupWithDetailsByUserIdAsync(int userId);
+        Task<bool> UpdateInvitationStatusAsync(GroupInvitation invitation);
     }
 }

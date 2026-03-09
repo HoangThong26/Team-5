@@ -95,7 +95,24 @@ namespace CapstoneProject.API.Controllers
             return Content(htmlError, "text/html");
         }
 
+        [HttpGet("reject-invite")]
+        [AllowAnonymous]
+        public async Task<IActionResult> RejectInvite([FromQuery] int invitationId)
+        {
+            // Bạn cần thêm hàm RejectInviteAsync vào IGroupService
+            var result = await _groupService.RejectInviteAsync(invitationId);
 
+            string statusColor = result.Contains("successfully") ? "orange" : "red";
+            string title = result.Contains("successfully") ? "Invitation Rejected" : "Oops!";
+
+            string html = $@"
+            <div style='text-align:center; padding:50px; font-family:Arial;'>
+                <h1 style='color:{statusColor};'>{title}</h1>
+                <p style='font-size:18px;'>{result}</p>
+                <p>You can close this tab now.</p>
+            </div>";
+            return Content(html, "text/html");
+        }
 
         [HttpGet]
         public async Task<IActionResult> GetMyGroup()

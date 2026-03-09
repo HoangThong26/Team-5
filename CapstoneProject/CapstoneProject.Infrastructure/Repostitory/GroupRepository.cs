@@ -179,5 +179,22 @@ namespace CapstoneProject.Infrastructure.Repostitory
                     .ThenInclude(ma => ma.Mentor) 
                 .FirstOrDefaultAsync(g => g.GroupMembers.Any(m => m.UserId == userId));
         }
+
+        public async Task<bool> UpdateInvitationStatusAsync(GroupInvitation invitation)
+        {
+            try
+            {
+                _context.GroupInvitations.Update(invitation);
+                var result = await _context.SaveChangesAsync();
+
+                // Trả về true nếu có ít nhất 1 dòng được cập nhật thành công
+                return result > 0;
+            }
+            catch (Exception)
+            {
+                // Log lỗi nếu cần thiết
+                return false;
+            }
+        }
     }
 }

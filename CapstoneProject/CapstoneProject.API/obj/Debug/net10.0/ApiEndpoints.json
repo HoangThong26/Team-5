@@ -250,6 +250,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "CapstoneProject.API.Controllers.GroupsController",
+    "Method": "RejectInvite",
+    "RelativePath": "api/Groups/reject-invite",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "invitationId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "CapstoneProject.API.Controllers.UserController",
     "Method": "GetProfile",
     "RelativePath": "api/User/get-profile",
