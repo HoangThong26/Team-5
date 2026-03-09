@@ -1,0 +1,120 @@
+{
+  "version": 3,
+  "targets": {
+    "net10.0": {
+      "CapstoneProject.Application/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "CapstoneProject.Domain": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/CapstoneProject.Application.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/CapstoneProject.Application.dll": {}
+        }
+      },
+      "CapstoneProject.Domain/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "compile": {
+          "bin/placeholder/CapstoneProject.Domain.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/CapstoneProject.Domain.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "CapstoneProject.Application/1.0.0": {
+      "type": "project",
+      "path": "../CapstoneProject.Application/CapstoneProject.Application.csproj",
+      "msbuildProject": "../CapstoneProject.Application/CapstoneProject.Application.csproj"
+    },
+    "CapstoneProject.Domain/1.0.0": {
+      "type": "project",
+      "path": "../CapstoneProject.Domain/CapstoneProject.Domain.csproj",
+      "msbuildProject": "../CapstoneProject.Domain/CapstoneProject.Domain.csproj"
+    }
+  },
+  "projectFileDependencyGroups": {
+    "net10.0": [
+      "CapstoneProject.Application >= 1.0.0",
+      "CapstoneProject.Domain >= 1.0.0"
+    ]
+  },
+  "packageFolders": {
+    "C:\\Users\\QuangAnh\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "C:\\Users\\QuangAnh\\Documents\\Github\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj",
+      "projectName": "CapstoneProject.Infrastructure",
+      "projectPath": "C:\\Users\\QuangAnh\\Documents\\Github\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj",
+      "packagesPath": "C:\\Users\\QuangAnh\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\QuangAnh\\Documents\\Github\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\obj\\",
+      "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
+      "configFilePaths": [
+        "C:\\Users\\QuangAnh\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+      ],
+      "originalTargetFrameworks": [
+        "net10.0"
+      ],
+      "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net10.0": {
+          "targetAlias": "net10.0",
+          "projectReferences": {
+            "C:\\Users\\QuangAnh\\Documents\\Github\\Team-5\\CapstoneProject\\CapstoneProject.Application\\CapstoneProject.Application.csproj": {
+              "projectPath": "C:\\Users\\QuangAnh\\Documents\\Github\\Team-5\\CapstoneProject\\CapstoneProject.Application\\CapstoneProject.Application.csproj"
+            },
+            "C:\\Users\\QuangAnh\\Documents\\Github\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\CapstoneProject.Domain.csproj": {
+              "projectPath": "C:\\Users\\QuangAnh\\Documents\\Github\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\CapstoneProject.Domain.csproj"
+            }
+          }
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "all"
+      },
+      "SdkAnalysisLevel": "10.0.100"
+    },
+    "frameworks": {
+      "net10.0": {
+        "targetAlias": "net10.0",
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48",
+          "net481"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.103/PortableRuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}
