@@ -16,6 +16,7 @@ export class AdminDashboardComponent implements OnInit {
   // User list
   users: any[] = [];
   isLoadingUsers = false;
+  isExporting: boolean = false;
 
   // --- CÁC BIẾN VÀ HÀM PHÂN TRANG ---
   currentPage = 1;
@@ -248,6 +249,45 @@ export class AdminDashboardComponent implements OnInit {
       error: () => {
         this.authService.clearToken();
         this.router.navigate(['/login']);
+      }
+    });
+  }
+  downloadStudentList() {
+    this.isExporting = true;
+    this.errorMessage = ''; // Xóa thông báo lỗi cũ (nếu có) trước khi chạy
+    this.successMessage = ''; 
+
+    this.adminService.exportStudents().subscribe({
+      next: (blob: Blob) => {
+        const url = window.URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = url;
+      
+        const today = new Date();
+        const dd = String(today.getDate()).padStart(2, '0');
+        const mm = String(today.getMonth() + 1).padStart(2, '0'); 
+        const yyyy = today.getFullYear();
+        
+        // Đổi tên file sang tiếng Anh
+        a.download = `StudentList_${dd}${mm}${yyyy}.xlsx`; 
+      
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url); 
+        
+        this.isExporting = false;
+        
+        // (Tùy chọn) Bạn có thể bật dòng dưới nếu muốn hiện thông báo thành công màu xanh
+        // this.successMessage = 'Student list exported successfully!'; 
+      },
+      error: (error) => {
+        console.error('Error exporting Excel file:', error);
+        
+        // Sử dụng biến errorMessage thay cho alert() để đồng bộ UI
+        this.errorMessage = 'An error occurred while exporting the student list!';
+        this.isExporting = false;
       }
     });
   }

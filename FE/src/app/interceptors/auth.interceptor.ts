@@ -8,7 +8,6 @@ import { catchError, switchMap, throwError } from 'rxjs';
 const AUTH_URLS = ['/api/auth/login', '/api/auth/refresh-token', '/api/auth/logout', '/api/auth/forgot-password', '/api/auth/reset-password', '/api/auth/verify'];
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  // Skip interceptor for auth endpoints
   const isAuthUrl = AUTH_URLS.some(url => req.url.includes(url));
   if (isAuthUrl) {
     return next(req);

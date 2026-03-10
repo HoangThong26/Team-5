@@ -33,4 +33,10 @@ export class AdminService {
     // Chú ý sửa lại endpoint /import-users sao cho khớp với route trên backend C#
     return this.http.post(`${this.apiUrl}/import-users`, formData);
   }
+
+  exportStudents(): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/export-students`, {
+      responseType: 'blob' // Bắt buộc phải có để Angular hiểu đây là file binary
+    });
+  }
 }
