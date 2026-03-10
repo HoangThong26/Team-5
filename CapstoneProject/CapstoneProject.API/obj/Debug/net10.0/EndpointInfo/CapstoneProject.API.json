@@ -146,6 +146,18 @@
         }
       }
     },
+    "/api/Admin/export-students": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Auth/login": {
       "post": {
         "tags": [
@@ -408,30 +420,21 @@
         }
       }
     },
-    "/api/Topics/submit": {
-      "post": {
+    "/api/Groups/reject-invite": {
+      "get": {
         "tags": [
-          "Topics"
+          "Groups"
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TopicSubmitRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TopicSubmitRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/TopicSubmitRequest"
-              }
+        "parameters": [
+          {
+            "name": "invitationId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -439,30 +442,11 @@
         }
       }
     },
-    "/api/Topics/approve": {
-      "put": {
+    "/api/Groups": {
+      "get": {
         "tags": [
-          "Topics"
+          "Groups"
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TopicApprovalRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TopicApprovalRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/TopicApprovalRequest"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "OK"
@@ -686,41 +670,6 @@
         },
         "additionalProperties": false
       },
-      "TopicApprovalRequest": {
-        "type": "object",
-        "properties": {
-          "topicId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "isApproved": {
-            "type": "boolean"
-          },
-          "comment": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "TopicSubmitRequest": {
-        "type": "object",
-        "properties": {
-          "groupId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "title": {
-            "type": "string",
-            "nullable": true
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "UpdatePasswordProfileRequest": {
         "type": "object",
         "properties": {
@@ -772,9 +721,6 @@
     },
     {
       "name": "Groups"
-    },
-    {
-      "name": "Topics"
     },
     {
       "name": "User"

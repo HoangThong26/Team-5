@@ -1314,6 +1314,10 @@
               "target": "Package",
               "version": "[4.1.0, )"
             },
+            "ClosedXML": {
+              "target": "Package",
+              "version": "[0.105.0, )"
+            },
             "ExcelDataReader": {
               "target": "Package",
               "version": "[3.8.0, )"

@@ -120,5 +120,23 @@ namespace CapstoneProject.API.Controllers
                     });
                 }
             }
+
+
+        [HttpGet("export-students")]
+        public async Task<IActionResult> ExportStudents()
+        {
+            try
+            {
+                var fileBytes = await _adminService.ExportStudentsToExcelAsync();
+
+                string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                string fileName = $"StudentList{DateTime.Now:ddMMyyyy}.xlsx";
+                return File(fileBytes, contentType, fileName);
+            }
+            catch (System.Exception ex)
+            {
+                return StatusCode(500, new { Message = "Errol Export file Excel.", Error = ex.Message });
+            }
         }
+    }
 }
