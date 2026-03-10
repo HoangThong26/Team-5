@@ -18,7 +18,7 @@ namespace CapstoneProject.Application.Interface.IRepository
 
         Task SaveChangesAsync();
 
-
+        Task<List<User>> GetStudentsAsync();
         Task<PasswordResetToken?> GetValidOtpByUserAsync(int userId, string otp);
         Task MarkOtpUsedAsync(PasswordResetToken token);
         Task RevokeAllRefreshTokensAsync(int userId);

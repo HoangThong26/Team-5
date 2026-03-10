@@ -897,23 +897,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\hbt2k\\.nuget\\packages\\": {},
+    "C:\\Users\\PC\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\hbt2k\\OneDrive\\Documents\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\CapstoneProject.Domain.csproj",
+      "projectUniqueName": "C:\\Users\\PC\\Documents\\GitHub\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\CapstoneProject.Domain.csproj",
       "projectName": "CapstoneProject.Domain",
-      "projectPath": "C:\\Users\\hbt2k\\OneDrive\\Documents\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\CapstoneProject.Domain.csproj",
-      "packagesPath": "C:\\Users\\hbt2k\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\hbt2k\\OneDrive\\Documents\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\obj\\",
+      "projectPath": "C:\\Users\\PC\\Documents\\GitHub\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\CapstoneProject.Domain.csproj",
+      "packagesPath": "C:\\Users\\PC\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\PC\\Documents\\GitHub\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\hbt2k\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\PC\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -922,6 +922,7 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
