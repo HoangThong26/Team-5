@@ -276,6 +276,43 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "CapstoneProject.API.Controllers.TopicsController",
+    "Method": "EditTopic",
+    "RelativePath": "api/Topics/edit/{topicId}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "topicId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "CapstoneProject.Application.DTO.TopicUpdateDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CapstoneProject.API.Controllers.TopicsController",
+    "Method": "SubmitTopic",
+    "RelativePath": "api/Topics/submit",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "CapstoneProject.Application.DTO.TopicSubmitRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "CapstoneProject.API.Controllers.UserController",
     "Method": "GetProfile",
     "RelativePath": "api/User/get-profile",
