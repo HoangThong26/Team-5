@@ -157,5 +157,12 @@ namespace CapstoneProject.Infrastructure.Repostitory
             await _context.Users.AddRangeAsync(users);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<List<User>> GetStudentsAsync()
+        {
+            return await _context.Users
+                .Where(u => u.Role == "Student")
+                .ToListAsync();
+        }
     }
 }

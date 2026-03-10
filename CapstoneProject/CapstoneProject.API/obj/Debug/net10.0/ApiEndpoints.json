@@ -43,6 +43,16 @@
   },
   {
     "ContainingType": "CapstoneProject.API.Controllers.AdminController",
+    "Method": "ExportStudents",
+    "RelativePath": "api/Admin/export-students",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CapstoneProject.API.Controllers.AdminController",
     "Method": "ImportUsersFromExcel",
     "RelativePath": "api/Admin/import-users",
     "HttpMethod": "POST",

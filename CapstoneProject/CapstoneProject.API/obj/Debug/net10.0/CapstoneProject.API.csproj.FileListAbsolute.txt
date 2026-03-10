@@ -527,3 +527,11 @@ C:\Users\hbt2k\OneDrive\Desktop\CapstoneProject\CapstoneProject.API\obj\Debug\ne
 C:\Users\hbt2k\OneDrive\Desktop\CapstoneProject\CapstoneProject.API\obj\Debug\net10.0\CapstoneProject.API.pdb
 C:\Users\hbt2k\OneDrive\Desktop\CapstoneProject\CapstoneProject.API\obj\Debug\net10.0\CapstoneProject.API.genruntimeconfig.cache
 C:\Users\hbt2k\OneDrive\Desktop\CapstoneProject\CapstoneProject.API\obj\Debug\net10.0\ref\CapstoneProject.API.dll
+C:\Users\hbt2k\OneDrive\Documents\Team-5\CapstoneProject\CapstoneProject.API\bin\Debug\net10.0\ClosedXML.dll
+C:\Users\hbt2k\OneDrive\Documents\Team-5\CapstoneProject\CapstoneProject.API\bin\Debug\net10.0\ClosedXML.Parser.dll
+C:\Users\hbt2k\OneDrive\Documents\Team-5\CapstoneProject\CapstoneProject.API\bin\Debug\net10.0\DocumentFormat.OpenXml.dll
+C:\Users\hbt2k\OneDrive\Documents\Team-5\CapstoneProject\CapstoneProject.API\bin\Debug\net10.0\DocumentFormat.OpenXml.Framework.dll
+C:\Users\hbt2k\OneDrive\Documents\Team-5\CapstoneProject\CapstoneProject.API\bin\Debug\net10.0\ExcelNumberFormat.dll
+C:\Users\hbt2k\OneDrive\Documents\Team-5\CapstoneProject\CapstoneProject.API\bin\Debug\net10.0\RBush.dll
+C:\Users\hbt2k\OneDrive\Documents\Team-5\CapstoneProject\CapstoneProject.API\bin\Debug\net10.0\SixLabors.Fonts.dll
+C:\Users\hbt2k\OneDrive\Documents\Team-5\CapstoneProject\CapstoneProject.API\bin\Debug\net10.0\System.IO.Packaging.dll

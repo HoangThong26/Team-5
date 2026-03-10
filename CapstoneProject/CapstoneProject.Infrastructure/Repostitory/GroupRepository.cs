@@ -17,7 +17,6 @@ namespace CapstoneProject.Infrastructure.Repostitory
 
         public async Task<bool> IsUserInAnyGroupAsync(int userId)
         {
-            // Kiểm tra User đã có trong nhóm nào chưa
             return await _context.GroupMembers.AnyAsync(m => m.UserId == userId);
         }
 
@@ -26,17 +25,11 @@ namespace CapstoneProject.Infrastructure.Repostitory
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
-                // 1. Lưu Group để lấy GroupId
                 await _context.Groups.AddAsync(group);
                 await _context.SaveChangesAsync();
-
-                // 2. Gán GroupId cho Leader và lưu vào bảng GroupMembers
                 member.GroupId = group.GroupId;
                 await _context.GroupMembers.AddAsync(member);
                 await _context.SaveChangesAsync();
-
-                // CHÚ Ý: Không gán Mentor ở đây vì lúc này nhóm mới có 1 người.
-
                 await transaction.CommitAsync();
                 return group;
             }
@@ -53,16 +46,12 @@ namespace CapstoneProject.Infrastructure.Repostitory
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
-                // 1. Lấy thông tin lời mời
                 var invite = await _context.GroupInvitations.FindAsync(invitationId);
                 if (invite == null || invite.Status != "Pending")
                     return "The invitation is invalid or has already been processed.";
-
-                // 2. Kiểm tra xem User này đã có nhóm khác chưa (Double check an toàn)
                 bool alreadyInGroup = await _context.GroupMembers.AnyAsync(m => m.UserId == invite.ReceiverId);
                 if (alreadyInGroup) return "You are already a member of another group.";
 
-                // 3. Thêm thành viên mới vào GroupMembers
                 var newMember = new GroupMember
                 {
                     GroupId =(int) invite.GroupId,
@@ -186,13 +175,10 @@ namespace CapstoneProject.Infrastructure.Repostitory
             {
                 _context.GroupInvitations.Update(invitation);
                 var result = await _context.SaveChangesAsync();
-
-                // Trả về true nếu có ít nhất 1 dòng được cập nhật thành công
                 return result > 0;
             }
             catch (Exception)
             {
-                // Log lỗi nếu cần thiết
                 return false;
             }
         }

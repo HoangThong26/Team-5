@@ -15,5 +15,6 @@ namespace CapstoneProject.Application.Interface.IService
         Task<List<AdminUserResponse>> SearchUsersAsync(string keyword);
 
         Task<int> ImportUsersFromExcelAsync(Stream excelStream);
+        Task<byte[]> ExportStudentsToExcelAsync();
     }
 }
