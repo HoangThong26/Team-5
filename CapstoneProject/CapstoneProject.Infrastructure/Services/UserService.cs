@@ -108,8 +108,5 @@ namespace CapstoneProject.Infrastructure.Services
 
             await _emailService.SendEmailAsync(user.Email, "Your OTP", $"Your OTP is: {otp}");
         }
-
-
-
     }
 }

@@ -1,8 +1,10 @@
 ﻿using CapstoneProject.Application.DTO;
 using CapstoneProject.Application.Interface.IService;
+using CapstoneProject.Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace CapstoneProject.API.Controllers
 {
@@ -33,9 +35,18 @@ namespace CapstoneProject.API.Controllers
         }
 
         [HttpGet("all-users")]
-        public async Task<IActionResult> GetUsers()
+        public async Task<IActionResult> GetAllUsers()
         {
-            var users = await _adminService.GetAllUsersAsync();
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                              ?? User.FindFirst("id")?.Value;
+
+            if (!int.TryParse(userIdClaim, out int currentUserId))
+            {
+                return Unauthorized();
+            }
+
+            var users = await _adminService.GetAllUsersAsync(currentUserId);
+
             return Ok(users);
         }
 
@@ -61,18 +72,23 @@ namespace CapstoneProject.API.Controllers
         }
 
         [HttpGet("search-users")]
-        public async Task<IActionResult> SearchUsers(string keyword)
+        public async Task<IActionResult> SearchUsers([FromQuery] string keyword)
         {
-            if (string.IsNullOrEmpty(keyword))
-                return BadRequest("Keyword is required");
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                              ?? User.FindFirst("id")?.Value;
 
-            var result = await _adminService.SearchUsersAsync(keyword);
+            if (!int.TryParse(userIdClaim, out int currentUserId))
+            {
+                return Unauthorized();
+            }
 
-            return Ok(result);
+            var users = await _adminService.SearchUsersAsync(keyword, currentUserId);
+
+            return Ok(users);
         }
 
 
-            [HttpPost("import-users")]
+        [HttpPost("import-users")]
             public async Task<IActionResult> ImportUsersFromExcel(IFormFile file)
             {
                 if (file == null)

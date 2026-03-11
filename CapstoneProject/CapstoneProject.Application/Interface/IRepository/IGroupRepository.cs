@@ -20,5 +20,12 @@ namespace CapstoneProject.Application.Interface.IRepository
         Task<Group?> GetGroupByUserIdAsync(int userId);
         Task<Group?> GetGroupWithDetailsByUserIdAsync(int userId);
         Task<bool> UpdateInvitationStatusAsync(GroupInvitation invitation);
+
+        Task<GroupMember?> GetGroupMemberAsync(int groupId, int userId);
+        Task<bool> RemoveGroupMemberAsync(GroupMember member);
+        Task<List<Group>> GetAllGroupsWithDetailsAsync();
+        Task<bool> DeleteGroupAsync(int groupId);
+        Task<bool> RemoveMentorFromGroupAsync(int groupId);
+        Task<int?> GetGroupLeaderIdAsync(int groupId);
     }
 }

@@ -1,7 +1,7 @@
 [
   {
     "ContainingType": "CapstoneProject.API.Controllers.AdminController",
-    "Method": "GetUsers",
+    "Method": "GetAllUsers",
     "RelativePath": "api/Admin/all-users",
     "HttpMethod": "GET",
     "IsController": true,
@@ -197,6 +197,27 @@
   },
   {
     "ContainingType": "CapstoneProject.API.Controllers.GroupsController",
+    "Method": "KickMember",
+    "RelativePath": "api/Groups/{groupId}/members/{targetUserId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "groupId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "targetUserId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CapstoneProject.API.Controllers.GroupsController",
     "Method": "GetGroupDetails",
     "RelativePath": "api/Groups/{id}",
     "HttpMethod": "GET",
@@ -225,6 +246,48 @@
         "IsRequired": false
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CapstoneProject.API.Controllers.GroupsController",
+    "Method": "DeleteGroup",
+    "RelativePath": "api/Groups/admin/{groupId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "groupId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CapstoneProject.API.Controllers.GroupsController",
+    "Method": "KickMentorByAdmin",
+    "RelativePath": "api/Groups/admin/{groupId}/kick-mentor",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "groupId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CapstoneProject.API.Controllers.GroupsController",
+    "Method": "GetAllGroups",
+    "RelativePath": "api/Groups/admin/all-groups",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
