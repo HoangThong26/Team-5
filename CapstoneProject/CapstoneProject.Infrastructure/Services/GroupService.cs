@@ -109,6 +109,11 @@ namespace CapstoneProject.Infrastructure.Services
 
             var invitee = await _groupRepository.GetUserByEmailAsync(request.InviteeEmail);
             if (invitee == null) return "No student found with this email address in the system!";
+
+
+            if (invitee.Role != "Student")
+                return $"Invalid request: You can only invite Students. You cannot invite a {invitee.Role}!";
+
             if (invitee.UserId == leaderId) return "You cannot invite yourself!";
 
             string inviteeName = invitee.FullName ?? "Student";
@@ -151,8 +156,6 @@ namespace CapstoneProject.Infrastructure.Services
             string smtpServer = "smtp.gmail.com";
             int smtpPort = 587;
             string senderName = "Capstone Project System";
-
-            // Tạo Link cho Accept và Reject
             string acceptLink = $"{baseUrl}/api/groups/accept-invite?invitationId={invitationId}";
             string rejectLink = $"{baseUrl}/api/groups/reject-invite?invitationId={invitationId}";
 
@@ -226,24 +229,17 @@ namespace CapstoneProject.Infrastructure.Services
 
         public async Task<string> RejectInviteAsync(int invitationId)
         {
-            // 1. Tìm bản ghi lời mời dựa trên ID
             var invitation = await _groupRepository.GetInvitationByIdAsync(invitationId);
 
             if (invitation == null)
             {
                 return "Invitation not found or has been deleted.";
             }
-
-            // 2. Kiểm tra xem lời mời đã được xử lý chưa (tránh việc reject một lời mời đã accept)
             if (invitation.Status != "Pending")
             {
                 return $"This invitation has already been {invitation.Status.ToLower()}.";
             }
-
-            // 3. Cập nhật trạng thái thành 'Rejected'
             invitation.Status = "Rejected";
-
-            // 4. Lưu vào Database thông qua Repository
             bool isUpdated = await _groupRepository.UpdateInvitationStatusAsync(invitation);
 
             if (isUpdated)
@@ -252,6 +248,102 @@ namespace CapstoneProject.Infrastructure.Services
             }
 
             return "An error occurred while processing your request.";
+        }
+
+        public async Task<string> KickMemberAsync(int requesterId, int groupId, int targetUserId)
+        {
+            var group = await _groupRepository.GetGroupByIdAsync(groupId);
+            if (group == null)
+                throw new Exception("Group not found.");
+
+
+            if (group.LeaderId != requesterId)
+                throw new Exception("Only the Leader can kick members.");
+
+            if (group.IsLocked == true || group.Status != "Forming")
+                throw new Exception("The group is locked or no longer in the forming stage.");
+
+            if (requesterId == targetUserId)
+                throw new Exception("The Leader cannot kick themselves.");
+
+            var memberToKick = await _groupRepository.GetGroupMemberAsync(groupId, targetUserId);
+            if (memberToKick == null)
+                throw new Exception("This user is not a member of your group.");
+            bool isRemoved = await _groupRepository.RemoveGroupMemberAsync(memberToKick);
+
+            if (!isRemoved)
+                throw new Exception("An error occurred while trying to remove the member.");
+
+            return "Member has been successfully kicked from the group.";
+        }
+
+
+        public async Task<List<GroupDetailResponse>> GetAllGroupsForAdminAsync()
+        {
+            var groups = await _groupRepository.GetAllGroupsWithDetailsAsync();
+
+            return groups.Select(group => new GroupDetailResponse
+            {
+                GroupId = group.GroupId,
+                GroupName = group.GroupName,
+                Status = group.Status,
+                CreatedAt = group.CreatedAt,
+                MentorId = group?.MentorAssignment?.MentorId,
+                MentorName = group?.MentorAssignment?.Mentor?.FullName,
+                Members = group?.GroupMembers?.Select(m => new GroupMemberDto
+                {
+                    UserId = m.UserId,
+                    FullName = m.User?.FullName,
+                    RoleInGroup = m.RoleInGroup,
+                    JoinedAt = m.JoinedAt
+                }).ToList() ?? new List<GroupMemberDto>()
+            }).ToList();
+        }
+
+        public async Task<string> DeleteGroupByAdminAsync(int groupId, int currentUserId, string currentUserRole)
+        {
+            try
+            {
+                int? leaderId = await _groupRepository.GetGroupLeaderIdAsync(groupId);
+
+                if (leaderId == null)
+                    return "Group not found in the system.";
+
+                bool isAdmin = currentUserRole == "Admin";
+                bool isLeader = (leaderId == currentUserId);
+
+                if (!isAdmin && !isLeader)
+                {
+                    return "Access denied. Only Admin or Group Leader can delete this group.";
+                }
+
+                bool isDeleted = await _groupRepository.DeleteGroupAsync(groupId);
+
+                if (!isDeleted) return "Failed to delete the group.";
+
+                return "Group and all related data have been successfully deleted.";
+            }
+            catch (Exception ex)
+            {
+                return $"An error occurred while deleting the group: {ex.Message}";
+            }
+        }
+
+        public async Task<string> KickMentorByAdminAsync(int groupId)
+        {
+            try
+            {
+                bool isKicked = await _groupRepository.RemoveMentorFromGroupAsync(groupId);
+                if (!isKicked)
+                {
+                    return "This group currently has no Mentor or does not exist.";
+                }
+                return "Mentor successfully removed from the group! Group status has been changed back to 'Forming'.";
+            }
+            catch (Exception ex)
+            {
+                return $"An error occurred while removing the mentor: {ex.Message}";
+            }
         }
 
     }

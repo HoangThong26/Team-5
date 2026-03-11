@@ -1,9 +1,11 @@
 ﻿using CapstoneProject.API.Hubs;
 using CapstoneProject.Application.DTO;
 using CapstoneProject.Application.Interface.IService;
+using DocumentFormat.OpenXml.Math;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace CapstoneProject.API.Controllers
@@ -130,6 +132,81 @@ namespace CapstoneProject.API.Controllers
             }
 
             return Ok(result);
+        }
+
+        [HttpDelete("{groupId}/members/{targetUserId}")]
+        public async Task<IActionResult> KickMember(int groupId, int targetUserId)
+        {
+            try
+            {
+
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier) ?? User.FindFirst("UserId");
+
+                if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int requesterId))
+                {
+                    return Unauthorized(new { message = "Unauthorized or invalid token." });
+                }
+
+                //int requesterId = 52;
+
+                var resultMessage = await _groupService.KickMemberAsync(requesterId, groupId, targetUserId);
+
+                return Ok(new { message = resultMessage });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [Authorize(Roles = "Admin")] 
+        [HttpGet("admin/all-groups")]
+        public async Task<IActionResult> GetAllGroups()
+        {
+            var result = await _groupService.GetAllGroupsForAdminAsync();
+            return Ok(result);
+        }
+        [Authorize(Roles = "Admin")] 
+        [HttpDelete("admin/{groupId}/kick-mentor")]
+        public async Task<IActionResult> KickMentorByAdmin(int groupId)
+        {
+            try
+            {
+                var result = await _groupService.KickMentorByAdminAsync(groupId);
+
+                if (result.Contains("successfully"))
+                {
+                    return Ok(new { message = result });
+                }
+
+                return BadRequest(new { message = result });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = $"System error: {ex.Message}" });
+            }
+        }
+
+        [HttpDelete("admin/{groupId}")]
+        [Authorize(Roles = "Admin,Student")] // Cho phép cả 2 Role gọi API
+        public async Task<IActionResult> DeleteGroup(int groupId)
+        {
+            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+            var roleClaim = User.FindFirst(System.Security.Claims.ClaimTypes.Role);
+
+            if (userIdClaim == null || roleClaim == null) return Unauthorized();
+
+            int currentUserId = int.Parse(userIdClaim.Value);
+            string currentUserRole = roleClaim.Value;
+
+            var result = await _groupService.DeleteGroupByAdminAsync(groupId, currentUserId, currentUserRole);
+
+ 
+            if (result.Contains("not found")) return NotFound(new { message = result });
+            if (result.Contains("Access denied")) return Forbid();
+            if (result.Contains("successfully")) return Ok(new { message = result });
+
+            return StatusCode(500, new { message = result });
         }
     }
 }
