@@ -86,6 +86,24 @@ namespace CapstoneProject.Infrastructure.Services
             await _topicRepository.SaveChangesAsync();
         }
 
+        public async Task<TopicDto?> GetTopicByGroupIdAsync(int groupId)
+        {
+            // Giả sử bạn có ITopicRepository đã được inject
+            var topic = await _topicRepository.GetByGroupIdAsync(groupId);
+
+            if (topic == null) return null;
+
+            // Chuyển đổi từ Entity sang DTO (Bạn tự viết hoặc dùng AutoMapper)
+            return new TopicDto
+            {
+                TopicId = topic.TopicId,
+                GroupId = topic.GroupId ?? 0,
+                Title = topic.Title ?? string.Empty,
+                Description = topic.Description ?? string.Empty,
+                Status = topic.Status ?? string.Empty
+            };
+        }
+
         public async Task ApproveTopicAsync(int reviewerId, TopicApprovalRequest request)
         {
             // Existing approval logic...

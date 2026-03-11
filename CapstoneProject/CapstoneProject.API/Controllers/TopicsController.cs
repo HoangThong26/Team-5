@@ -47,5 +47,19 @@ namespace CapstoneProject.API.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+        [HttpGet("group/{groupId}")]
+        public async Task<IActionResult> GetTopicByGroupId(int groupId)
+        {
+            try
+            {
+                var topic = await _topicService.GetTopicByGroupIdAsync(groupId);
+                // Trả về null vẫn là 200 OK, Frontend sẽ nhận được null
+                return Ok(topic);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
     }
 }
