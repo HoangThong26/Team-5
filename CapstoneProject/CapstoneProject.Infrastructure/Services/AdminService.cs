@@ -40,9 +40,10 @@ namespace CapstoneProject.Infrastructure.Services
             return $"Created.";
         }
 
-        public async Task<List<User>> GetAllUsersAsync()
+        public async Task<List<User>> GetAllUsersAsync(int currentUserId)
         {
-            return await _userRepository.GetAllUsersAsync();
+            var allUsers = await _userRepository.GetAllUsersAsync();
+            return allUsers.Where(user => user.UserId != currentUserId).ToList();
         }
 
         public async Task DeleteAsync(int userId)
@@ -55,19 +56,22 @@ namespace CapstoneProject.Infrastructure.Services
             await _userRepository.ChangeStatusAsync(userId);
         }
 
-        public async Task<List<AdminUserResponse>> SearchUsersAsync(string keyword)
+        // Thêm currentUserId vào tham số
+        public async Task<List<AdminUserResponse>> SearchUsersAsync(string keyword, int currentUserId)
         {
             var users = await _userRepository.SearchUsersAsync(keyword);
 
-            return users.Select(u => new AdminUserResponse
-            {
-                UserId = u.UserId,
-                Email = u.Email,
-                FullName = u.FullName,
-                Phone = u.Phone,
-                Status = u.Status,
-                Role = u.Role
-            }).ToList();
+            return users
+                .Where(u => u.UserId != currentUserId) 
+                .Select(u => new AdminUserResponse
+                {
+                    UserId = u.UserId,
+                    Email = u.Email,
+                    FullName = u.FullName,
+                    Phone = u.Phone,
+                    Status = u.Status,
+                    Role = u.Role
+                }).ToList();
         }
 
 
