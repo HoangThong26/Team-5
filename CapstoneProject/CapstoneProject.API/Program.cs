@@ -18,9 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<LoginRequestValidator>();
-// Đăng ký các dịch vụ cho Topic
-builder.Services.AddScoped<ITopicRepository, TopicRepository>();
-builder.Services.AddScoped<ITopicService, TopicService>();
+
 builder.Services.AddControllers();
 builder.Services.AddSignalR(); // Đã có sẵn, rất tốt!
 builder.Services.AddEndpointsApiExplorer();
