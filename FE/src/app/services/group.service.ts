@@ -22,6 +22,13 @@ export interface GroupMemberDto {
   joinedAt: Date;
 }
 
+export interface TopicResponse {
+  topicId: number;
+  title: string;
+  description: string;
+  status: string;
+}
+
 export interface GroupDetailResponse {
   groupId: number;
   groupName: string;
@@ -29,6 +36,7 @@ export interface GroupDetailResponse {
   createdAt: string;
   mentorName: string | null;
   members: GroupMemberDto[];
+  topic?: TopicResponse;
 }
 
 @Injectable({
