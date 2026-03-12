@@ -9,6 +9,7 @@ import { AdminCreateUserRequest } from '../models/user.model';
 export class AdminService {
 
   private apiUrl = 'https://localhost:7084/api/Admin';
+ private apiUrlGroup = 'https://localhost:7084/api/Groups';
 
   constructor(private http: HttpClient) {}
 
@@ -29,14 +30,24 @@ export class AdminService {
   importUsers(file: File): Observable<any> {
     const formData = new FormData();
     formData.append('file', file, file.name);
-
-    // Chú ý sửa lại endpoint /import-users sao cho khớp với route trên backend C#
     return this.http.post(`${this.apiUrl}/import-users`, formData);
   }
 
   exportStudents(): Observable<Blob> {
     return this.http.get(`${this.apiUrl}/export-students`, {
-      responseType: 'blob' // Bắt buộc phải có để Angular hiểu đây là file binary
+      responseType: 'blob' 
     });
   }
+
+  getAllGroups(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrlGroup}/admin/all-groups`);
+}
+
+deleteGroup(groupId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrlGroup}/admin/${groupId}`);
+}
+
+kickMentor(groupId: number): Observable<any> {
+  return this.http.delete(`${this.apiUrlGroup}/admin/${groupId}/kick-mentor`);
+}
 }

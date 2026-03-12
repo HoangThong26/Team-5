@@ -962,4 +962,390 @@
   .form-actions {
     flex-direction: column;
   }
+
+  
 }
+
+/* =========================================
+   GROUP MENU & MODAL STYLES (Extracted)
+   ========================================= */
+
+/* Utilities & Icons */
+.ext-mt-section { margin-top: 2.5rem; }
+.ext-mr-spinner { margin-right: 10px; }
+.icon-purple { color: #8b5cf6; margin-right: 8px; }
+.icon-blue { color: #3b82f6; }
+.icon-green { color: #10b981; }
+.icon-orange { color: #f59e0b; }
+.warning-icon { font-size: 2.5rem; color: #f87171; }
+
+/* Group Section */
+.group-section-title {
+  margin-bottom: 1rem;
+  color: #374151;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.group-loading-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  max-width: 400px;
+}
+.group-loading-card .loading-text {
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.group-menu-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  max-width: 400px;
+  background: white;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border-top: 4px solid #8b5cf6;
+}
+
+/* Replaced inline onmouseover/onmouseout with proper CSS hover */
+.group-action-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px 10px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.group-action-btn i { font-size: 1.8rem; }
+.group-action-btn span {
+  font-weight: 600;
+  color: #334155;
+  font-size: 0.95rem;
+}
+.group-action-btn:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+/* Custom Modals */
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.custom-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(17, 24, 39, 0.6);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+
+.custom-modal-container {
+  background: white;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  animation: modalFadeIn 0.3s ease-out;
+}
+
+.custom-modal-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f9fafb;
+  border-radius: 16px 16px 0 0;
+}
+
+.modal-title {
+  margin: 0;
+  color: #1f2937;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.modal-close-btn {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: #6b7280;
+  cursor: pointer;
+}
+
+.custom-modal-body {
+  padding: 24px;
+  overflow-y: auto;
+}
+
+/* Modal States & Banners */
+.modal-empty-state {
+  text-align: center;
+  color: #9ca3af;
+}
+.empty-icon {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.alert-banner {
+  padding: 15px;
+  border-radius: 8px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.alert-danger { background: #fee2e2; color: #991b1b; }
+.alert-warning { background: #fef2f2; color: #991b1b; } /* As per original code colors */
+
+.slots-remaining-banner {
+  color: #15803d;
+  font-size: 0.9rem;
+  margin-top: 0;
+  background: #dcfce7;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+/* Group Info Details */
+.group-info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e5e7eb;
+}
+.group-label { font-size: 0.85rem; color: #6b7280; }
+.group-name { margin: 5px 0 0 0; color: #1e3a8a; font-size: 1.4rem; }
+.group-status-badge {
+  padding: 6px 14px;
+  background: #dbeafe;
+  color: #1e40af;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.mentor-card {
+  margin-top: 15px;
+  padding: 12px;
+  background: #f0f9ff;
+  border-radius: 10px;
+  border: 1px dashed #7dd3fc;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.mentor-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #bae6fd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0369a1;
+}
+.mentor-avatar i { font-size: 1.2rem; }
+.mentor-label {
+  font-size: 0.75rem;
+  color: #0369a1;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.mentor-name {
+  margin: 2px 0 0 0;
+  font-weight: 600;
+  color: #0c4a6e;
+  font-size: 1rem;
+}
+.mentor-hint { font-size: 0.7rem; color: #64748b; }
+
+.member-count-row {
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.member-count-label { margin: 0; color: #4b5563; font-size: 0.95rem; }
+.member-count-label i { margin-right: 5px; color: #6b7280; }
+.member-count-value { font-weight: 700; color: #111827; }
+
+/* Modal Forms */
+.modal-desc { color: #6b7280; margin-top: 0; }
+.modal-input-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.label-mt { margin-top: 15px; }
+.modal-input-field {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  outline: none;
+  box-sizing: border-box;
+  margin-bottom: 15px;
+}
+
+.btn-modal-primary {
+  width: 100%;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+.bg-purple { background: #8b5cf6; }
+.bg-green { background: #10b981; }
+
+/* Member List */
+.member-list-title { margin: 0 0 15px 0; color: #374151; }
+.member-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.member-list-item {
+  padding: 12px;
+  background: #f9fafb;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid #e5e7eb;
+}
+.member-avatar-small {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+}
+.member-name {
+  margin: 0;
+  font-weight: 600;
+  color: #111827;
+  font-size: 0.95rem;
+}
+.member-role-badge {
+  font-size: 0.75rem;
+  color: #4b5563;
+  background: #e5e7eb;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-top: 4px;
+  display: inline-block;
+}
+
+/* Replaced inline JS for Kick Button */
+.kick-member-btn {
+  margin-left: auto;
+  padding: 6px 12px;
+  border: none;
+  background-color: #ef4444;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: background 0.2s;
+}
+
+/* Vùng cảnh báo nguy hiểm */
+.danger-zone {
+  margin-top: 25px;
+  padding: 15px;
+  background-color: #fff5f5; /* Màu nền đỏ cực nhạt */
+  border: 1px dashed #feb2b2; /* Viền đứt đoạn màu hồng đào */
+  border-radius: 12px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.danger-zone:hover {
+  background-color: #fff0f0;
+  border-color: #f56565;
+}
+
+/* Tiêu đề vùng nguy hiểm */
+.danger-text {
+  display: block;
+  color: #c53030;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+
+/* Nút xóa nhóm */
+.btn-delete-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  background-color: #e53e3e; /* Đỏ chuẩn Danger */
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.1s, background-color 0.2s, box-shadow 0.2s;
+}
+
+.btn-delete-group i {
+  font-size: 1rem;
+}
+
+.btn-delete-group:hover:not(:disabled) {
+  background-color: #c53030;
+  box-shadow: 0 4px 12px rgba(229, 62, 62, 0.3);
+}
+
+.btn-delete-group:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.btn-delete-group:disabled {
+  background-color: #feb2b2;
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+.modal-divider {
+  margin: 20px 0;
+  border: 0;
+  border-top: 1px solid #edf2f7;
+}
+.kick-member-btn:hover { background-color: #dc2626; }

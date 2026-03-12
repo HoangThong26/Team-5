@@ -291,4 +291,60 @@ export class AdminDashboardComponent implements OnInit {
       }
     });
   }
+
+
+  groups: any[] = [];
+  isLoadingGroups = false;
+  viewMode: 'users' | 'groups' = 'users'; // Để chuyển đổi giữa quản lý User và Group
+
+  // ... (ngOnInit) ...
+switchView(mode: 'users' | 'groups') {
+  this.viewMode = mode;
+  if (mode === 'users') {
+    // Đảm bảo users không bị rỗng, nếu rỗng thì load lại
+    if (this.users.length === 0) {
+      this.loadUsers();
+    }
+  } else if (mode === 'groups') {
+    this.loadGroups();
+  }
+}
+
+  loadGroups() {
+    this.isLoadingGroups = true;
+    this.adminService.getAllGroups().subscribe({
+      next: (res) => {
+        this.groups = res;
+        this.isLoadingGroups = false;
+      },
+      error: (err) => {
+        this.isLoadingGroups = false;
+        this.errorMessage = 'Could not load group list.';
+      }
+    });
+  }
+
+  handleKickMentor(groupId: number) {
+    if (confirm('Are you sure you want to remove the mentor from this group?')) {
+      this.adminService.kickMentor(groupId).subscribe({
+        next: (res: any) => {
+          this.successMessage = res.message;
+          this.loadGroups(); // Refresh lại danh sách
+        },
+        error: (err) => this.errorMessage = this.extractError(err, 'Failed to kick mentor.')
+      });
+    }
+  }
+
+  handleDeleteGroup(groupId: number) {
+    if (confirm('WARNING: This will delete the group and all its assignments. Proceed?')) {
+      this.adminService.deleteGroup(groupId).subscribe({
+        next: (res: any) => {
+          this.successMessage = res.message;
+          this.loadGroups();
+        },
+        error: (err) => this.errorMessage = this.extractError(err, 'Failed to delete group.')
+      });
+    }
+  }
 }

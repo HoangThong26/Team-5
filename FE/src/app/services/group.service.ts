@@ -79,4 +79,16 @@ export class GroupService {
       responseType: 'text' 
     });
   }
+
+  kickMember(groupId: number, targetUserId: number): Observable<any> {
+    const url = `${this.apiUrl}/${groupId}/members/${targetUserId}`;
+    
+    return this.http.delete(url);
+  }
+
+  // Trong group.service.ts
+deleteGroup(groupId: number): Observable<any> {
+  // Vì Leader cũng dùng chung API này (đã phân quyền Roles="Admin,Student")
+  return this.http.delete(`https://localhost:7084/api/Groups/admin/${groupId}`);
+}
 }
