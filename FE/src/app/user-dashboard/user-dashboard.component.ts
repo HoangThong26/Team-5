@@ -1,80 +1,224 @@
-  import { Component, OnInit, OnDestroy, Inject, PLATFORM_ID } from '@angular/core';
-  import { isPlatformBrowser } from '@angular/common';
-  import { FormsModule } from '@angular/forms';
-  import { Router } from '@angular/router';
-  import { Subscription } from 'rxjs';
 
-  import { AuthService } from '../services/auth.service';
-  import { UserService } from '../services/user.service';
-  import { UserProfile } from '../models/user.model';
-  import { GroupService, GroupDetailResponse } from '../services/group.service';
-  import { WebsocketService } from '../services/websocket.service';
+import { Component, OnInit, OnDestroy, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs'; 
 
-  @Component({
-    selector: 'app-user-dashboard',
-    standalone: true,
-    imports: [FormsModule],
-    templateUrl: './user-dashboard.component.html',
-    styleUrls: ['./user-dashboard.component.css']
-  })
-  export class UserDashboardComponent implements OnInit, OnDestroy {
+import { AuthService } from '../services/auth.service';
+import { UserService } from '../services/user.service';
+import { UserProfile } from '../models/user.model';
+import { GroupService, GroupDetailResponse } from '../services/group.service';
+import { WebsocketService } from '../services/websocket.service'; 
+import { TopicService } from '../services/topic.service';
 
-    activeModal: 'none' | 'details' | 'create' | 'invite' | 'members' = 'none';
-    showGroupDetails: boolean = false;
-    private isBrowser: boolean;
-    myGroup: GroupDetailResponse | null = null;
-    newGroupName = '';
-    inviteEmail = '';
-    isGroupLoading = false;
+@Component({
+  selector: 'app-user-dashboard',
+  standalone: true,
+  imports: [FormsModule],
+  templateUrl: './user-dashboard.component.html',
+  styleUrls: ['./user-dashboard.component.css']
+})
+export class UserDashboardComponent implements OnInit, OnDestroy { 
+  
+  activeModal: 'none' | 'details' | 'create' | 'invite' | 'members' = 'none';
+  showGroupDetails: boolean = false;
+  private isBrowser: boolean;
+  myGroup: GroupDetailResponse | null = null;
+  newGroupName = '';
+  inviteEmail = '';
+  isGroupLoading = false;
+  
+  // Sidebar
+  activeTab: 'overview' | 'profile' | 'password' = 'overview';
+  sidebarCollapsed = false;
 
-    // Sidebar
-    activeTab: 'overview' | 'profile' | 'password' = 'overview';
-    sidebarCollapsed = false;
+  // Profile
+  profile: UserProfile | null = null;
+  editMode = false;
+  isLoading = false;
 
-    // Profile
-    profile: UserProfile | null = null;
-    editMode = false;
-    isLoading = false;
+  // Messages
+  successMessage = '';
+  errorMessage = '';
 
-    // Messages
-    successMessage = '';
-    errorMessage = '';
+  // Edit fields
+  fullName = '';
+  phone = '';
+  avatarUrl = '';
+  avatarPreview = '';
+  selectedAvatarFile: File | null = null;
 
-    // Edit fields
-    fullName = '';
-    phone = '';
-    avatarUrl = '';
-    avatarPreview = '';
-    selectedAvatarFile: File | null = null;
+  // Password change fields
+  currentPassword = '';
+  newPassword = '';
+  confirmPassword = '';
+  otp = '';
+  isChangingPassword = false;
+  isSendingOtp = false;
+  otpSent = false;
+  showCurrentPassword = false;
+  showNewPassword = false;
+  showConfirmPassword = false;
 
-    // Password change fields
-    currentPassword = '';
-    newPassword = '';
-    confirmPassword = '';
-    otp = '';
-    isChangingPassword = false;
-    isSendingOtp = false;
-    otpSent = false;
-    showCurrentPassword = false;
-    showNewPassword = false;
-    showConfirmPassword = false;
+  // Topic fields
+  topicTitle = '';
+  topicDescription = '';
+  isTopicEditing = false;
+  isTopicLoading = false;
 
-    // ==========================================
-    // BIẾN QUẢN LÝ WEBSOCKET
-    // ==========================================
-    private wsSubscription?: Subscription;
+  // ==========================================
+  // BIẾN QUẢN LÝ WEBSOCKET
+  // ==========================================
+  private wsSubscription?: Subscription;
 
-    constructor(
-      private userService: UserService,
-      private authService: AuthService,
-      private groupService: GroupService,
-      private wsService: WebsocketService,
-      private router: Router,
-      @Inject(PLATFORM_ID) platformId: Object
-    ) {
-      this.isBrowser = isPlatformBrowser(platformId);
+  constructor(
+    private userService: UserService,
+    private authService: AuthService,
+    private groupService: GroupService,
+    private wsService: WebsocketService,
+    private topicService: TopicService,
+    private router: Router,
+    @Inject(PLATFORM_ID) platformId: Object
+  ) {
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
+  loadMyGroup() {
+    this.isGroupLoading = true;
+    this.groupService.getMyGroup().subscribe({
+      next: (res) => {
+        this.myGroup = res; 
+        if (res.topic) {
+          this.topicTitle = res.topic.title;
+          this.topicDescription = res.topic.description;
+        }
+        this.isGroupLoading = false;
+      },
+      error: (err) => {
+        this.isGroupLoading = false;
+        this.myGroup = null;
+      }
+    });
+  }
+
+  // ==========================================
+  // HÀM LOAD DỮ LIỆU NGẦM (KHÔNG BẬT LOADING)
+  // ==========================================
+  loadMyGroupSilently() {
+  this.groupService.getMyGroup().subscribe({
+    next: (res) => {
+      this.myGroup = res; 
+
+      // BỔ SUNG: Sau khi có group, phải đi lấy topic thì UI mới hiện View Mode được
+      if (this.myGroup?.groupId) {
+        this.topicService.getTopicByGroupId(this.myGroup.groupId).subscribe({
+          next: (topicRes) => {
+            if (this.myGroup) {
+              this.myGroup.topic = topicRes; // Gán topic vào để HTML nhận diện
+              console.log('Topic đã được nạp:', topicRes);
+            }
+          },
+          error: (err) => {
+            console.log('Nhóm này chưa có topic hoặc lỗi API', err);
+            if (this.myGroup) this.myGroup.topic = undefined;
+          }
+        });
+      }
+    },
+    error: (err) => console.log('Silently load group failed', err)
+  });
+}
+
+
+  // ===== Topic Actions =====
+  
+  // Hàm này dùng để mở form edit và gán giá trị hiện tại của topic vào input
+  enableTopicEdit() {
+    if (this.myGroup?.topic) {
+      this.topicTitle = this.myGroup.topic.title;
+      this.topicDescription = this.myGroup.topic.description;
+      this.isTopicEditing = true;
+    }
+  }
+
+  cancelTopicEdit() {
+    this.isTopicEditing = false;
+    this.topicTitle = '';
+    this.topicDescription = '';
+  }
+  getStatusColor(status: string): string {
+  switch (status) {
+    case 'Approved': return '#dcfce7'; // Xanh lá
+    case 'Pending':  return '#fef9c3'; // Vàng nhạt
+    case 'Rejected': return '#fee2e2'; // Đỏ nhạt
+    default:         return '#e2e8f0'; // Xám
+  }
+  }
+
+  getStatusTextColor(status: string): string {
+    switch (status) {
+      case 'Approved': return '#166534';
+      case 'Pending':  return '#854d0e';
+      case 'Rejected': return '#991b1b';
+      default:         return '#475569';
+    }
+  }
+
+  private alertTimer: any;
+  handleTopicSubmit() {
+    if (this.alertTimer) clearTimeout(this.alertTimer);
+    if (!this.topicTitle.trim() || !this.topicDescription.trim() || !this.myGroup) {
+      this.errorMessage = 'Please fill in both title and description.';
+      this.alertTimer = setTimeout(() => {
+            this.errorMessage = '';
+        }, 3000);
+      return;
     }
 
+    this.isTopicLoading = true;
+    const request = {
+      groupId: this.myGroup.groupId,
+      title: this.topicTitle,
+      description: this.topicDescription
+    };
+
+    // Nếu chưa có topic thì gọi Submit, nếu có rồi (đang ở mode Edit) thì gọi Edit
+    if (this.myGroup.topic && this.isTopicEditing) {
+      this.topicService.editTopic(this.myGroup.topic.topicId, {
+        title: this.topicTitle,
+        description: this.topicDescription
+      }).subscribe({
+        next: (res) => this.handleTopicSuccess(res.message),
+        error: (err) => this.handleTopicError(err)
+      });
+    } else {
+      this.topicService.submitTopic(request).subscribe({
+        next: (res) => this.handleTopicSuccess(res.message),
+        error: (err) => this.handleTopicError(err)
+      });
+    }
+  }
+
+  private handleTopicSuccess(message: string) {
+    this.isTopicLoading = false;
+    this.isTopicEditing = false;
+    this.successMessage = message;
+    this.loadMyGroupSilently(); // Load lại để cập nhật trạng thái Topic mới
+    setTimeout(() => {
+    this.successMessage = ''; // Xóa thông báo
+  }, 3000);
+  }
+
+  private handleTopicError(err: any) {
+    this.isTopicLoading = false;
+    this.errorMessage = this.extractError(err, 'Failed to process topic.');
+    setTimeout(() => {
+    this.successMessage = ''; // Xóa thông báo
+  }, 3000);
+  }
+
+
+    
     ngOnInit() {
       if (this.isBrowser) {
         this.loadProfile();
@@ -133,31 +277,7 @@
       this.sidebarCollapsed = !this.sidebarCollapsed;
     }
 
-    loadMyGroup() {
-      this.isGroupLoading = true;
-      this.groupService.getMyGroup().subscribe({
-        next: (res) => {
-          this.myGroup = res;
-          this.isGroupLoading = false;
-        },
-        error: (err) => {
-          this.isGroupLoading = false;
-          this.myGroup = null;
-        }
-      });
-    }
 
-    // ==========================================
-    // HÀM LOAD DỮ LIỆU NGẦM (KHÔNG BẬT LOADING)
-    // ==========================================
-    loadMyGroupSilently() {
-      this.groupService.getMyGroup().subscribe({
-        next: (res) => {
-          this.myGroup = res; // Gán lại data, HTML tự động cập nhật
-        },
-        error: (err) => console.log('Silently load group failed', err)
-      });
-    }
 
     handleCreateGroup() {
       if (!this.newGroupName.trim()) {
@@ -515,3 +635,4 @@ handleDeleteGroup() {
     
 
   }
+
