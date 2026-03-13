@@ -277,19 +277,6 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
       this.sidebarCollapsed = !this.sidebarCollapsed;
     }
 
-    loadMyGroup() {
-      this.isGroupLoading = true;
-      this.groupService.getMyGroup().subscribe({
-        next: (res) => {
-          this.myGroup = res;
-          this.isGroupLoading = false;
-        },
-        error: (err) => {
-          this.isGroupLoading = false;
-          this.myGroup = null;
-        }
-      });
-    }
 
 
     handleCreateGroup() {

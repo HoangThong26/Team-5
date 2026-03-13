@@ -3,6 +3,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
+/** Guard kiểm tra user đã đăng nhập chưa (dùng cho các trang cần auth chung) */
 export const authGuard: CanActivateFn = () => {
   const platformId = inject(PLATFORM_ID);
   if (!isPlatformBrowser(platformId)) return true;
@@ -18,6 +19,7 @@ export const authGuard: CanActivateFn = () => {
   return false;
 };
 
+/** Guard CHỈ cho phép Admin truy cập */
 export const adminGuard: CanActivateFn = () => {
   const platformId = inject(PLATFORM_ID);
   if (!isPlatformBrowser(platformId)) return true;
@@ -27,20 +29,16 @@ export const adminGuard: CanActivateFn = () => {
 
   const user = authService.getCurrentUser();
   
-  // Debug logging
-  console.log('User from LocalStorage:', user);
+  console.log('User from LocalStorage in adminGuard:', user);
 
-  // Allow access if token exists (for testing)
-  if (authService.getAccessToken()) {
-      console.log('Token found, allowing Admin access for testing...');
-      return true;
+  if (user && user.role && user.role.toLowerCase() === 'admin') {
+      return true; 
   }
 
-  router.navigate(['/login']);
+  router.navigate(['/dashboard']); 
   return false;
 };
 
-/** Guard to prevent logged-in users from accessing login/register pages */
 export const guestGuard: CanActivateFn = () => {
   const platformId = inject(PLATFORM_ID);
   if (!isPlatformBrowser(platformId)) return true;
@@ -51,13 +49,15 @@ export const guestGuard: CanActivateFn = () => {
   if (authService.isLoggedIn()) {
     const user = authService.getCurrentUser();
     const role = user?.role?.toLowerCase();
+    
+
     if (role === 'admin') {
       router.navigate(['/admin']);
     } else {
-      router.navigate(['/dashboard']);
+      router.navigate(['/dashboard']); 
     }
     return false;
   }
 
-  return true;
+  return true; 
 };
