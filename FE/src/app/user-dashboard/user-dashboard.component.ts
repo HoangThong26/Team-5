@@ -277,6 +277,8 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
       this.sidebarCollapsed = !this.sidebarCollapsed;
     }
 
+
+
     handleCreateGroup() {
       if (!this.newGroupName.trim()) {
         this.errorMessage = 'Please enter a group name.';
