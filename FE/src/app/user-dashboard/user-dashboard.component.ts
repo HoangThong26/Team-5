@@ -222,7 +222,7 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
     ngOnInit() {
       if (this.isBrowser) {
         this.loadProfile();
-        this.loadMyGroup();
+        this.loadMyGroupSilently();
 
         // ==========================================
         // THIẾT LẬP KẾT NỐI WEBSOCKET (SIGNALR)
@@ -276,21 +276,6 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
     toggleSidebar() {
       this.sidebarCollapsed = !this.sidebarCollapsed;
     }
-
-    loadMyGroup() {
-      this.isGroupLoading = true;
-      this.groupService.getMyGroup().subscribe({
-        next: (res) => {
-          this.myGroup = res;
-          this.isGroupLoading = false;
-        },
-        error: (err) => {
-          this.isGroupLoading = false;
-          this.myGroup = null;
-        }
-      });
-    }
-
 
     handleCreateGroup() {
       if (!this.newGroupName.trim()) {
