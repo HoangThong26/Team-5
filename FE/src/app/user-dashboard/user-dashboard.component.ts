@@ -222,7 +222,7 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
     ngOnInit() {
       if (this.isBrowser) {
         this.loadProfile();
-        this.loadMyGroup();
+        this.loadMyGroupSilently();
 
         // ==========================================
         // THIẾT LẬP KẾT NỐI WEBSOCKET (SIGNALR)
