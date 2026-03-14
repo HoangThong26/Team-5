@@ -91,4 +91,11 @@ deleteGroup(groupId: number): Observable<any> {
   // Vì Leader cũng dùng chung API này (đã phân quyền Roles="Admin,Student")
   return this.http.delete(`https://localhost:7084/api/Groups/admin/${groupId}`);
 }
+
+assignMentor(groupId: number, mentorId: number): Observable<any> {
+  return this.http.post(`${this.apiUrl}/admin/assign-mentor`, { 
+    groupId: groupId, 
+    mentorId: mentorId 
+  });
+}
 }

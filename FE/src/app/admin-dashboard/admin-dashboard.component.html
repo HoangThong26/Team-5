@@ -212,7 +212,7 @@
       </div>
     }
 
-    @if (viewMode === 'groups') {
+   @if (viewMode === 'groups') {
       <div class="action-bar" style="justify-content: flex-end;">
          <button class="action-btn refresh-btn" (click)="loadGroups()">
           <i class="fas fa-sync-alt"></i> Refresh Groups
@@ -241,7 +241,6 @@
                   <tr>     
                     <td>
                       <div style="font-weight: 700; color: #ffe600; font-size: 1rem;">{{ group.groupName }}</div>
-                  
                     </td>
 
                     <td>
@@ -274,7 +273,21 @@
                     </td>
 
                     <td>
-                      <div style="display: flex; justify-content: center; gap: 10px;">
+                      <div style="display: flex; justify-content: center; gap: 10px; align-items: center;">
+                        
+                        @if (!group.mentorName) {
+                          <div class="assign-mentor-wrapper">
+                            <select #mentorSelect 
+                                    style="background: rgba(74, 144, 226, 0.15); color: #a0c4ff; border: 1px solid rgba(74, 144, 226, 0.3); padding: 5px; border-radius: 8px; font-size: 0.8rem; outline: none; cursor: pointer;"
+                                    (change)="handleAssignMentor(group.groupId, +mentorSelect.value); mentorSelect.value = ''">
+                              <option value="" disabled selected>+ Assign Mentor</option>
+                              @for (m of mentors; track m.id) {
+                                <option [value]="m.userId" style="background: #1a1a2e; color: #fff;">{{ m.fullName }}</option>
+                              }
+                            </select>
+                          </div>
+                        }
+
                         @if (group.mentorName) {
                           <button style="background: rgba(255, 152, 0, 0.2); color: #ff9800; border: 1px solid rgba(255, 152, 0, 0.4); padding: 6px 12px; border-radius: 8px; cursor: pointer;" 
                                   (click)="handleKickMentor(group.groupId)" title="Kick Mentor"
@@ -307,6 +320,5 @@
         }
       </div>
     }
-
   </div>
 </div>

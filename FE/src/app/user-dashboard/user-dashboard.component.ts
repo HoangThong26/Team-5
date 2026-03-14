@@ -223,25 +223,17 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
       if (this.isBrowser) {
         this.loadProfile();
         this.loadMyGroup();
+        this.loadMyGroupSilently();
 
-        // ==========================================
-        // THIẾT LẬP KẾT NỐI WEBSOCKET (SIGNALR)
-        // ==========================================
         const currentUser = this.getCurrentUser();
-
-        // SỬA Ở ĐÂY: Lấy email làm định danh thay vì id để không bị lỗi gạch đỏ
         const userId = currentUser?.email;
 
         if (userId) {
-          // 1. Mở kết nối
           this.wsService.connect(userId);
 
-          // 2. Lắng nghe tin nhắn từ C# Backend gửi về
           this.wsSubscription = this.wsService.getMessages().subscribe({
             next: (message) => {
               console.log('Received from Backend:', message);
-
-              // SỬA Ở ĐÂY: Bắt cả chữ 'type' (thường) và 'Type' (hoa) do C# trả về
               if (
                 message.type === 'GROUP_UPDATED' || message.Type === 'GROUP_UPDATED' ||
                 message.type === 'MEMBER_ACCEPTED' || message.Type === 'MEMBER_ACCEPTED'
@@ -256,16 +248,12 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
       }
     }
 
-    // ==========================================
-    // HỦY KẾT NỐI KHI RỜI KHỎI TRANG
-    // ==========================================
     ngOnDestroy() {
       if (this.wsSubscription) {
         this.wsSubscription.unsubscribe();
       }
     }
 
-    // ===== Sidebar =====
     switchTab(tab: 'overview' | 'profile' | 'password') {
       this.activeTab = tab;
       this.successMessage = '';
