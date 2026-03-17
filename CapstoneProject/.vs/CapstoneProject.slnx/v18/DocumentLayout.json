@@ -7,6 +7,46 @@
       "RelativeMoniker": "D:0:0:{8E841551-FF5A-EF1A-E785-C594E46E45CF}|CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj|solutionrelative:capstoneproject.infrastructure\\services\\topicservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{8E841551-FF5A-EF1A-E785-C594E46E45CF}|CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj|c:\\team-5\\capstoneproject\\capstoneproject.infrastructure\\services\\emailservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8E841551-FF5A-EF1A-E785-C594E46E45CF}|CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj|solutionrelative:capstoneproject.infrastructure\\services\\emailservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{94F3C53E-94D2-8A0F-2FC6-BC3340F5AAA5}|CapstoneProject.Domain\\CapstoneProject.Domain.csproj|c:\\team-5\\capstoneproject\\capstoneproject.domain\\entities\\weeklyevaluation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{94F3C53E-94D2-8A0F-2FC6-BC3340F5AAA5}|CapstoneProject.Domain\\CapstoneProject.Domain.csproj|solutionrelative:capstoneproject.domain\\entities\\weeklyevaluation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{94F3C53E-94D2-8A0F-2FC6-BC3340F5AAA5}|CapstoneProject.Domain\\CapstoneProject.Domain.csproj|c:\\team-5\\capstoneproject\\capstoneproject.domain\\entities\\weeklyreport.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{94F3C53E-94D2-8A0F-2FC6-BC3340F5AAA5}|CapstoneProject.Domain\\CapstoneProject.Domain.csproj|solutionrelative:capstoneproject.domain\\entities\\weeklyreport.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{94F3C53E-94D2-8A0F-2FC6-BC3340F5AAA5}|CapstoneProject.Domain\\CapstoneProject.Domain.csproj|c:\\team-5\\capstoneproject\\capstoneproject.domain\\entities\\passwordresettoken.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{94F3C53E-94D2-8A0F-2FC6-BC3340F5AAA5}|CapstoneProject.Domain\\CapstoneProject.Domain.csproj|solutionrelative:capstoneproject.domain\\entities\\passwordresettoken.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{94F3C53E-94D2-8A0F-2FC6-BC3340F5AAA5}|CapstoneProject.Domain\\CapstoneProject.Domain.csproj|c:\\team-5\\capstoneproject\\capstoneproject.domain\\entities\\mentorrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{94F3C53E-94D2-8A0F-2FC6-BC3340F5AAA5}|CapstoneProject.Domain\\CapstoneProject.Domain.csproj|solutionrelative:capstoneproject.domain\\entities\\mentorrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{94F3C53E-94D2-8A0F-2FC6-BC3340F5AAA5}|CapstoneProject.Domain\\CapstoneProject.Domain.csproj|c:\\team-5\\capstoneproject\\capstoneproject.domain\\entities\\gradecomplaint.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{94F3C53E-94D2-8A0F-2FC6-BC3340F5AAA5}|CapstoneProject.Domain\\CapstoneProject.Domain.csproj|solutionrelative:capstoneproject.domain\\entities\\gradecomplaint.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|c:\\team-5\\capstoneproject\\capstoneproject.application\\dto\\topicdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|solutionrelative:capstoneproject.application\\dto\\topicdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|c:\\team-5\\capstoneproject\\capstoneproject.application\\dto\\creategrouprequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|solutionrelative:capstoneproject.application\\dto\\creategrouprequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{94F3C53E-94D2-8A0F-2FC6-BC3340F5AAA5}|CapstoneProject.Domain\\CapstoneProject.Domain.csproj|c:\\team-5\\capstoneproject\\capstoneproject.domain\\entities\\topicversion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{94F3C53E-94D2-8A0F-2FC6-BC3340F5AAA5}|CapstoneProject.Domain\\CapstoneProject.Domain.csproj|solutionrelative:capstoneproject.domain\\entities\\topicversion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|c:\\team-5\\capstoneproject\\capstoneproject.api\\controllers\\mentortopiccontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|solutionrelative:capstoneproject.api\\controllers\\mentortopiccontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{8E841551-FF5A-EF1A-E785-C594E46E45CF}|CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj|c:\\team-5\\capstoneproject\\capstoneproject.infrastructure\\repostitory\\topicrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8E841551-FF5A-EF1A-E785-C594E46E45CF}|CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj|solutionrelative:capstoneproject.infrastructure\\repostitory\\topicrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -19,20 +59,12 @@
       "RelativeMoniker": "D:0:0:{8E841551-FF5A-EF1A-E785-C594E46E45CF}|CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj|solutionrelative:capstoneproject.infrastructure\\repostitory\\grouprepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|c:\\team-5\\capstoneproject\\capstoneproject.application\\dto\\topicdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|solutionrelative:capstoneproject.application\\dto\\topicdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|c:\\team-5\\capstoneproject\\capstoneproject.application\\dto\\topicapprovalrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|solutionrelative:capstoneproject.application\\dto\\topicapprovalrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|c:\\team-5\\capstoneproject\\capstoneproject.api\\controllers\\topicscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|solutionrelative:capstoneproject.api\\controllers\\topicscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|c:\\team-5\\capstoneproject\\capstoneproject.api\\controllers\\mentortopiccontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|solutionrelative:capstoneproject.api\\controllers\\mentortopiccontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|c:\\team-5\\capstoneproject\\capstoneproject.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -115,10 +147,6 @@
       "RelativeMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|solutionrelative:capstoneproject.application\\interface\\irepository\\ipasswordresettokenrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8E841551-FF5A-EF1A-E785-C594E46E45CF}|CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj|c:\\team-5\\capstoneproject\\capstoneproject.infrastructure\\services\\emailservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8E841551-FF5A-EF1A-E785-C594E46E45CF}|CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj|solutionrelative:capstoneproject.infrastructure\\services\\emailservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|c:\\team-5\\capstoneproject\\capstoneproject.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|solutionrelative:capstoneproject.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -149,10 +177,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|c:\\team-5\\capstoneproject\\capstoneproject.application\\interface\\irepository\\iuserrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|solutionrelative:capstoneproject.application\\interface\\irepository\\iuserrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|c:\\team-5\\capstoneproject\\capstoneproject.application\\dto\\creategrouprequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|solutionrelative:capstoneproject.application\\dto\\creategrouprequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|c:\\team-5\\capstoneproject\\capstoneproject.application\\dto\\changepasswordwithotprequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -209,32 +233,84 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "ITopicRepository.cs",
-              "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Application\\Interface\\IRepository\\ITopicRepository.cs",
-              "RelativeDocumentMoniker": "CapstoneProject.Application\\Interface\\IRepository\\ITopicRepository.cs",
-              "ToolTip": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Application\\Interface\\IRepository\\ITopicRepository.cs",
-              "RelativeToolTip": "CapstoneProject.Application\\Interface\\IRepository\\ITopicRepository.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAA3AAAAAAAAAA==",
+              "Title": "WeeklyEvaluation.cs",
+              "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\Entities\\WeeklyEvaluation.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.Domain\\Entities\\WeeklyEvaluation.cs",
+              "ToolTip": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\Entities\\WeeklyEvaluation.cs",
+              "RelativeToolTip": "CapstoneProject.Domain\\Entities\\WeeklyEvaluation.cs",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAowAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-17T01:59:58.965Z",
+              "WhenOpened": "2026-03-17T10:44:21.934Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "TopicRepository.cs",
-              "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Repostitory\\TopicRepository.cs",
-              "RelativeDocumentMoniker": "CapstoneProject.Infrastructure\\Repostitory\\TopicRepository.cs",
-              "ToolTip": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Repostitory\\TopicRepository.cs",
-              "RelativeToolTip": "CapstoneProject.Infrastructure\\Repostitory\\TopicRepository.cs",
-              "ViewState": "AgIAAEUAAAAAAAAAAAAkwFkAAAAJAAAAAAAAAA==",
+              "DocumentIndex": 3,
+              "Title": "WeeklyReport.cs",
+              "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\Entities\\WeeklyReport.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.Domain\\Entities\\WeeklyReport.cs",
+              "ToolTip": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\Entities\\WeeklyReport.cs",
+              "RelativeToolTip": "CapstoneProject.Domain\\Entities\\WeeklyReport.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-17T01:56:57.27Z",
+              "WhenOpened": "2026-03-17T10:44:20.908Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "PasswordResetToken.cs",
+              "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\Entities\\PasswordResetToken.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.Domain\\Entities\\PasswordResetToken.cs",
+              "ToolTip": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\Entities\\PasswordResetToken.cs",
+              "RelativeToolTip": "CapstoneProject.Domain\\Entities\\PasswordResetToken.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAgwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-17T10:44:18.652Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "MentorRequest.cs",
+              "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\Entities\\MentorRequest.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.Domain\\Entities\\MentorRequest.cs",
+              "ToolTip": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\Entities\\MentorRequest.cs",
+              "RelativeToolTip": "CapstoneProject.Domain\\Entities\\MentorRequest.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-17T10:44:17.582Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "GradeComplaint.cs",
+              "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\Entities\\GradeComplaint.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.Domain\\Entities\\GradeComplaint.cs",
+              "ToolTip": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\Entities\\GradeComplaint.cs",
+              "RelativeToolTip": "CapstoneProject.Domain\\Entities\\GradeComplaint.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-17T10:44:13.587Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "TopicVersion.cs",
+              "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\Entities\\TopicVersion.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.Domain\\Entities\\TopicVersion.cs",
+              "ToolTip": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\Entities\\TopicVersion.cs",
+              "RelativeToolTip": "CapstoneProject.Domain\\Entities\\TopicVersion.cs",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAzwCEAAAA7AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-17T09:59:58.819Z",
               "EditorCaption": ""
             },
             {
@@ -245,27 +321,53 @@
               "RelativeDocumentMoniker": "CapstoneProject.Infrastructure\\Services\\TopicService.cs",
               "ToolTip": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Services\\TopicService.cs",
               "RelativeToolTip": "CapstoneProject.Infrastructure\\Services\\TopicService.cs",
-              "ViewState": "AgIAAIEAAAAAAAAAAAAwwI4AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAFEAAAAAAAAAAAAAAGEAAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-17T01:56:43.048Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 7,
               "Title": "TopicDto.cs",
               "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Application\\DTO\\TopicDto.cs",
               "RelativeDocumentMoniker": "CapstoneProject.Application\\DTO\\TopicDto.cs",
               "ToolTip": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Application\\DTO\\TopicDto.cs",
               "RelativeToolTip": "CapstoneProject.Application\\DTO\\TopicDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAWAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAyAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-14T02:46:32.915Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 1,
+              "Title": "EmailService.cs",
+              "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Services\\EmailService.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.Infrastructure\\Services\\EmailService.cs",
+              "ToolTip": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Services\\EmailService.cs",
+              "RelativeToolTip": "CapstoneProject.Infrastructure\\Services\\EmailService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-04T09:04:15.022Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "TopicRepository.cs",
+              "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Repostitory\\TopicRepository.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.Infrastructure\\Repostitory\\TopicRepository.cs",
+              "ToolTip": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Repostitory\\TopicRepository.cs",
+              "RelativeToolTip": "CapstoneProject.Infrastructure\\Repostitory\\TopicRepository.cs",
+              "ViewState": "AgIAAEAAAAAAAAAAAAAUwFsAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-17T01:56:57.27Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
               "Title": "TopicApprovalRequest.cs",
               "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Application\\DTO\\TopicApprovalRequest.cs",
               "RelativeDocumentMoniker": "CapstoneProject.Application\\DTO\\TopicApprovalRequest.cs",
@@ -273,25 +375,24 @@
               "RelativeToolTip": "CapstoneProject.Application\\DTO\\TopicApprovalRequest.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAqAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-17T02:01:22.083Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-17T02:01:22.083Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 10,
               "Title": "MentorTopicController.cs",
               "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.API\\Controllers\\MentorTopicController.cs",
               "RelativeDocumentMoniker": "CapstoneProject.API\\Controllers\\MentorTopicController.cs",
               "ToolTip": "C:\\Team-5\\CapstoneProject\\CapstoneProject.API\\Controllers\\MentorTopicController.cs",
               "RelativeToolTip": "CapstoneProject.API\\Controllers\\MentorTopicController.cs",
-              "ViewState": "AgIAABAAAAAAAAAAAAAgwBwAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAAB8AAAAgAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-17T02:02:21.095Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 16,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.API\\Program.cs",
               "RelativeDocumentMoniker": "CapstoneProject.API\\Program.cs",
@@ -299,12 +400,11 @@
               "RelativeToolTip": "CapstoneProject.API\\Program.cs",
               "ViewState": "AgIAADsAAAAAAAAAAAAQwE4AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-05T13:56:09.461Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-05T13:56:09.461Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 15,
               "Title": "TopicsController.cs",
               "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.API\\Controllers\\TopicsController.cs",
               "RelativeDocumentMoniker": "CapstoneProject.API\\Controllers\\TopicsController.cs",
@@ -312,12 +412,36 @@
               "RelativeToolTip": "CapstoneProject.API\\Controllers\\TopicsController.cs",
               "ViewState": "AgIAAC0AAAAAAAAAAAAqwDYAAABQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-14T02:52:58.514Z",
+              "WhenOpened": "2026-03-14T02:52:58.514Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "CreateGroupRequest.cs",
+              "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Application\\DTO\\CreateGroupRequest.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.Application\\DTO\\CreateGroupRequest.cs",
+              "ToolTip": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Application\\DTO\\CreateGroupRequest.cs",
+              "RelativeToolTip": "CapstoneProject.Application\\DTO\\CreateGroupRequest.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-05T13:52:26.014Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 12,
+              "Title": "ITopicRepository.cs",
+              "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Application\\Interface\\IRepository\\ITopicRepository.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.Application\\Interface\\IRepository\\ITopicRepository.cs",
+              "ToolTip": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Application\\Interface\\IRepository\\ITopicRepository.cs",
+              "RelativeToolTip": "CapstoneProject.Application\\Interface\\IRepository\\ITopicRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAA3AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-17T01:59:58.965Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
               "Title": "GroupRepository.cs",
               "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Repostitory\\GroupRepository.cs",
               "RelativeDocumentMoniker": "CapstoneProject.Infrastructure\\Repostitory\\GroupRepository.cs",
@@ -325,12 +449,11 @@
               "RelativeToolTip": "CapstoneProject.Infrastructure\\Repostitory\\GroupRepository.cs",
               "ViewState": "AgIAAAEAAAAAAAAAAAAQwCgAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-04T09:41:45.603Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-04T09:41:45.603Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 17,
               "Title": "ITopicService.cs",
               "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Application\\Interface\\IService\\ITopicService.cs",
               "RelativeDocumentMoniker": "CapstoneProject.Application\\Interface\\IService\\ITopicService.cs",
@@ -338,12 +461,11 @@
               "RelativeToolTip": "CapstoneProject.Application\\Interface\\IService\\ITopicService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAABRAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-09T07:32:40.013Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-09T07:32:40.013Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 18,
               "Title": "User.cs",
               "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\Entities\\User.cs",
               "RelativeDocumentMoniker": "CapstoneProject.Domain\\Entities\\User.cs",
@@ -351,12 +473,11 @@
               "RelativeToolTip": "CapstoneProject.Domain\\Entities\\User.cs",
               "ViewState": "AgIAAEEAAAAAAAAAAAAYwFkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-17T02:32:59.949Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-17T02:32:59.949Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 19,
               "Title": "MentorAssignment.cs",
               "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\Entities\\MentorAssignment.cs",
               "RelativeDocumentMoniker": "CapstoneProject.Domain\\Entities\\MentorAssignment.cs",
@@ -364,12 +485,11 @@
               "RelativeToolTip": "CapstoneProject.Domain\\Entities\\MentorAssignment.cs",
               "ViewState": "AgIAAAMAAAAAAAAAAAAkwBwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-14T03:08:33.667Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-14T03:08:33.667Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 20,
               "Title": "Group.cs",
               "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\Entities\\Group.cs",
               "RelativeDocumentMoniker": "CapstoneProject.Domain\\Entities\\Group.cs",
@@ -377,12 +497,11 @@
               "RelativeToolTip": "CapstoneProject.Domain\\Entities\\Group.cs",
               "ViewState": "AgIAACAAAAAAAAAAAAAYwDgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-14T03:08:16.477Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-14T03:08:16.477Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 21,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.API\\appsettings.json",
               "RelativeDocumentMoniker": "CapstoneProject.API\\appsettings.json",
@@ -390,12 +509,11 @@
               "RelativeToolTip": "CapstoneProject.API\\appsettings.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-03-14T02:53:47.891Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-14T02:53:47.891Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 26,
               "Title": "IGroupRepository.cs",
               "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Application\\Interface\\IRepository\\IGroupRepository.cs",
               "RelativeDocumentMoniker": "CapstoneProject.Application\\Interface\\IRepository\\IGroupRepository.cs",
@@ -407,7 +525,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 23,
               "Title": "GroupsController.cs",
               "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.API\\Controllers\\GroupsController.cs",
               "RelativeDocumentMoniker": "CapstoneProject.API\\Controllers\\GroupsController.cs",
@@ -415,12 +533,11 @@
               "RelativeToolTip": "CapstoneProject.API\\Controllers\\GroupsController.cs",
               "ViewState": "AgIAAMkAAAAAAAAAAAAUwNoAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-04T09:06:41.833Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-04T09:06:41.833Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 25,
               "Title": "IGroupService.cs",
               "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Application\\Interface\\IService\\IGroupService.cs",
               "RelativeDocumentMoniker": "CapstoneProject.Application\\Interface\\IService\\IGroupService.cs",
@@ -432,7 +549,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 22,
               "Title": "GroupService.cs",
               "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Services\\GroupService.cs",
               "RelativeDocumentMoniker": "CapstoneProject.Infrastructure\\Services\\GroupService.cs",
@@ -440,12 +557,11 @@
               "RelativeToolTip": "CapstoneProject.Infrastructure\\Services\\GroupService.cs",
               "ViewState": "AgIAAGEBAAAAAAAAAAAUwG0BAAAuAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-04T09:04:21.108Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-04T09:04:21.108Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 24,
               "Title": "AssignMentorDto.cs",
               "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Application\\DTO\\AssignMentorDto.cs",
               "RelativeDocumentMoniker": "CapstoneProject.Application\\DTO\\AssignMentorDto.cs",
@@ -457,7 +573,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 27,
               "Title": "AdminController.cs",
               "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.API\\Controllers\\AdminController.cs",
               "RelativeDocumentMoniker": "CapstoneProject.API\\Controllers\\AdminController.cs",
@@ -469,7 +585,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 29,
               "Title": "UserController.cs",
               "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.API\\Controllers\\UserController.cs",
               "RelativeDocumentMoniker": "CapstoneProject.API\\Controllers\\UserController.cs",
@@ -481,7 +597,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
+              "DocumentIndex": 30,
               "Title": "IAuthRepository.cs",
               "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Application\\Interface\\IRepository\\IAuthRepository.cs",
               "RelativeDocumentMoniker": "CapstoneProject.Application\\Interface\\IRepository\\IAuthRepository.cs",
@@ -493,7 +609,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 28,
               "Title": "UserService.cs",
               "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Services\\UserService.cs",
               "RelativeDocumentMoniker": "CapstoneProject.Infrastructure\\Services\\UserService.cs",
@@ -505,7 +621,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 23,
+              "DocumentIndex": 31,
               "Title": "IUserService.cs",
               "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Application\\Interface\\IService\\IUserService.cs",
               "RelativeDocumentMoniker": "CapstoneProject.Application\\Interface\\IService\\IUserService.cs",
@@ -517,7 +633,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 24,
+              "DocumentIndex": 32,
               "Title": "IAdminService.cs",
               "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Application\\Interface\\IService\\IAdminService.cs",
               "RelativeDocumentMoniker": "CapstoneProject.Application\\Interface\\IService\\IAdminService.cs",
@@ -529,7 +645,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 25,
+              "DocumentIndex": 33,
               "Title": "AdminService.cs",
               "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Services\\AdminService.cs",
               "RelativeDocumentMoniker": "CapstoneProject.Infrastructure\\Services\\AdminService.cs",
@@ -541,7 +657,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 26,
+              "DocumentIndex": 34,
               "Title": "AuthService.cs",
               "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Services\\AuthService.cs",
               "RelativeDocumentMoniker": "CapstoneProject.Infrastructure\\Services\\AuthService.cs",
@@ -553,7 +669,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 27,
+              "DocumentIndex": 35,
               "Title": "IPasswordResetTokenRepository.cs",
               "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Application\\Interface\\IRepository\\IPasswordResetTokenRepository.cs",
               "RelativeDocumentMoniker": "CapstoneProject.Application\\Interface\\IRepository\\IPasswordResetTokenRepository.cs",
@@ -565,7 +681,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 30,
+              "DocumentIndex": 37,
               "Title": "IEmailService.cs",
               "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Application\\Interface\\IService\\IEmailService.cs",
               "RelativeDocumentMoniker": "CapstoneProject.Application\\Interface\\IService\\IEmailService.cs",
@@ -577,19 +693,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 28,
-              "Title": "EmailService.cs",
-              "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Services\\EmailService.cs",
-              "RelativeDocumentMoniker": "CapstoneProject.Infrastructure\\Services\\EmailService.cs",
-              "ToolTip": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Services\\EmailService.cs",
-              "RelativeToolTip": "CapstoneProject.Infrastructure\\Services\\EmailService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-04T09:04:15.022Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 29,
+              "DocumentIndex": 36,
               "Title": "AuthController.cs",
               "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.API\\Controllers\\AuthController.cs",
               "RelativeDocumentMoniker": "CapstoneProject.API\\Controllers\\AuthController.cs",
@@ -601,7 +705,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 31,
+              "DocumentIndex": 38,
               "Title": "IAuthService.cs",
               "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Application\\Interface\\IService\\IAuthService.cs",
               "RelativeDocumentMoniker": "CapstoneProject.Application\\Interface\\IService\\IAuthService.cs",
@@ -613,7 +717,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 32,
+              "DocumentIndex": 39,
               "Title": "AuthRepository.cs",
               "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Repostitory\\AuthRepository.cs",
               "RelativeDocumentMoniker": "CapstoneProject.Infrastructure\\Repostitory\\AuthRepository.cs",
@@ -625,7 +729,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 34,
+              "DocumentIndex": 41,
               "Title": "CapstoneProject.API.csproj",
               "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.API\\CapstoneProject.API.csproj",
               "RelativeDocumentMoniker": "CapstoneProject.API\\CapstoneProject.API.csproj",
@@ -637,7 +741,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 33,
+              "DocumentIndex": 40,
               "Title": "NotificationHub.cs.cs",
               "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.API\\Hubs\\NotificationHub.cs.cs",
               "RelativeDocumentMoniker": "CapstoneProject.API\\Hubs\\NotificationHub.cs.cs",
@@ -649,7 +753,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 35,
+              "DocumentIndex": 42,
               "Title": "UserRepository.cs",
               "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Repostitory\\UserRepository.cs",
               "RelativeDocumentMoniker": "CapstoneProject.Infrastructure\\Repostitory\\UserRepository.cs",
@@ -661,7 +765,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 36,
+              "DocumentIndex": 43,
               "Title": "IUserRepository.cs",
               "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Application\\Interface\\IRepository\\IUserRepository.cs",
               "RelativeDocumentMoniker": "CapstoneProject.Application\\Interface\\IRepository\\IUserRepository.cs",
@@ -673,19 +777,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 37,
-              "Title": "CreateGroupRequest.cs",
-              "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Application\\DTO\\CreateGroupRequest.cs",
-              "RelativeDocumentMoniker": "CapstoneProject.Application\\DTO\\CreateGroupRequest.cs",
-              "ToolTip": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Application\\DTO\\CreateGroupRequest.cs",
-              "RelativeToolTip": "CapstoneProject.Application\\DTO\\CreateGroupRequest.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-05T13:52:26.014Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 38,
+              "DocumentIndex": 44,
               "Title": "ChangePasswordWithOtpRequest.cs",
               "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Application\\DTO\\ChangePasswordWithOtpRequest.cs",
               "RelativeDocumentMoniker": "CapstoneProject.Application\\DTO\\ChangePasswordWithOtpRequest.cs",
@@ -697,7 +789,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 39,
+              "DocumentIndex": 45,
               "Title": "GroupDetailResponse.cs",
               "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Application\\DTO\\GroupDetailResponse.cs",
               "RelativeDocumentMoniker": "CapstoneProject.Application\\DTO\\GroupDetailResponse.cs",
@@ -709,7 +801,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 40,
+              "DocumentIndex": 46,
               "Title": "Validator.cs",
               "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Validation\\Validator.cs",
               "RelativeDocumentMoniker": "CapstoneProject.Infrastructure\\Validation\\Validator.cs",
@@ -721,7 +813,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 41,
+              "DocumentIndex": 47,
               "Title": "PasswordResetTokenRepository.cs",
               "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Repostitory\\PasswordResetTokenRepository.cs",
               "RelativeDocumentMoniker": "CapstoneProject.Infrastructure\\Repostitory\\PasswordResetTokenRepository.cs",
@@ -733,7 +825,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 42,
+              "DocumentIndex": 48,
               "Title": "AdminCreateUserRequest.cs",
               "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Application\\DTO\\AdminCreateUserRequest.cs",
               "RelativeDocumentMoniker": "CapstoneProject.Application\\DTO\\AdminCreateUserRequest.cs",
@@ -745,7 +837,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 43,
+              "DocumentIndex": 49,
               "Title": "AdminUserResponse.cs",
               "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Application\\DTO\\AdminUserResponse.cs",
               "RelativeDocumentMoniker": "CapstoneProject.Application\\DTO\\AdminUserResponse.cs",
@@ -757,7 +849,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 44,
+              "DocumentIndex": 50,
               "Title": "UpdateProfileRequest.cs",
               "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Application\\DTO\\UpdateProfileRequest.cs",
               "RelativeDocumentMoniker": "CapstoneProject.Application\\DTO\\UpdateProfileRequest.cs",
@@ -769,7 +861,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 45,
+              "DocumentIndex": 51,
               "Title": "UpdatePasswordProfileRequest.cs",
               "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Application\\DTO\\UpdatePasswordProfileRequest.cs",
               "RelativeDocumentMoniker": "CapstoneProject.Application\\DTO\\UpdatePasswordProfileRequest.cs",
@@ -781,7 +873,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 46,
+              "DocumentIndex": 52,
               "Title": "UserGetProfileRequest.cs",
               "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Application\\DTO\\UserGetProfileRequest.cs",
               "RelativeDocumentMoniker": "CapstoneProject.Application\\DTO\\UserGetProfileRequest.cs",
@@ -793,7 +885,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 47,
+              "DocumentIndex": 53,
               "Title": "UserViewDTO.cs",
               "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Application\\DTO\\UserViewDTO.cs",
               "RelativeDocumentMoniker": "CapstoneProject.Application\\DTO\\UserViewDTO.cs",
@@ -805,7 +897,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 48,
+              "DocumentIndex": 54,
               "Title": "LoginResponse.cs",
               "DocumentMoniker": "C:\\Team-5\\CapstoneProject\\CapstoneProject.Application\\DTO\\LoginResponse.cs",
               "RelativeDocumentMoniker": "CapstoneProject.Application\\DTO\\LoginResponse.cs",
@@ -817,7 +909,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 49,
+              "DocumentIndex": 55,
               "Title": "Microsoft.PackageDependencyResolution.targets",
               "DocumentMoniker": "C:\\Program Files\\dotnet\\sdk\\10.0.103\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.PackageDependencyResolution.targets",
               "RelativeDocumentMoniker": "..\\..\\Program Files\\dotnet\\sdk\\10.0.103\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.PackageDependencyResolution.targets",

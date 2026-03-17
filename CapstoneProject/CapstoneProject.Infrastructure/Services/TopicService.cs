@@ -16,12 +16,9 @@ namespace CapstoneProject.Infrastructure.Services
 
         public async Task SubmitTopicAsync(int userId, TopicSubmitRequest request)
         {
-            // 1. Kiểm tra quyền thành viên
             var isMember = await _topicRepository.IsUserInGroupAsync(request.GroupId, userId);
             if (!isMember) throw new Exception("You are not a member of this group.");
 
-            // 2. Kiểm tra xem nhóm đã có Mentor chưa (Nếu không có, submit sẽ không ai thấy)
-            // Bạn nên thêm hàm CheckMentor vào Repository
             var hasMentor = await _topicRepository.HasMentorAssignedAsync(request.GroupId);
             if (!hasMentor) throw new Exception("Nhóm chưa được phân công Mentor. Vui lòng liên hệ Admin.");
 
@@ -34,7 +31,7 @@ namespace CapstoneProject.Infrastructure.Services
                     GroupId = request.GroupId,
                     Title = request.Title,
                     Description = request.Description,
-                    Status = "Pending", // Trạng thái bảng Topic là Pending
+                    Status = "Pending",
                     CurrentVersion = 1,
                     CreatedAt = DateTime.UtcNow
                 };
@@ -42,31 +39,28 @@ namespace CapstoneProject.Infrastructure.Services
             }
             else
             {
-                if (topic.Status == "Approved" || topic.Status == "Active")
-                    throw new Exception("Topic already approved. Cannot resubmit.");
+                if (topic.Status == "Approved" || topic.Status == "Active" || topic.Status == "Completed")
+                    throw new Exception("Topic đã được duyệt hoặc đang triển khai. Không thể nộp lại.");
 
                 topic.CurrentVersion += 1;
                 topic.Title = request.Title;
                 topic.Description = request.Description;
-                topic.Status = "Pending";
+                topic.Status = "Pending"; 
             }
 
-            // LƯU LẦN 1: Để chắc chắn Topic đã có ID từ Database
             await _topicRepository.SaveChangesAsync();
-
-            // 3. Tạo Version mới - ĐÂY LÀ DỮ LIỆU MENTOR SẼ TRUY VẤN
             var version = new TopicVersion
             {
-                TopicId = topic.TopicId, // Đảm bảo lấy ID vừa sinh ra hoặc đã tồn tại
+                TopicId = topic.TopicId,
                 VersionNumber = topic.CurrentVersion,
                 Title = request.Title,
                 Description = request.Description,
-                Status = "Submitted", // Mentor tìm kiếm trạng thái 'Submitted'
+                Status = "Submitted", 
                 SubmittedAt = DateTime.UtcNow
             };
 
             await _topicRepository.AddVersionAsync(version);
-            await _topicRepository.SaveChangesAsync(); // LƯU LẦN 2: Hoàn tất
+            await _topicRepository.SaveChangesAsync();
         }
 
         public async Task EditTopicAsync(int userId, int topicId, TopicUpdateDto request)
@@ -77,14 +71,11 @@ namespace CapstoneProject.Infrastructure.Services
             var isMember = await _topicRepository.IsUserInGroupAsync(topic.GroupId ?? 0, userId);
             if (!isMember) throw new Exception("You are not authorized to edit this topic.");
 
-            // Rule US-12: Only allow editing if status is Pending
             if (topic.Status != "Pending")
                 throw new Exception("Only topics with 'Pending' status can be edited.");
 
             topic.Title = request.Title;
             topic.Description = request.Description;
-
-            // Update the latest version as well
             var latestVersion = await _topicRepository.GetLatestVersionAsync(topicId);
             if (latestVersion != null && latestVersion.Status == "Submitted")
             {
@@ -97,10 +88,9 @@ namespace CapstoneProject.Infrastructure.Services
 
         public async Task<TopicDto?> GetTopicByGroupIdAsync(int groupId)
         {
-            // Giả sử bạn có ITopicRepository đã được inject
             var topic = await _topicRepository.GetByGroupIdAsync(groupId);
-
             if (topic == null) return null;
+            var latestVersion = await _topicRepository.GetLatestVersionAsync(topic.TopicId);
 
             return new TopicDto
             {
@@ -108,26 +98,38 @@ namespace CapstoneProject.Infrastructure.Services
                 GroupId = topic.GroupId ?? 0,
                 Title = topic.Title ?? string.Empty,
                 Description = topic.Description ?? string.Empty,
-                Status = topic.Status ?? string.Empty
+                Status = topic.Status ?? string.Empty,
+                ReviewComment = latestVersion?.ReviewComment,
+                VersionId = latestVersion?.Id ?? 0
             };
         }
 
         public async Task ApproveTopicAsync(int reviewerId, TopicApprovalRequest request)
         {
             var version = await _topicRepository.GetVersionByIdAsync(request.VersionId);
-            if (version == null)
-                throw new Exception("Topic version not found.");
+            if (version == null) throw new Exception("Topic version not found.");
             var topic = await _topicRepository.GetByIdAsync(version.TopicId.Value);
-            if (topic == null)
-                throw new Exception("Original topic not found.");
+            if (topic == null) throw new Exception("Original topic not found.");
+
             var isMentor = await _topicRepository.IsMentorOfGroupAsync(topic.GroupId ?? 0, reviewerId);
-            if (!isMentor)
-                throw new Exception("Access denied. You are not authorized to review this group's topic.");
-            topic.Status = (request.Status == "Approved") ? "Active" : "Rejected";
-            version.Status = request.Status;
+            if (!isMentor) throw new Exception("Access denied. You are not authorized to review this group's topic.");
+
+            if (request.Status == "Approved")
+            {
+                topic.Status = "Active";    
+                version.Status = "Approved"; 
+            }
+            else if (request.Status == "Rejected")
+            {
+                topic.Status = "Rejected";   
+                version.Status = "Rejected"; 
+            }
+            else
+            {
+                throw new Exception("Trạng thái phê duyệt không hợp lệ.");
+            }
             version.ReviewedBy = reviewerId;
             version.ReviewComment = request.ReviewComment;
-            version.SubmittedAt = DateTime.UtcNow; 
 
             await _topicRepository.SaveChangesAsync();
         }
@@ -145,7 +147,6 @@ namespace CapstoneProject.Infrastructure.Services
                 Description = v.Description,
                 Status = v.Status,
                 SubmittedAt = v.SubmittedAt,
-
                 GroupId = v.Topic?.GroupId ?? 0,
                 GroupName = v.Topic?.Group?.GroupName ?? "N/A"
             });
