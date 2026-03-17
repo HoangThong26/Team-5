@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { TopicDto } from '../models/topic.model';
 
 // Interface khớp với CreateGroupRequest trong Backend
 export interface CreateGroupRequest {
@@ -36,7 +37,7 @@ export interface GroupDetailResponse {
   createdAt: string;
   mentorName: string | null;
   members: GroupMemberDto[];
-  topic?: TopicResponse;
+  topic?: TopicDto;
 }
 
 @Injectable({

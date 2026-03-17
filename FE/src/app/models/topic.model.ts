@@ -5,7 +5,7 @@ export interface TopicSubmitRequest {
 }
 
 export interface TopicDto {
-  versionId: number; // ID từ bảng TopicVersions
+  versionId: number; 
   topicId: number;
   groupId: number;
   groupName?: string;
@@ -13,10 +13,11 @@ export interface TopicDto {
   description: string;
   status: string;
   submittedAt?: Date;
+  reviewComment?: string;
 }
 
 export interface TopicApprovalRequest {
-  versionId: number; // Thêm trường này
+  versionId: number; 
   topicId: number;
   status: string;
   reviewComment: string;
