@@ -53,13 +53,22 @@ namespace CapstoneProject.API.Controllers
             try
             {
                 var topic = await _topicService.GetTopicByGroupIdAsync(groupId);
-                // Trả về null vẫn là 200 OK, Frontend sẽ nhận được null
                 return Ok(topic);
             }
             catch (Exception ex)
             {
                 return BadRequest(new { message = ex.Message });
             }
+        }
+
+        [HttpGet("mentor/pending-topics")]
+        [Authorize(Roles = "Mentor")]
+        public async Task<IActionResult> GetPendingTopics()
+        { 
+            var mentorId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var topics = await _topicService.GetPendingTopicsForMentorAsync(mentorId);
+
+            return Ok(topics);
         }
     }
 }

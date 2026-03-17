@@ -16,8 +16,14 @@ namespace CapstoneProject.Infrastructure.Services
 
         public async Task SubmitTopicAsync(int userId, TopicSubmitRequest request)
         {
+            // 1. Kiểm tra quyền thành viên
             var isMember = await _topicRepository.IsUserInGroupAsync(request.GroupId, userId);
             if (!isMember) throw new Exception("You are not a member of this group.");
+
+            // 2. Kiểm tra xem nhóm đã có Mentor chưa (Nếu không có, submit sẽ không ai thấy)
+            // Bạn nên thêm hàm CheckMentor vào Repository
+            var hasMentor = await _topicRepository.HasMentorAssignedAsync(request.GroupId);
+            if (!hasMentor) throw new Exception("Nhóm chưa được phân công Mentor. Vui lòng liên hệ Admin.");
 
             var topic = await _topicRepository.GetByGroupIdAsync(request.GroupId);
 
@@ -28,7 +34,7 @@ namespace CapstoneProject.Infrastructure.Services
                     GroupId = request.GroupId,
                     Title = request.Title,
                     Description = request.Description,
-                    Status = "Pending",
+                    Status = "Pending", // Trạng thái bảng Topic là Pending
                     CurrentVersion = 1,
                     CreatedAt = DateTime.UtcNow
                 };
@@ -45,19 +51,22 @@ namespace CapstoneProject.Infrastructure.Services
                 topic.Status = "Pending";
             }
 
+            // LƯU LẦN 1: Để chắc chắn Topic đã có ID từ Database
             await _topicRepository.SaveChangesAsync();
 
+            // 3. Tạo Version mới - ĐÂY LÀ DỮ LIỆU MENTOR SẼ TRUY VẤN
             var version = new TopicVersion
             {
-                TopicId = topic.TopicId,
+                TopicId = topic.TopicId, // Đảm bảo lấy ID vừa sinh ra hoặc đã tồn tại
                 VersionNumber = topic.CurrentVersion,
                 Title = request.Title,
                 Description = request.Description,
-                Status = "Submitted",
+                Status = "Submitted", // Mentor tìm kiếm trạng thái 'Submitted'
                 SubmittedAt = DateTime.UtcNow
             };
+
             await _topicRepository.AddVersionAsync(version);
-            await _topicRepository.SaveChangesAsync();
+            await _topicRepository.SaveChangesAsync(); // LƯU LẦN 2: Hoàn tất
         }
 
         public async Task EditTopicAsync(int userId, int topicId, TopicUpdateDto request)
@@ -93,7 +102,6 @@ namespace CapstoneProject.Infrastructure.Services
 
             if (topic == null) return null;
 
-            // Chuyển đổi từ Entity sang DTO (Bạn tự viết hoặc dùng AutoMapper)
             return new TopicDto
             {
                 TopicId = topic.TopicId,
@@ -106,7 +114,41 @@ namespace CapstoneProject.Infrastructure.Services
 
         public async Task ApproveTopicAsync(int reviewerId, TopicApprovalRequest request)
         {
-            // Existing approval logic...
+            var version = await _topicRepository.GetVersionByIdAsync(request.VersionId);
+            if (version == null)
+                throw new Exception("Topic version not found.");
+            var topic = await _topicRepository.GetByIdAsync(version.TopicId.Value);
+            if (topic == null)
+                throw new Exception("Original topic not found.");
+            var isMentor = await _topicRepository.IsMentorOfGroupAsync(topic.GroupId ?? 0, reviewerId);
+            if (!isMentor)
+                throw new Exception("Access denied. You are not authorized to review this group's topic.");
+            topic.Status = (request.Status == "Approved") ? "Active" : "Rejected";
+            version.Status = request.Status;
+            version.ReviewedBy = reviewerId;
+            version.ReviewComment = request.ReviewComment;
+            version.SubmittedAt = DateTime.UtcNow; 
+
+            await _topicRepository.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<TopicDto>> GetPendingTopicsForMentorAsync(int mentorId)
+        {
+            var pendingVersions = await _topicRepository.GetPendingTopicVersionsByMentorAsync(mentorId);
+
+            return pendingVersions.Select(v => new TopicDto
+            {
+                TopicId = v.TopicId ?? 0, 
+                VersionId = v.Id,       
+
+                Title = v.Title,
+                Description = v.Description,
+                Status = v.Status,
+                SubmittedAt = v.SubmittedAt,
+
+                GroupId = v.Topic?.GroupId ?? 0,
+                GroupName = v.Topic?.Group?.GroupName ?? "N/A"
+            });
         }
     }
 }

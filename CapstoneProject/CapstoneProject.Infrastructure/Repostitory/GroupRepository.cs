@@ -39,7 +39,6 @@ namespace CapstoneProject.Infrastructure.Repostitory
                 throw;
             }
         }
-
         public async Task<string> AcceptInvitationWithMentorCheckAsync(int invitationId)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
@@ -52,9 +51,6 @@ namespace CapstoneProject.Infrastructure.Repostitory
                 bool alreadyInGroup = await _context.GroupMembers.AnyAsync(m => m.UserId == invite.ReceiverId);
                 if (alreadyInGroup) return "You are already a member of another group.";
 
-                // ==========================================
-                // 🛑 BƯỚC 1: CHỐT CHẶN NGƯỜI THỨ 6
-                // ==========================================
                 int checkCountBefore = await _context.GroupMembers.CountAsync(m => m.GroupId == invite.GroupId);
                 if (checkCountBefore >= 5)
                 {
@@ -65,9 +61,6 @@ namespace CapstoneProject.Infrastructure.Repostitory
                     return "Too late! The group has already reached the maximum capacity of 5 members.";
                 }
 
-                // ==========================================
-                // ✅ BƯỚC 2: CHO PHÉP VÀO NHÓM
-                // ==========================================
                 var newMember = new GroupMember
                 {
                     GroupId = (int)invite.GroupId,

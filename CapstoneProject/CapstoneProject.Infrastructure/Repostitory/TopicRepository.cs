@@ -62,5 +62,31 @@ namespace CapstoneProject.Infrastructure.Repostitory
         {
             return await _context.SaveChangesAsync();
         }
+
+        public async Task<bool> IsMentorOfGroupAsync(int groupId, int mentorId)
+        {
+            return await _context.MentorAssignments
+                .AnyAsync(ma => ma.GroupId == groupId && ma.MentorId == mentorId);
+        }
+
+        public async Task<IEnumerable<TopicVersion>> GetPendingTopicVersionsByMentorAsync(int mentorId)
+        {
+            return await _context.TopicVersions
+                .Include(tv => tv.Topic) 
+                    .ThenInclude(t => t.Group) 
+                .Where(tv => tv.Status == "Submitted" &&
+                             _context.MentorAssignments.Any(ma => ma.MentorId == mentorId && ma.GroupId == tv.Topic.GroupId))
+                .OrderByDescending(tv => tv.SubmittedAt)
+                .ToListAsync();
+        }
+        public async Task<TopicVersion?> GetVersionByIdAsync(int id)
+        {
+            return await _context.TopicVersions.FindAsync(id);
+        }
+        public async Task<bool> HasMentorAssignedAsync(int groupId)
+        {
+            // Kiểm tra xem có bất kỳ bản ghi nào trong bảng MentorAssignments khớp với GroupId này không
+            return await _context.MentorAssignments.AnyAsync(ma => ma.GroupId == groupId);
+        }
     }
 }
