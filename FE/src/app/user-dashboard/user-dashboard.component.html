@@ -4,26 +4,29 @@
     <div class="sidebar-header">
       <div class="avatar-circle">
         @if (profile?.avatarUrl) {
-          <img [src]="profile!.avatarUrl" alt="Avatar" class="avatar-img" />
+        <img [src]="profile!.avatarUrl" alt="Avatar" class="avatar-img" />
         } @else {
-          <span class="avatar-initials">{{ getInitials() }}</span>
+        <span class="avatar-initials">{{ getInitials() }}</span>
         }
       </div>
       @if (!sidebarCollapsed) {
-        <p class="sidebar-name">{{ profile?.fullName || 'User' }}</p>
+      <p class="sidebar-name">{{ profile?.fullName || 'User' }}</p>
       }
     </div>
 
     <nav class="sidebar-nav">
-      <button class="nav-item" [class.active]="activeTab === 'overview'" (click)="switchTab('overview')">
+      <button class="nav-item" [class.active]="activeTab === 'overview'"
+        (click)="switchTab('overview')">
         <i class="fas fa-th-large"></i>
         @if (!sidebarCollapsed) { <span>Overview</span> }
       </button>
-      <button class="nav-item" [class.active]="activeTab === 'profile'" (click)="switchTab('profile')">
+      <button class="nav-item" [class.active]="activeTab === 'profile'"
+        (click)="switchTab('profile')">
         <i class="fas fa-user"></i>
         @if (!sidebarCollapsed) { <span>Profile</span> }
       </button>
-      <button class="nav-item" [class.active]="activeTab === 'password'" (click)="switchTab('password')">
+      <button class="nav-item" [class.active]="activeTab === 'password'"
+        (click)="switchTab('password')">
         <i class="fas fa-lock"></i>
         @if (!sidebarCollapsed) { <span>Change Password</span> }
       </button>
@@ -41,488 +44,658 @@
 
     <div class="topbar">
       <button class="toggle-sidebar-btn" (click)="toggleSidebar()">
-        <i class="fas" [class.fa-bars]="sidebarCollapsed" [class.fa-chevron-left]="!sidebarCollapsed"></i>
+        <i class="fas" [class.fa-bars]="sidebarCollapsed"
+          [class.fa-chevron-left]="!sidebarCollapsed"></i>
       </button>
       <h1 class="page-title">
         @switch (activeTab) {
-          @case ('overview') { Overview }
-          @case ('profile') { Profile }
-          @case ('password') { Change Password }
+        @case ('overview') { Overview }
+        @case ('profile') { Profile }
+        @case ('password') { Change Password }
         }
       </h1>
     </div>
 
     @if (successMessage) {
-      <div class="alert alert-success">
-        <i class="fas fa-check-circle"></i>
-        <span>{{ successMessage }}</span>
-        <button class="alert-close" (click)="successMessage = ''"><i class="fas fa-times"></i></button>
-      </div>
+    <div class="alert alert-success">
+      <i class="fas fa-check-circle"></i>
+      <span>{{ successMessage }}</span>
+      <button class="alert-close" (click)="successMessage = ''"><i
+          class="fas fa-times"></i></button>
+    </div>
     }
     @if (errorMessage) {
-      <div class="alert alert-error">
-        <i class="fas fa-exclamation-circle"></i>
-        <span>{{ errorMessage }}</span>
-        <button class="alert-close" (click)="errorMessage = ''"><i class="fas fa-times"></i></button>
-      </div>
+    <div class="alert alert-error">
+      <i class="fas fa-exclamation-circle"></i>
+      <span>{{ errorMessage }}</span>
+      <button class="alert-close" (click)="errorMessage = ''"><i
+          class="fas fa-times"></i></button>
+    </div>
     }
 
     @if (isLoading && !profile) {
-      <div class="loading-screen">
-        <div class="spinner"></div>
-        <p>Loading...</p>
-      </div>
+    <div class="loading-screen">
+      <div class="spinner"></div>
+      <p>Loading...</p>
+    </div>
     }
 
     @if (!isLoading && !profile && errorMessage) {
-      <div class="loading-screen">
-        <i class="fas fa-exclamation-triangle warning-icon"></i>
-        <p>{{ errorMessage }}</p>
-        <button class="btn btn-primary" (click)="loadProfile()">
-          <i class="fas fa-refresh"></i> Retry
-        </button>
-      </div>
+    <div class="loading-screen">
+      <i class="fas fa-exclamation-triangle warning-icon"></i>
+      <p>{{ errorMessage }}</p>
+      <button class="btn btn-primary" (click)="loadProfile()">
+        <i class="fas fa-refresh"></i> Retry
+      </button>
+    </div>
     }
 
     @if (activeTab === 'overview' && profile) {
-      <div class="overview-content">
+    <div class="overview-content">
 
-        <div class="welcome-card">
-          <div class="welcome-text">
-            <h2>Hello, {{ profile.fullName }}! 👋</h2>
-            <p>Welcome back to the Capstone Project Management System.</p>
-          </div>
-          <i class="fas fa-graduation-cap welcome-icon"></i>
+      <div class="welcome-card">
+        <div class="welcome-text">
+          <h2>Hello, {{ profile.fullName }}! 👋</h2>
+          <p>Welcome back to the Capstone Project Management System.</p>
         </div>
+        <i class="fas fa-graduation-cap welcome-icon"></i>
+      </div>
 
-        <div class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-icon blue"><i class="fas fa-envelope"></i></div>
-            <div class="stat-info">
-              <span class="stat-label">Email</span>
-              <span class="stat-value">{{ profile.email }}</span>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon green"><i class="fas fa-phone"></i></div>
-            <div class="stat-info">
-              <span class="stat-label">Phone</span>
-              <span class="stat-value">{{ profile.phone || 'Not updated' }}</span>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon purple"><i class="fas fa-circle-check"></i></div>
-            <div class="stat-info">
-              <span class="stat-label">Status</span>
-              <span class="stat-value status-active">Active</span>
-            </div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon blue"><i class="fas fa-envelope"></i></div>
+          <div class="stat-info">
+            <span class="stat-label">Email</span>
+            <span class="stat-value">{{ profile.email }}</span>
           </div>
         </div>
+        <div class="stat-card">
+          <div class="stat-icon green"><i class="fas fa-phone"></i></div>
+          <div class="stat-info">
+            <span class="stat-label">Phone</span>
+            <span class="stat-value">{{ profile.phone || 'Not updated' }}</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon purple"><i
+              class="fas fa-circle-check"></i></div>
+          <div class="stat-info">
+            <span class="stat-label">Status</span>
+            <span class="stat-value status-active">Active</span>
+          </div>
+        </div>
+      </div>
 
-        <div class="group-dashboard-section" style="margin-top: 2.5rem;">
-          <h3 style="margin-bottom: 1rem; color: #374151; font-size: 1.25rem; font-weight: 600;">
-            <i class="fas fa-th-large" style="color: #8b5cf6; margin-right: 8px;"></i> My Group Menu
+      <div class="group-dashboard-section" style="margin-top: 2.5rem;">
+        <h3
+          style="margin-bottom: 1rem; color: #374151; font-size: 1.25rem; font-weight: 600;">
+          <i class="fas fa-th-large"
+            style="color: #8b5cf6; margin-right: 8px;"></i> My Group Menu
+        </h3>
+
+        @if (isGroupLoading) {
+        <div class="stat-card"
+          style="display: flex; align-items: center; justify-content: center; padding: 2rem; max-width: 400px;">
+          <div class="spinner" style="margin-right: 10px;"></div>
+          <p style="color: #6b7280; font-weight: 500;">Loading data...</p>
+        </div>
+        } @else {
+        <div
+          style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; max-width: 400px; background: white; padding: 20px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border-top: 4px solid #8b5cf6;">
+          <button (click)="activeModal = 'details'"
+            style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 20px 10px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; cursor: pointer; transition: all 0.2s;"
+            onmouseover="this.style.background='#f1f5f9'; this.style.borderColor='#cbd5e1'"
+            onmouseout="this.style.background='#f8fafc'; this.style.borderColor='#e2e8f0'">
+            <i class="fas fa-info-circle"
+              style="font-size: 1.8rem; color: #3b82f6;"></i>
+            <span
+              style="font-weight: 600; color: #334155; font-size: 0.95rem;">Group
+              Details</span>
+          </button>
+
+          <button (click)="activeModal = 'create'"
+            style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 20px 10px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; cursor: pointer; transition: all 0.2s;"
+            onmouseover="this.style.background='#f1f5f9'; this.style.borderColor='#cbd5e1'"
+            onmouseout="this.style.background='#f8fafc'; this.style.borderColor='#e2e8f0'">
+            <i class="fas fa-plus-square"
+              style="font-size: 1.8rem; color: #8b5cf6;"></i>
+            <span
+              style="font-weight: 600; color: #334155; font-size: 0.95rem;">Create
+              Group</span>
+          </button>
+
+          <button (click)="activeModal = 'invite'"
+            style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 20px 10px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; cursor: pointer; transition: all 0.2s;"
+            onmouseover="this.style.background='#f1f5f9'; this.style.borderColor='#cbd5e1'"
+            onmouseout="this.style.background='#f8fafc'; this.style.borderColor='#e2e8f0'">
+            <i class="fas fa-envelope-open-text"
+              style="font-size: 1.8rem; color: #10b981;"></i>
+            <span
+              style="font-weight: 600; color: #334155; font-size: 0.95rem;">Invite
+              Member</span>
+          </button>
+
+          <button (click)="activeModal = 'members'"
+            style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 20px 10px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; cursor: pointer; transition: all 0.2s;"
+            onmouseover="this.style.background='#f1f5f9'; this.style.borderColor='#cbd5e1'"
+            onmouseout="this.style.background='#f8fafc'; this.style.borderColor='#e2e8f0'">
+            <i class="fas fa-users"
+              style="font-size: 1.8rem; color: #f59e0b;"></i>
+            <span
+              style="font-weight: 600; color: #334155; font-size: 0.95rem;">Member
+              List</span>
+          </button>
+        </div>
+        }
+      </div>
+      @if (myGroup) {
+      <div
+        style="margin-top: 2rem; background: white; padding: 24px; border-radius: 16px; border: 1px solid #e2e8f0; max-width: 500px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
+
+        <div
+          style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <h3
+            style="margin: 0; color: #1e3a8a; font-size: 1.25rem; display: flex; align-items: center; gap: 10px;">
+            <i class="fas fa-lightbulb" style="color: #f59e0b;"></i> Capstone
+            Topic
           </h3>
 
-          @if (isGroupLoading) {
-            <div class="stat-card" style="display: flex; align-items: center; justify-content: center; padding: 2rem; max-width: 400px;">
-              <div class="spinner" style="margin-right: 10px;"></div>
-              <p style="color: #6b7280; font-weight: 500;">Loading data...</p>
-            </div>
-          } @else {
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; max-width: 400px; background: white; padding: 20px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border-top: 4px solid #8b5cf6;">
-              <button (click)="activeModal = 'details'" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 20px 10px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#f1f5f9'; this.style.borderColor='#cbd5e1'" onmouseout="this.style.background='#f8fafc'; this.style.borderColor='#e2e8f0'">
-                <i class="fas fa-info-circle" style="font-size: 1.8rem; color: #3b82f6;"></i>
-                <span style="font-weight: 600; color: #334155; font-size: 0.95rem;">Group Details</span>
-              </button>
-
-              <button (click)="activeModal = 'create'" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 20px 10px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#f1f5f9'; this.style.borderColor='#cbd5e1'" onmouseout="this.style.background='#f8fafc'; this.style.borderColor='#e2e8f0'">
-                <i class="fas fa-plus-square" style="font-size: 1.8rem; color: #8b5cf6;"></i>
-                <span style="font-weight: 600; color: #334155; font-size: 0.95rem;">Create Group</span>
-              </button>
-
-              <button (click)="activeModal = 'invite'" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 20px 10px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#f1f5f9'; this.style.borderColor='#cbd5e1'" onmouseout="this.style.background='#f8fafc'; this.style.borderColor='#e2e8f0'">
-                <i class="fas fa-envelope-open-text" style="font-size: 1.8rem; color: #10b981;"></i>
-                <span style="font-weight: 600; color: #334155; font-size: 0.95rem;">Invite Member</span>
-              </button>
-
-              <button (click)="activeModal = 'members'" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 20px 10px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#f1f5f9'; this.style.borderColor='#cbd5e1'" onmouseout="this.style.background='#f8fafc'; this.style.borderColor='#e2e8f0'">
-                <i class="fas fa-users" style="font-size: 1.8rem; color: #f59e0b;"></i>
-                <span style="font-weight: 600; color: #334155; font-size: 0.95rem;">Member List</span>
-              </button>
-
-            </div>
+          @if (!isTopicEditing && myGroup.topic) {
+          @if (myGroup.topic.status === 'Pending') {
+          <button (click)="enableTopicEdit()"
+            style="background: #eff6ff; color: #3b82f6; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem;">
+            <i class="fas fa-edit"></i> Edit
+          </button>
+          } @else if (myGroup.topic.status === 'Rejected') {
+          <button (click)="enableTopicEdit()"
+            style="background: #fee2e2; color: #dc2626; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem;">
+            <i class="fas fa-redo"></i> Resubmit
+          </button>
+          }
           }
         </div>
 
-        @if (myGroup) {
-          <div style="margin-top: 2rem; background: white; padding: 24px; border-radius: 16px; border: 1px solid #e2e8f0; max-width: 500px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
-            
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-              <h3 style="margin: 0; color: #1e3a8a; font-size: 1.25rem; display: flex; align-items: center; gap: 10px;">
-                <i class="fas fa-lightbulb" style="color: #f59e0b;"></i> Capstone Topic
-              </h3>
-              
-              @if (myGroup.topic && myGroup.topic.status === 'Pending' && !isTopicEditing) {
-                <button (click)="enableTopicEdit()" style="background: #eff6ff; color: #3b82f6; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem;">
-                  <i class="fas fa-edit"></i> Edit
-                </button>
-              }
-            </div>
+        @if (!isTopicEditing && myGroup.topic) {
+        @if (myGroup.topic && myGroup.topic.status === 'Rejected') {
+        <div
+          style="background: #fff1f2; border-left: 4px solid #e11d48; padding: 16px; margin-bottom: 16px; border-radius: 8px; box-shadow: 0 2px 4px rgba(225, 29, 72, 0.1);">
+          <div
+            style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+            <i class="fas fa-comment-dots" style="color: #e11d48;"></i>
+            <strong style="color: #9f1239; font-size: 0.95rem;">Mentor's
+              Review:</strong>
+          </div>
 
-            @if (myGroup.topic && !isTopicEditing) {
-              <div style="background: #f8fafc; padding: 16px; border-radius: 10px; border: 1px solid #e2e8f0;">
-                <p style="margin: 0 0 8px 0; font-weight: 700; color: #1e293b; font-size: 1.1rem;">{{ myGroup.topic.title }}</p>
-                <p style="margin: 0 0 12px 0; font-size: 0.95rem; color: #475569; line-height: 1.5;">{{ myGroup.topic.description }}</p>
-                
-                <span [style.background]="getStatusColor(myGroup.topic.status)"
-                      [style.color]="getStatusTextColor(myGroup.topic.status)"
-                      style="font-size: 0.75rem; padding: 4px 12px; border-radius: 12px; font-weight: 700; text-transform: uppercase;">
-                  {{ myGroup.topic.status }}
-                </span>
-              </div>
-            } 
-            @else {
-              <div style="display: flex; flex-direction: column; gap: 12px;">
-                <input type="text" [(ngModel)]="topicTitle" placeholder="Project Title" style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px;">
-                <textarea [(ngModel)]="topicDescription" placeholder="Project Description..." rows="3" style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px;"></textarea>
-                
-                <div style="display: flex; gap: 10px;">
-                  <button (click)="handleTopicSubmit()" [disabled]="isTopicLoading" style="flex: 2; background: #3b82f6; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer;">
-                    {{ isTopicEditing ? 'Update Topic' : 'Submit Topic' }}
-                  </button>
-                  @if (isTopicEditing) {
-                    <button (click)="cancelTopicEdit()" style="flex: 1; background: #e2e8f0; color: #475569; border: none; padding: 10px; border-radius: 8px; cursor: pointer;">Cancel</button>
-                  }
-                </div>
-              </div>
+          <p
+            style="color: #be123c; margin: 0; font-size: 0.95rem; line-height: 1.5; font-style: italic; background: rgba(255,255,255,0.5); padding: 8px; border-radius: 4px;">
+            "{{ myGroup.topic.reviewComment || 'No specific comments provided, please contact your mentor for more details.' }}"
+          </p>
+        </div>
+        }
+
+        <div
+          style="background: #f8fafc; padding: 16px; border-radius: 10px; border: 1px solid #e2e8f0;">
+          <p
+            style="margin: 0 0 8px 0; font-weight: 700; color: #1e293b; font-size: 1.1rem;">{{
+            myGroup.topic.title }}</p>
+          <p
+            style="margin: 0 0 12px 0; font-size: 0.95rem; color: #475569; line-height: 1.5;">{{
+            myGroup.topic.description }}</p>
+
+          <span [style.background]="getStatusColor(myGroup.topic.status)"
+            [style.color]="getStatusTextColor(myGroup.topic.status)"
+            style="font-size: 0.75rem; padding: 4px 12px; border-radius: 12px; font-weight: 700; text-transform: uppercase;">
+            {{ myGroup.topic.status }}
+          </span>
+        </div>
+        }
+
+        @else {
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <input type="text" [(ngModel)]="topicTitle"
+            placeholder="Project Title"
+            style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px;">
+          <textarea [(ngModel)]="topicDescription"
+            placeholder="Project Description..." rows="3"
+            style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px;"></textarea>
+
+          <div style="display: flex; gap: 10px;">
+            <button (click)="handleTopicSubmit()" [disabled]="isTopicLoading"
+              style="flex: 2; background: #3b82f6; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer;">
+              <i class="fas" [class.fa-paper-plane]="!isTopicEditing"
+                [class.fa-save]="isTopicEditing"></i>
+              {{ isTopicEditing ? (myGroup.topic?.status === 'Rejected' ?
+              'Submit New Version' : 'Update Changes') : 'Submit Topic' }}
+            </button>
+
+            @if (isTopicEditing || myGroup.topic) {
+            <button (click)="cancelTopicEdit()"
+              style="flex: 1; background: #e2e8f0; color: #475569; border: none; padding: 10px; border-radius: 8px; cursor: pointer;">
+              Cancel
+            </button>
             }
           </div>
+        </div>
         }
+      </div>
+      }
 
-        @if (activeModal !== 'none') {
-          <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(17, 24, 39, 0.6); z-index: 9999; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px);" (click)="activeModal = 'none'">
-            
-            <div (click)="$event.stopPropagation()" style="background: white; border-radius: 16px; width: 90%; max-width: 500px; max-height: 90vh; display: flex; flex-direction: column; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); animation: modalFadeIn 0.3s ease-out;">
-              
-              <div style="padding: 16px 20px; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center; background: #f9fafb; border-radius: 16px 16px 0 0;">
-                <h2 style="margin: 0; color: #1f2937; font-size: 1.25rem; font-weight: 600;">
-                  @if (activeModal === 'details') { <i class="fas fa-info-circle" style="color: #3b82f6;"></i> Group Details }
-                  @if (activeModal === 'create') { <i class="fas fa-plus-square" style="color: #8b5cf6;"></i> Create New Group }
-                  @if (activeModal === 'invite') { <i class="fas fa-envelope-open-text" style="color: #10b981;"></i> Invite Member }
-                  @if (activeModal === 'members') { <i class="fas fa-users" style="color: #f59e0b;"></i> Member List }
-                </h2>
-                <button (click)="activeModal = 'none'" style="background: none; border: none; font-size: 1.2rem; color: #6b7280; cursor: pointer; padding: 0;"><i class="fas fa-times"></i></button>
+      @if (activeModal !== 'none') {
+      <div
+        style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(17, 24, 39, 0.6); z-index: 9999; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px);"
+        (click)="activeModal = 'none'">
+
+        <div (click)="$event.stopPropagation()"
+          style="background: white; border-radius: 16px; width: 90%; max-width: 500px; max-height: 90vh; display: flex; flex-direction: column; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); animation: modalFadeIn 0.3s ease-out;">
+
+          <div
+            style="padding: 16px 20px; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center; background: #f9fafb; border-radius: 16px 16px 0 0;">
+            <h2
+              style="margin: 0; color: #1f2937; font-size: 1.25rem; font-weight: 600;">
+              @if (activeModal === 'details') { <i class="fas fa-info-circle"
+                style="color: #3b82f6;"></i> Group Details }
+              @if (activeModal === 'create') { <i class="fas fa-plus-square"
+                style="color: #8b5cf6;"></i> Create New Group }
+              @if (activeModal === 'invite') { <i
+                class="fas fa-envelope-open-text" style="color: #10b981;"></i>
+              Invite Member }
+              @if (activeModal === 'members') { <i class="fas fa-users"
+                style="color: #f59e0b;"></i> Member List }
+            </h2>
+            <button (click)="activeModal = 'none'"
+              style="background: none; border: none; font-size: 1.2rem; color: #6b7280; cursor: pointer; padding: 0;"><i
+                class="fas fa-times"></i></button>
+          </div>
+
+          <div class="custom-modal-body"
+            style="padding: 24px; overflow-y: auto;">
+
+            @if (activeModal === 'details') {
+            @if (!myGroup) {
+            <div style="text-align: center; color: #9ca3af; padding: 20px;">
+              <i class="fas fa-exclamation-circle"
+                style="font-size: 2.5rem; margin-bottom: 10px; color: #d1d5db;"></i>
+              <p>You haven't joined any group yet.</p>
+            </div>
+            } @else {
+            <div
+              style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; border-bottom: 1px solid #e5e7eb;">
+              <div>
+                <span style="font-size: 0.85rem; color: #6b7280;">Group
+                  Name</span>
+                <h3
+                  style="margin: 5px 0 0 0; color: #1e3a8a; font-size: 1.4rem;">{{
+                  myGroup.groupName }}</h3>
               </div>
+              <span
+                style="padding: 6px 14px; background: #dbeafe; color: #1e40af; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">{{
+                myGroup.status }}</span>
+            </div>
 
-              <div class="custom-modal-body" style="padding: 24px; overflow-y: auto;">
-                
-                @if (activeModal === 'details') {
-                  @if (!myGroup) {
-                    <div style="text-align: center; color: #9ca3af; padding: 20px;">
-                      <i class="fas fa-exclamation-circle" style="font-size: 2.5rem; margin-bottom: 10px; color: #d1d5db;"></i>
-                      <p>You haven't joined any group yet.</p>
-                    </div>
-                  } @else {
-                    <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; border-bottom: 1px solid #e5e7eb;">
-                      <div>
-                        <span style="font-size: 0.85rem; color: #6b7280;">Group Name</span>
-                        <h3 style="margin: 5px 0 0 0; color: #1e3a8a; font-size: 1.4rem;">{{ myGroup.groupName }}</h3>
-                      </div>
-                      <span style="padding: 6px 14px; background: #dbeafe; color: #1e40af; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">{{ myGroup.status }}</span>
-                    </div>
-
-                    <div style="margin-top: 20px; padding: 12px; background: #f0f9ff; border-radius: 10px; border: 1px dashed #7dd3fc; display: flex; align-items: center; gap: 12px;">
-                      <div style="width: 40px; height: 40px; border-radius: 50%; background: #bae6fd; display: flex; align-items: center; justify-content: center; color: #0369a1;">
-                        <i class="fas fa-user-tie" style="font-size: 1.2rem;"></i>
-                      </div>
-                      <div>
-                        <span style="font-size: 0.75rem; color: #0369a1; font-weight: 700; text-transform: uppercase;">Mentor</span>
-                        <p style="margin: 2px 0 0 0; font-weight: 600; color: #0c4a6e; font-size: 1rem;">
-                          {{ myGroup.mentorName || 'Waiting for assignment...' }}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center; padding: 0 5px;">
-                      <p style="margin: 0; color: #4b5563; font-size: 0.95rem;">
-                        <i class="fas fa-users" style="margin-right: 5px; color: #6b7280;"></i>
-                        <strong>Total Members:</strong>
-                      </p>
-                      <span style="font-weight: 700; color: #111827;">{{ myGroup.members.length || 0 }}/5</span>
-                    </div>
-
-                    @if (isCurrentUserLeader()) {
-                      <hr style="margin: 20px 0; border: none; border-top: 1px solid #e5e7eb;">
-                      <div style="background: #fef2f2; padding: 15px; border-radius: 8px; border: 1px solid #fecaca;">
-                        <p style="margin: 0 0 10px 0; color: #991b1b; font-weight: 600; font-size: 0.9rem; text-transform: uppercase;">Danger Zone</p>
-                        <button (click)="handleDeleteGroup()" [disabled]="isGroupLoading" style="width: 100%; padding: 10px; background: #dc2626; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">
-                          <i class="fas fa-trash-alt"></i> {{ isGroupLoading ? 'Deleting...' : 'Delete Group' }}
-                        </button>
-                      </div>
-                    }
-                  }
-                }
-
-                @if (activeModal === 'create') {
-                  @if (myGroup) {
-                    <div style="background: #fee2e2; padding: 15px; border-radius: 8px; color: #991b1b; display: flex; gap: 10px; align-items: center;"><i class="fas fa-ban"></i> <span>You are already in a group!</span></div>
-                  } @else {
-                    <p style="color: #6b7280; margin-top: 0;">Start a new team to collaborate on your Capstone project.</p>
-                    <label style="display: block; font-weight: 600; margin-bottom: 8px;">Group Name</label>
-                    <input type="text" [(ngModel)]="newGroupName" placeholder="Enter new group name..." style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; outline: none; box-sizing: border-box; margin-bottom: 15px;">
-                    <button class="btn btn-primary" (click)="handleCreateGroup()" [disabled]="isLoading" style="width: 100%; background: #8b5cf6; border: none; padding: 12px; border-radius: 8px; color: white; font-weight: 600; cursor: pointer;">
-                      @if (isLoading) { <i class="fas fa-spinner fa-spin"></i> Processing... } @else { Create Group }
-                    </button>
-                  }
-                }
-
-                @if (activeModal === 'invite') {
-                  @if (!myGroup) {
-                    <div style="text-align: center; color: #9ca3af;"><i class="fas fa-exclamation-circle" style="font-size: 2rem; margin-bottom: 10px;"></i><p>Create a group first to invite members.</p></div>
-                  } @else if (myGroup.members && myGroup.members.length >= 5) {
-                    <div style="background: #fef2f2; padding: 15px; border-radius: 8px; color: #991b1b;"><i class="fas fa-info-circle"></i> Your group is full (5/5).</div>
-                  } @else {
-                    <p style="color: #15803d; font-size: 0.9rem; margin-top: 0; background: #dcfce7; padding: 8px 12px; border-radius: 6px;">You have {{ 5 - (myGroup.members.length || 0) }} slots remaining.</p>
-                    <label style="display: block; font-weight: 600; margin-bottom: 8px; margin-top: 15px;">Member Email</label>
-                    <input type="email" [(ngModel)]="inviteEmail" placeholder="student@example.com" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; outline: none; box-sizing: border-box; margin-bottom: 15px;">
-                    <button class="btn btn-primary" (click)="handleInviteMember()" [disabled]="isLoading" style="width: 100%; background: #10b981; border: none; padding: 12px; border-radius: 8px; color: white; font-weight: 600; cursor: pointer;">
-                      @if (isLoading) { <i class="fas fa-spinner fa-spin"></i> Sending... } @else { <i class="fas fa-paper-plane"></i> Send Invite }
-                    </button>
-                  }
-                }
-
-                @if (activeModal === 'members') {
-                  @if (!myGroup || !myGroup.members || myGroup.members.length === 0) {
-                    <div style="text-align: center; color: #9ca3af;">
-                      <i class="fas fa-users-slash" style="font-size: 2rem; margin-bottom: 10px;"></i>
-                      <p>No members to show.</p>
-                    </div>
-                  } @else {
-                    <h4 style="margin: 0 0 15px 0; color: #374151;">Members ({{ myGroup.members.length }}/5)</h4>
-                    <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px;">
-                      @for (member of myGroup.members; track member.userId) {
-                        <li style="padding: 12px; background: #f9fafb; border-radius: 8px; display: flex; align-items: center; gap: 12px; border: 1px solid #e5e7eb;">
-                          <div style="width: 36px; height: 36px; border-radius: 50%; background: #e5e7eb; display: flex; align-items: center; justify-content: center; color: #6b7280;">
-                            <i class="fas fa-user-graduate"></i>
-                          </div>
-                          
-                          <div style="flex-grow: 1;">
-                            <p style="margin: 0; font-weight: 600; color: #111827; font-size: 0.95rem;">
-                              {{ member.fullName || 'Student ID: ' + member.userId }}
-                            </p>
-                            <span style="font-size: 0.75rem; color: #4b5563; background: #e5e7eb; padding: 2px 6px; border-radius: 4px; margin-top: 4px; display: inline-block;">
-                              {{ member.roleInGroup }}
-                            </span>
-                          </div>
-
-                          @if (isCurrentUserLeader() && member.roleInGroup !== 'Leader') {
-                            <button 
-                              (click)="handleKickMember(member.userId)"
-                              [disabled]="isGroupLoading"
-                              style="padding: 6px 12px; background: #fee2e2; color: #dc2626; border: 1px solid #f87171; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 6px; transition: all 0.2s;"
-                              onmouseover="this.style.background='#fca5a5'; this.style.color='#991b1b'"
-                              onmouseout="this.style.background='#fee2e2'; this.style.color='#dc2626'"
-                              title="Remove this member">
-                              <i class="fas fa-user-minus"></i> Kick
-                            </button>
-                          }
-                        </li>
-                      }
-                    </ul>
-                  }
-                }
-
+            <div
+              style="margin-top: 20px; padding: 12px; background: #f0f9ff; border-radius: 10px; border: 1px dashed #7dd3fc; display: flex; align-items: center; gap: 12px;">
+              <div
+                style="width: 40px; height: 40px; border-radius: 50%; background: #bae6fd; display: flex; align-items: center; justify-content: center; color: #0369a1;">
+                <i class="fas fa-user-tie" style="font-size: 1.2rem;"></i>
+              </div>
+              <div>
+                <span
+                  style="font-size: 0.75rem; color: #0369a1; font-weight: 700; text-transform: uppercase;">Mentor</span>
+                <p
+                  style="margin: 2px 0 0 0; font-weight: 600; color: #0c4a6e; font-size: 1rem;">
+                  {{ myGroup.mentorName || 'Waiting for assignment...' }}
+                </p>
               </div>
             </div>
+
+            <div
+              style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center; padding: 0 5px;">
+              <p style="margin: 0; color: #4b5563; font-size: 0.95rem;">
+                <i class="fas fa-users"
+                  style="margin-right: 5px; color: #6b7280;"></i>
+                <strong>Total Members:</strong>
+              </p>
+              <span style="font-weight: 700; color: #111827;">{{
+                myGroup.members.length || 0 }}/5</span>
+            </div>
+
+            @if (isCurrentUserLeader()) {
+            <hr
+              style="margin: 20px 0; border: none; border-top: 1px solid #e5e7eb;">
+            <div
+              style="background: #fef2f2; padding: 15px; border-radius: 8px; border: 1px solid #fecaca;">
+              <p
+                style="margin: 0 0 10px 0; color: #991b1b; font-weight: 600; font-size: 0.9rem; text-transform: uppercase;">Danger
+                Zone</p>
+              <button (click)="handleDeleteGroup()" [disabled]="isGroupLoading"
+                style="width: 100%; padding: 10px; background: #dc2626; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">
+                <i class="fas fa-trash-alt"></i> {{ isGroupLoading ?
+                'Deleting...' : 'Delete Group' }}
+              </button>
+            </div>
+            }
+            }
+            }
+
+            @if (activeModal === 'create') {
+            @if (myGroup) {
+            <div
+              style="background: #fee2e2; padding: 15px; border-radius: 8px; color: #991b1b; display: flex; gap: 10px; align-items: center;"><i
+                class="fas fa-ban"></i> <span>You are already in a
+                group!</span></div>
+            } @else {
+            <p style="color: #6b7280; margin-top: 0;">Start a new team to
+              collaborate on your Capstone project.</p>
+            <label
+              style="display: block; font-weight: 600; margin-bottom: 8px;">Group
+              Name</label>
+            <input type="text" [(ngModel)]="newGroupName"
+              placeholder="Enter new group name..."
+              style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; outline: none; box-sizing: border-box; margin-bottom: 15px;">
+            <button class="btn btn-primary" (click)="handleCreateGroup()"
+              [disabled]="isLoading"
+              style="width: 100%; background: #8b5cf6; border: none; padding: 12px; border-radius: 8px; color: white; font-weight: 600; cursor: pointer;">
+              @if (isLoading) { <i class="fas fa-spinner fa-spin"></i>
+              Processing... } @else { Create Group }
+            </button>
+            }
+            }
+
+            @if (activeModal === 'invite') {
+            @if (!myGroup) {
+            <div style="text-align: center; color: #9ca3af;"><i
+                class="fas fa-exclamation-circle"
+                style="font-size: 2rem; margin-bottom: 10px;"></i><p>Create a
+                group first to invite members.</p></div>
+            } @else if (myGroup.members && myGroup.members.length >= 5) {
+            <div
+              style="background: #fef2f2; padding: 15px; border-radius: 8px; color: #991b1b;"><i
+                class="fas fa-info-circle"></i> Your group is full (5/5).</div>
+            } @else {
+            <p
+              style="color: #15803d; font-size: 0.9rem; margin-top: 0; background: #dcfce7; padding: 8px 12px; border-radius: 6px;">You
+              have {{ 5 - (myGroup.members.length || 0) }} slots remaining.</p>
+            <label
+              style="display: block; font-weight: 600; margin-bottom: 8px; margin-top: 15px;">Member
+              Email</label>
+            <input type="email" [(ngModel)]="inviteEmail"
+              placeholder="student@example.com"
+              style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; outline: none; box-sizing: border-box; margin-bottom: 15px;">
+            <button class="btn btn-primary" (click)="handleInviteMember()"
+              [disabled]="isLoading"
+              style="width: 100%; background: #10b981; border: none; padding: 12px; border-radius: 8px; color: white; font-weight: 600; cursor: pointer;">
+              @if (isLoading) { <i class="fas fa-spinner fa-spin"></i>
+              Sending... } @else { <i class="fas fa-paper-plane"></i> Send
+              Invite }
+            </button>
+            }
+            }
+
+            @if (activeModal === 'members') {
+            @if (!myGroup || !myGroup.members || myGroup.members.length === 0) {
+            <div style="text-align: center; color: #9ca3af;">
+              <i class="fas fa-users-slash"
+                style="font-size: 2rem; margin-bottom: 10px;"></i>
+              <p>No members to show.</p>
+            </div>
+            } @else {
+            <h4 style="margin: 0 0 15px 0; color: #374151;">Members ({{
+              myGroup.members.length }}/5)</h4>
+            <ul
+              style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px;">
+              @for (member of myGroup.members; track member.userId) {
+              <li
+                style="padding: 12px; background: #f9fafb; border-radius: 8px; display: flex; align-items: center; gap: 12px; border: 1px solid #e5e7eb;">
+                <div
+                  style="width: 36px; height: 36px; border-radius: 50%; background: #e5e7eb; display: flex; align-items: center; justify-content: center; color: #6b7280;">
+                  <i class="fas fa-user-graduate"></i>
+                </div>
+
+                <div style="flex-grow: 1;">
+                  <p
+                    style="margin: 0; font-weight: 600; color: #111827; font-size: 0.95rem;">
+                    {{ member.fullName || 'Student ID: ' + member.userId }}
+                  </p>
+                  <span
+                    style="font-size: 0.75rem; color: #4b5563; background: #e5e7eb; padding: 2px 6px; border-radius: 4px; margin-top: 4px; display: inline-block;">
+                    {{ member.roleInGroup }}
+                  </span>
+                </div>
+
+                @if (isCurrentUserLeader() && member.roleInGroup !== 'Leader') {
+                <button
+                  (click)="handleKickMember(member.userId)"
+                  [disabled]="isGroupLoading"
+                  style="padding: 6px 12px; background: #fee2e2; color: #dc2626; border: 1px solid #f87171; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 6px; transition: all 0.2s;"
+                  onmouseover="this.style.background='#fca5a5'; this.style.color='#991b1b'"
+                  onmouseout="this.style.background='#fee2e2'; this.style.color='#dc2626'"
+                  title="Remove this member">
+                  <i class="fas fa-user-minus"></i> Kick
+                </button>
+                }
+              </li>
+              }
+            </ul>
+            }
+            }
+
           </div>
-          <style>
+        </div>
+      </div>
+      <style>
             @keyframes modalFadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
           </style>
-        }
+      }
 
-      </div>
+    </div>
     }
 
     @if (activeTab === 'profile' && profile) {
-      <div class="profile-content">
-        <div class="profile-card">
-          <div class="profile-card-header">
-            <div class="profile-avatar-large">
-              @if (profile.avatarUrl) {
-                <img [src]="profile.avatarUrl" alt="Avatar" />
+    <div class="profile-content">
+      <div class="profile-card">
+        <div class="profile-card-header">
+          <div class="profile-avatar-large">
+            @if (profile.avatarUrl) {
+            <img [src]="profile.avatarUrl" alt="Avatar" />
+            } @else {
+            <span>{{ getInitials() }}</span>
+            }
+          </div>
+          <div class="profile-card-info">
+            <h2>{{ profile.fullName }}</h2>
+            <p>{{ profile.email }}</p>
+          </div>
+          <button class="edit-profile-btn" (click)="toggleEdit()">
+            <i class="fas" [class.fa-pen]="!editMode"
+              [class.fa-times]="editMode"></i>
+            {{ editMode ? 'Cancel' : 'Edit' }}
+          </button>
+        </div>
+
+        @if (!editMode) {
+        <div class="profile-details">
+          <div class="detail-row">
+            <div class="detail-icon"><i class="fas fa-user"></i></div>
+            <div class="detail-content">
+              <span class="detail-label">Full Name</span>
+              <span class="detail-value">{{ profile.fullName }}</span>
+            </div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-icon"><i class="fas fa-envelope"></i></div>
+            <div class="detail-content">
+              <span class="detail-label">Email</span>
+              <span class="detail-value">{{ profile.email }}</span>
+            </div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-icon"><i class="fas fa-phone"></i></div>
+            <div class="detail-content">
+              <span class="detail-label">Phone</span>
+              <span class="detail-value">{{ profile.phone || 'Not updated'
+                }}</span>
+            </div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-icon"><i class="fas fa-circle-check"></i></div>
+            <div class="detail-content">
+              <span class="detail-label">Status</span>
+              <span class="detail-value status-active">Active</span>
+            </div>
+          </div>
+        </div>
+        }
+
+        @if (editMode) {
+        <div class="edit-form">
+          <div class="form-grid">
+            <div class="form-group">
+              <label><i class="fas fa-user"></i>Full Name</label>
+              <input type="text" [(ngModel)]="fullName"
+                placeholder="Enter full name" />
+            </div>
+            <div class="form-group">
+              <label><i class="fas fa-phone"></i>Phone Number</label>
+              <input type="text" [(ngModel)]="phone"
+                placeholder="Enter phone number" />
+            </div>
+            <div class="form-group full-width">
+              <label><i class="fas fa-image"></i>Avatar</label>
+              <div class="avatar-upload-area">
+                <div class="avatar-preview-box">
+                  @if (avatarPreview) {
+                  <img [src]="avatarPreview" alt="Preview"
+                    class="avatar-preview-img" />
+                  <button class="avatar-remove-btn" type="button"
+                    (click)="removeAvatar()">
+                    <i class="fas fa-times"></i>
+                  </button>
+                  } @else {
+                  <div class="avatar-placeholder">
+                    <i class="fas fa-camera"></i>
+                    <span>No image</span>
+                  </div>
+                  }
+                </div>
+                <div class="avatar-upload-actions">
+                  <label class="btn btn-outline avatar-upload-btn">
+                    <i class="fas fa-upload"></i> Choose image
+                    <input type="file" accept="image/*"
+                      (change)="onAvatarSelected($event)" hidden />
+                  </label>
+                  <small class="avatar-hint">Format: JPG, PNG, GIF. Max
+                    2MB.</small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-primary" (click)="saveProfile()"
+              [disabled]="isLoading">
+              @if (isLoading) {
+              <i class="fas fa-spinner fa-spin"></i> Saving...
               } @else {
-                <span>{{ getInitials() }}</span>
+              <i class="fas fa-check"></i> Save Changes
               }
-            </div>
-            <div class="profile-card-info">
-              <h2>{{ profile.fullName }}</h2>
-              <p>{{ profile.email }}</p>
-            </div>
-            <button class="edit-profile-btn" (click)="toggleEdit()">
-              <i class="fas" [class.fa-pen]="!editMode" [class.fa-times]="editMode"></i>
-              {{ editMode ? 'Cancel' : 'Edit' }}
+            </button>
+            <button class="btn btn-secondary" (click)="toggleEdit()">
+              <i class="fas fa-times"></i> Cancel
             </button>
           </div>
-
-          @if (!editMode) {
-            <div class="profile-details">
-              <div class="detail-row">
-                <div class="detail-icon"><i class="fas fa-user"></i></div>
-                <div class="detail-content">
-                  <span class="detail-label">Full Name</span>
-                  <span class="detail-value">{{ profile.fullName }}</span>
-                </div>
-              </div>
-              <div class="detail-row">
-                <div class="detail-icon"><i class="fas fa-envelope"></i></div>
-                <div class="detail-content">
-                  <span class="detail-label">Email</span>
-                  <span class="detail-value">{{ profile.email }}</span>
-                </div>
-              </div>
-              <div class="detail-row">
-                <div class="detail-icon"><i class="fas fa-phone"></i></div>
-                <div class="detail-content">
-                  <span class="detail-label">Phone</span>
-                  <span class="detail-value">{{ profile.phone || 'Not updated' }}</span>
-                </div>
-              </div>
-              <div class="detail-row">
-                <div class="detail-icon"><i class="fas fa-circle-check"></i></div>
-                <div class="detail-content">
-                  <span class="detail-label">Status</span>
-                  <span class="detail-value status-active">Active</span>
-                </div>
-              </div>
-            </div>
-          }
-
-          @if (editMode) {
-            <div class="edit-form">
-              <div class="form-grid">
-                <div class="form-group">
-                  <label><i class="fas fa-user"></i>Full Name</label>
-                  <input type="text" [(ngModel)]="fullName" placeholder="Enter full name" />
-                </div>
-                <div class="form-group">
-                  <label><i class="fas fa-phone"></i>Phone Number</label>
-                  <input type="text" [(ngModel)]="phone" placeholder="Enter phone number" />
-                </div>
-                <div class="form-group full-width">
-                  <label><i class="fas fa-image"></i>Avatar</label>
-                  <div class="avatar-upload-area">
-                    <div class="avatar-preview-box">
-                      @if (avatarPreview) {
-                        <img [src]="avatarPreview" alt="Preview" class="avatar-preview-img" />
-                        <button class="avatar-remove-btn" type="button" (click)="removeAvatar()">
-                          <i class="fas fa-times"></i>
-                        </button>
-                      } @else {
-                        <div class="avatar-placeholder">
-                          <i class="fas fa-camera"></i>
-                          <span>No image</span>
-                        </div>
-                      }
-                    </div>
-                    <div class="avatar-upload-actions">
-                      <label class="btn btn-outline avatar-upload-btn">
-                        <i class="fas fa-upload"></i> Choose image
-                        <input type="file" accept="image/*" (change)="onAvatarSelected($event)" hidden />
-                      </label>
-                      <small class="avatar-hint">Format: JPG, PNG, GIF. Max 2MB.</small>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="form-actions">
-                <button class="btn btn-primary" (click)="saveProfile()" [disabled]="isLoading">
-                  @if (isLoading) {
-                    <i class="fas fa-spinner fa-spin"></i> Saving...
-                  } @else {
-                    <i class="fas fa-check"></i> Save Changes
-                  }
-                </button>
-                <button class="btn btn-secondary" (click)="toggleEdit()">
-                  <i class="fas fa-times"></i> Cancel
-                </button>
-              </div>
-            </div>
-          }
-
         </div>
+        }
+
       </div>
+    </div>
     }
 
     @if (activeTab === 'password') {
-      <div class="password-content">
-        <div class="password-card">
-          <div class="card-header-icon">
-            <i class="fas fa-shield-halved"></i>
+    <div class="password-content">
+      <div class="password-card">
+        <div class="card-header-icon">
+          <i class="fas fa-shield-halved"></i>
+        </div>
+        <h2>Change Password</h2>
+        <p class="card-desc">Update your password to keep your account
+          secure.</p>
+
+        <div class="password-form">
+          <div class="form-group">
+            <label><i class="fas fa-lock"></i>Current Password</label>
+            <div class="password-input-wrapper">
+              <input [type]="showCurrentPassword ? 'text' : 'password'"
+                [(ngModel)]="currentPassword"
+                placeholder="Enter current password" />
+              <button class="toggle-pw-btn"
+                (click)="togglePasswordVisibility('current')">
+                <i class="fas" [class.fa-eye]="!showCurrentPassword"
+                  [class.fa-eye-slash]="showCurrentPassword"></i>
+              </button>
+            </div>
           </div>
-          <h2>Change Password</h2>
-          <p class="card-desc">Update your password to keep your account secure.</p>
 
-          <div class="password-form">
-            <div class="form-group">
-              <label><i class="fas fa-lock"></i>Current Password</label>
-              <div class="password-input-wrapper">
-                <input [type]="showCurrentPassword ? 'text' : 'password'" [(ngModel)]="currentPassword" placeholder="Enter current password" />
-                <button class="toggle-pw-btn" (click)="togglePasswordVisibility('current')">
-                  <i class="fas" [class.fa-eye]="!showCurrentPassword" [class.fa-eye-slash]="showCurrentPassword"></i>
-                </button>
-              </div>
+          <div class="form-group">
+            <label><i class="fas fa-key"></i>New Password</label>
+            <div class="password-input-wrapper">
+              <input [type]="showNewPassword ? 'text' : 'password'"
+                [(ngModel)]="newPassword"
+                placeholder="Enter new password (at least 6 characters)" />
+              <button class="toggle-pw-btn"
+                (click)="togglePasswordVisibility('new')">
+                <i class="fas" [class.fa-eye]="!showNewPassword"
+                  [class.fa-eye-slash]="showNewPassword"></i>
+              </button>
             </div>
-
-            <div class="form-group">
-              <label><i class="fas fa-key"></i>New Password</label>
-              <div class="password-input-wrapper">
-                <input [type]="showNewPassword ? 'text' : 'password'" [(ngModel)]="newPassword" placeholder="Enter new password (at least 6 characters)" />
-                <button class="toggle-pw-btn" (click)="togglePasswordVisibility('new')">
-                  <i class="fas" [class.fa-eye]="!showNewPassword" [class.fa-eye-slash]="showNewPassword"></i>
-                </button>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label><i class="fas fa-check-double"></i>Confirm Password</label>
-              <div class="password-input-wrapper">
-                <input [type]="showConfirmPassword ? 'text' : 'password'" [(ngModel)]="confirmPassword" placeholder="Re-enter new password" />
-                <button class="toggle-pw-btn" (click)="togglePasswordVisibility('confirm')">
-                  <i class="fas" [class.fa-eye]="!showConfirmPassword" [class.fa-eye-slash]="showConfirmPassword"></i>
-                </button>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label><i class="fas fa-key"></i>OTP Code</label>
-              <div class="password-input-wrapper">
-                <input type="text" [(ngModel)]="otp" placeholder="Enter OTP from email" maxlength="6" />
-                <button class="toggle-pw-btn" type="button" (click)="sendOtp()" [disabled]="isSendingOtp">
-                  @if (isSendingOtp) {
-                    <i class="fas fa-spinner fa-spin"></i>
-                  } @else {
-                    <i class="fas fa-paper-plane"></i>
-                  }
-                </button>
-              </div>
-              @if (!otpSent) {
-                <small class="otp-hint">Click <i class="fas fa-paper-plane"></i> to send OTP to your email</small>
-              } @else {
-                <small class="otp-hint otp-sent">OTP has been sent to your email (valid for 5 minutes)</small>
-              }
-            </div>
-
-            <button class="btn btn-primary full-width-btn" (click)="changePassword()" [disabled]="isChangingPassword">
-              @if (isChangingPassword) {
-                <i class="fas fa-spinner fa-spin"></i> Processing...
-              } @else {
-                <i class="fas fa-shield-halved"></i> Change Password
-              }
-            </button>
           </div>
+
+          <div class="form-group">
+            <label><i class="fas fa-check-double"></i>Confirm Password</label>
+            <div class="password-input-wrapper">
+              <input [type]="showConfirmPassword ? 'text' : 'password'"
+                [(ngModel)]="confirmPassword"
+                placeholder="Re-enter new password" />
+              <button class="toggle-pw-btn"
+                (click)="togglePasswordVisibility('confirm')">
+                <i class="fas" [class.fa-eye]="!showConfirmPassword"
+                  [class.fa-eye-slash]="showConfirmPassword"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label><i class="fas fa-key"></i>OTP Code</label>
+            <div class="password-input-wrapper">
+              <input type="text" [(ngModel)]="otp"
+                placeholder="Enter OTP from email" maxlength="6" />
+              <button class="toggle-pw-btn" type="button" (click)="sendOtp()"
+                [disabled]="isSendingOtp">
+                @if (isSendingOtp) {
+                <i class="fas fa-spinner fa-spin"></i>
+                } @else {
+                <i class="fas fa-paper-plane"></i>
+                }
+              </button>
+            </div>
+            @if (!otpSent) {
+            <small class="otp-hint">Click <i class="fas fa-paper-plane"></i> to
+              send OTP to your email</small>
+            } @else {
+            <small class="otp-hint otp-sent">OTP has been sent to your email
+              (valid for 5 minutes)</small>
+            }
+          </div>
+
+          <button class="btn btn-primary full-width-btn"
+            (click)="changePassword()" [disabled]="isChangingPassword">
+            @if (isChangingPassword) {
+            <i class="fas fa-spinner fa-spin"></i> Processing...
+            } @else {
+            <i class="fas fa-shield-halved"></i> Change Password
+            }
+          </button>
         </div>
       </div>
+    </div>
     }
 
   </main>

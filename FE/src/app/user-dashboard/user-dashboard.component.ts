@@ -104,28 +104,42 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
   // ==========================================
   // HÀM LOAD DỮ LIỆU NGẦM (KHÔNG BẬT LOADING)
   // ==========================================
-  loadMyGroupSilently() {
+loadMyGroupSilently() {
   this.groupService.getMyGroup().subscribe({
     next: (res) => {
-      this.myGroup = res; 
+      this.myGroup = res;
 
-      // BỔ SUNG: Sau khi có group, phải đi lấy topic thì UI mới hiện View Mode được
       if (this.myGroup?.groupId) {
         this.topicService.getTopicByGroupId(this.myGroup.groupId).subscribe({
           next: (topicRes) => {
             if (this.myGroup) {
-              this.myGroup.topic = topicRes; // Gán topic vào để HTML nhận diện
-              console.log('Topic đã được nạp:', topicRes);
+              // Gán toàn bộ object topic mới từ API vào myGroup
+              // Đảm bảo topicRes này chứa trường reviewComment
+              this.myGroup.topic = topicRes;
+
+              // Log ra để kiểm tra chắc chắn giá trị nhận được
+              console.log('--- Topic Info Loaded ---');
+              console.log('Status:', topicRes.status);
+              console.log('Mentor Feedback:', topicRes.reviewComment);
+
+              // Nếu trạng thái là Rejected, chuẩn bị sẵn dữ liệu trong form
+              if (topicRes.status === 'Rejected') {
+                // Chỉ tự động điền nếu SV chưa chủ động nhấn vào nút Edit/Resubmit
+                if (!this.isTopicEditing) {
+                  this.topicTitle = topicRes.title;
+                  this.topicDescription = topicRes.description;
+                }
+              }
             }
           },
           error: (err) => {
-            console.log('Nhóm này chưa có topic hoặc lỗi API', err);
+            console.warn('Nhóm chưa có topic hoặc lỗi khi lấy topic:', err);
             if (this.myGroup) this.myGroup.topic = undefined;
           }
         });
       }
     },
-    error: (err) => console.log('Silently load group failed', err)
+    error: (err) => console.error('Silently load group failed', err)
   });
 }
 
@@ -165,39 +179,45 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
   }
 
   private alertTimer: any;
-  handleTopicSubmit() {
-    if (this.alertTimer) clearTimeout(this.alertTimer);
-    if (!this.topicTitle.trim() || !this.topicDescription.trim() || !this.myGroup) {
-      this.errorMessage = 'Please fill in both title and description.';
-      this.alertTimer = setTimeout(() => {
-            this.errorMessage = '';
-        }, 3000);
-      return;
-    }
+handleTopicSubmit() {
+  if (this.alertTimer) clearTimeout(this.alertTimer);
+  
+  // 1. Validate dữ liệu đầu vào
+  if (!this.topicTitle.trim() || !this.topicDescription.trim() || !this.myGroup) {
+    this.errorMessage = 'Please fill in both title and description.';
+    this.alertTimer = setTimeout(() => this.errorMessage = '', 3000);
+    return;
+  }
 
-    this.isTopicLoading = true;
+  this.isTopicLoading = true;
+  const groupId = this.myGroup.groupId;
+  const currentStatus = this.myGroup.topic?.status;
+  if (!this.myGroup.topic || currentStatus === 'Rejected') {
     const request = {
-      groupId: this.myGroup.groupId,
+      groupId: groupId,
       title: this.topicTitle,
       description: this.topicDescription
     };
 
-    // Nếu chưa có topic thì gọi Submit, nếu có rồi (đang ở mode Edit) thì gọi Edit
-    if (this.myGroup.topic && this.isTopicEditing) {
-      this.topicService.editTopic(this.myGroup.topic.topicId, {
-        title: this.topicTitle,
-        description: this.topicDescription
-      }).subscribe({
-        next: (res) => this.handleTopicSuccess(res.message),
-        error: (err) => this.handleTopicError(err)
-      });
-    } else {
-      this.topicService.submitTopic(request).subscribe({
-        next: (res) => this.handleTopicSuccess(res.message),
-        error: (err) => this.handleTopicError(err)
-      });
-    }
+    this.topicService.submitTopic(request).subscribe({
+      next: (res) => {
+        this.handleTopicSuccess(res.message || 'Topic submitted successfully!');
+      },
+      error: (err) => this.handleTopicError(err)
+    });
+  } 
+  else if (this.isTopicEditing && currentStatus === 'Pending') {
+    this.topicService.editTopic(this.myGroup.topic.topicId, {
+      title: this.topicTitle,
+      description: this.topicDescription
+    }).subscribe({
+      next: (res) => {
+        this.handleTopicSuccess(res.message || 'Topic updated successfully!');
+      },
+      error: (err) => this.handleTopicError(err)
+    });
   }
+}
 
   private handleTopicSuccess(message: string) {
     this.isTopicLoading = false;
@@ -222,26 +242,18 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
     ngOnInit() {
       if (this.isBrowser) {
         this.loadProfile();
+        this.loadMyGroup();
         this.loadMyGroupSilently();
 
-        // ==========================================
-        // THIẾT LẬP KẾT NỐI WEBSOCKET (SIGNALR)
-        // ==========================================
         const currentUser = this.getCurrentUser();
-
-        // SỬA Ở ĐÂY: Lấy email làm định danh thay vì id để không bị lỗi gạch đỏ
         const userId = currentUser?.email;
 
         if (userId) {
-          // 1. Mở kết nối
           this.wsService.connect(userId);
 
-          // 2. Lắng nghe tin nhắn từ C# Backend gửi về
           this.wsSubscription = this.wsService.getMessages().subscribe({
             next: (message) => {
               console.log('Received from Backend:', message);
-
-              // SỬA Ở ĐÂY: Bắt cả chữ 'type' (thường) và 'Type' (hoa) do C# trả về
               if (
                 message.type === 'GROUP_UPDATED' || message.Type === 'GROUP_UPDATED' ||
                 message.type === 'MEMBER_ACCEPTED' || message.Type === 'MEMBER_ACCEPTED'
@@ -256,16 +268,12 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
       }
     }
 
-    // ==========================================
-    // HỦY KẾT NỐI KHI RỜI KHỎI TRANG
-    // ==========================================
     ngOnDestroy() {
       if (this.wsSubscription) {
         this.wsSubscription.unsubscribe();
       }
     }
 
-    // ===== Sidebar =====
     switchTab(tab: 'overview' | 'profile' | 'password') {
       this.activeTab = tab;
       this.successMessage = '';
@@ -631,6 +639,8 @@ handleDeleteGroup() {
     }
   });
 }
+
+
 
     
 
