@@ -55,8 +55,6 @@ namespace CapstoneProject.Infrastructure.Services
         {
             await _userRepository.ChangeStatusAsync(userId);
         }
-
-        // Thêm currentUserId vào tham số
         public async Task<List<AdminUserResponse>> SearchUsersAsync(string keyword, int currentUserId)
         {
             var users = await _userRepository.SearchUsersAsync(keyword);

@@ -348,7 +348,6 @@ namespace CapstoneProject.Infrastructure.Services
 
         public async Task<bool> AssignMentorAsync(int groupId, int mentorId)
         {
-            // 1. Lấy Group lên (Lúc này đã có kèm theo MentorAssignment nhờ bước Include ở trên)
             var group = await _groupRepository.GetGroupByIdAsync(groupId);
 
             if (group == null)
@@ -356,20 +355,23 @@ namespace CapstoneProject.Infrastructure.Services
                 return false;
             }
 
-            // 2. Thao tác với bảng MentorAssignment
             if (group.MentorAssignment == null)
             {
-                // Nếu nhóm chưa từng có Mentor, tạo mới bản ghi phân công
                 group.MentorAssignment = new MentorAssignment
                 {
                     MentorId = mentorId,
-                    AssignedAt = DateTime.Now 
+                    AssignedAt = DateTime.Now
                 };
             }
             else
             {
                 group.MentorAssignment.MentorId = mentorId;
-                group.MentorAssignment.AssignedAt = DateTime.Now; 
+                group.MentorAssignment.AssignedAt = DateTime.Now;
+            }
+
+            if (group.GroupMembers != null && group.GroupMembers.Count >= 4)
+            {
+                group.Status = "Active";
             }
 
             await _groupRepository.UpdateGroupAsync(group);

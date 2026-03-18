@@ -237,7 +237,6 @@ namespace CapstoneProject.Infrastructure.Repostitory
 
         public async Task<List<Group>> GetAllGroupsWithDetailsAsync()
         {
-            // Lấy toàn bộ nhóm, bao gồm cả Mentor và danh sách thành viên
             return await _context.Groups
                 .Include(g => g.GroupMembers)
                     .ThenInclude(m => m.User)
