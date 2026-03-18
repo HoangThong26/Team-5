@@ -27,7 +27,7 @@ namespace CapstoneProject.API.Controllers
 
                 await _topicService.ApproveTopicAsync(mentorId, request);
 
-                return Ok(new { message = $"Đã cập nhật trạng thái đề tài thành: {request.Status}" });
+                return Ok(new { message = $"Topic status has been updated: {request.Status}" });
             }
             catch (Exception ex)
             {

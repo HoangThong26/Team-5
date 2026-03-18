@@ -16,7 +16,6 @@ namespace CapstoneProject.Infrastructure.Repostitory
 
         public async Task<Topic?> GetByGroupIdAsync(int groupId)
         {
-            // Matches the UNIQUE GroupId constraint in your SQL schema
             return await _context.Topics
                 .FirstOrDefaultAsync(t => t.GroupId == groupId);
         }
@@ -29,7 +28,6 @@ namespace CapstoneProject.Infrastructure.Repostitory
 
         public async Task<TopicVersion?> GetLatestVersionAsync(int topicId)
         {
-            // Retrieves the most recent version based on VersionNumber as defined in your TopicVersions table
             return await _context.TopicVersions
                 .Where(v => v.TopicId == topicId)
                 .OrderByDescending(v => v.VersionNumber)
@@ -53,7 +51,6 @@ namespace CapstoneProject.Infrastructure.Repostitory
 
         public async Task<bool> IsUserInGroupAsync(int groupId, int userId)
         {
-            // Validates membership against the GroupMembers table
             return await _context.GroupMembers
                 .AnyAsync(gm => gm.GroupId == groupId && gm.UserId == userId);
         }
@@ -85,7 +82,6 @@ namespace CapstoneProject.Infrastructure.Repostitory
         }
         public async Task<bool> HasMentorAssignedAsync(int groupId)
         {
-            // Kiểm tra xem có bất kỳ bản ghi nào trong bảng MentorAssignments khớp với GroupId này không
             return await _context.MentorAssignments.AnyAsync(ma => ma.GroupId == groupId);
         }
     }

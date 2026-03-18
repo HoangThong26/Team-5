@@ -20,7 +20,7 @@ namespace CapstoneProject.Infrastructure.Services
             if (!isMember) throw new Exception("You are not a member of this group.");
 
             var hasMentor = await _topicRepository.HasMentorAssignedAsync(request.GroupId);
-            if (!hasMentor) throw new Exception("Nhóm chưa được phân công Mentor. Vui lòng liên hệ Admin.");
+            if (!hasMentor) throw new Exception("The group has not yet been assigned a mentor. Please contact the Admin.");
 
             var topic = await _topicRepository.GetByGroupIdAsync(request.GroupId);
 
@@ -40,7 +40,7 @@ namespace CapstoneProject.Infrastructure.Services
             else
             {
                 if (topic.Status == "Approved" || topic.Status == "Active" || topic.Status == "Completed")
-                    throw new Exception("Topic đã được duyệt hoặc đang triển khai. Không thể nộp lại.");
+                    throw new Exception("The theme has been approved or is under development. It cannot be reloaded.");
 
                 topic.CurrentVersion += 1;
                 topic.Title = request.Title;
@@ -126,7 +126,7 @@ namespace CapstoneProject.Infrastructure.Services
             }
             else
             {
-                throw new Exception("Trạng thái phê duyệt không hợp lệ.");
+                throw new Exception("The approval status is invalid.");
             }
             version.ReviewedBy = reviewerId;
             version.ReviewComment = request.ReviewComment;
