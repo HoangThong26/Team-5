@@ -16,7 +16,6 @@ namespace CapstoneProject.Infrastructure.Repostitory
 
         public async Task<Topic?> GetByGroupIdAsync(int groupId)
         {
-            // Matches the UNIQUE GroupId constraint in your SQL schema
             return await _context.Topics
                 .FirstOrDefaultAsync(t => t.GroupId == groupId);
         }
@@ -29,7 +28,6 @@ namespace CapstoneProject.Infrastructure.Repostitory
 
         public async Task<TopicVersion?> GetLatestVersionAsync(int topicId)
         {
-            // Retrieves the most recent version based on VersionNumber as defined in your TopicVersions table
             return await _context.TopicVersions
                 .Where(v => v.TopicId == topicId)
                 .OrderByDescending(v => v.VersionNumber)
@@ -53,7 +51,6 @@ namespace CapstoneProject.Infrastructure.Repostitory
 
         public async Task<bool> IsUserInGroupAsync(int groupId, int userId)
         {
-            // Validates membership against the GroupMembers table
             return await _context.GroupMembers
                 .AnyAsync(gm => gm.GroupId == groupId && gm.UserId == userId);
         }
@@ -61,6 +58,31 @@ namespace CapstoneProject.Infrastructure.Repostitory
         public async Task<int> SaveChangesAsync()
         {
             return await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> IsMentorOfGroupAsync(int groupId, int mentorId)
+        {
+            return await _context.MentorAssignments
+                .AnyAsync(ma => ma.GroupId == groupId && ma.MentorId == mentorId);
+        }
+
+        public async Task<IEnumerable<TopicVersion>> GetPendingTopicVersionsByMentorAsync(int mentorId)
+        {
+            return await _context.TopicVersions
+                .Include(tv => tv.Topic) 
+                    .ThenInclude(t => t.Group) 
+                .Where(tv => tv.Status == "Submitted" &&
+                             _context.MentorAssignments.Any(ma => ma.MentorId == mentorId && ma.GroupId == tv.Topic.GroupId))
+                .OrderByDescending(tv => tv.SubmittedAt)
+                .ToListAsync();
+        }
+        public async Task<TopicVersion?> GetVersionByIdAsync(int id)
+        {
+            return await _context.TopicVersions.FindAsync(id);
+        }
+        public async Task<bool> HasMentorAssignedAsync(int groupId)
+        {
+            return await _context.MentorAssignments.AnyAsync(ma => ma.GroupId == groupId);
         }
     }
 }

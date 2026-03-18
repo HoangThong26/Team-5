@@ -7,6 +7,7 @@ namespace CapstoneProject.Application.Interface.IService
         Task SubmitTopicAsync(int userId, TopicSubmitRequest request);
         Task EditTopicAsync(int userId, int topicId, TopicUpdateDto request);
         Task ApproveTopicAsync(int reviewerId, TopicApprovalRequest request);
+        Task<IEnumerable<TopicDto>> GetPendingTopicsForMentorAsync(int mentorId);
         Task<TopicDto?> GetTopicByGroupIdAsync(int groupId);
     }
 }

@@ -27,5 +27,6 @@ namespace CapstoneProject.Application.Interface.IRepository
         Task<bool> DeleteGroupAsync(int groupId);
         Task<bool> RemoveMentorFromGroupAsync(int groupId);
         Task<int?> GetGroupLeaderIdAsync(int groupId);
+        Task UpdateGroupAsync(Group group);
     }
 }

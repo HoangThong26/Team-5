@@ -39,7 +39,6 @@ namespace CapstoneProject.Infrastructure.Repostitory
                 throw;
             }
         }
-
         public async Task<string> AcceptInvitationWithMentorCheckAsync(int invitationId)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
@@ -52,9 +51,6 @@ namespace CapstoneProject.Infrastructure.Repostitory
                 bool alreadyInGroup = await _context.GroupMembers.AnyAsync(m => m.UserId == invite.ReceiverId);
                 if (alreadyInGroup) return "You are already a member of another group.";
 
-                // ==========================================
-                // 🛑 BƯỚC 1: CHỐT CHẶN NGƯỜI THỨ 6
-                // ==========================================
                 int checkCountBefore = await _context.GroupMembers.CountAsync(m => m.GroupId == invite.GroupId);
                 if (checkCountBefore >= 5)
                 {
@@ -65,9 +61,6 @@ namespace CapstoneProject.Infrastructure.Repostitory
                     return "Too late! The group has already reached the maximum capacity of 5 members.";
                 }
 
-                // ==========================================
-                // ✅ BƯỚC 2: CHO PHÉP VÀO NHÓM
-                // ==========================================
                 var newMember = new GroupMember
                 {
                     GroupId = (int)invite.GroupId,
@@ -150,7 +143,9 @@ namespace CapstoneProject.Infrastructure.Repostitory
         {
             return await _context.Groups
                 .Include(g => g.GroupMembers)
-                    .ThenInclude(gm => gm.User) 
+                    .ThenInclude(gm => gm.User)
+                // Thêm dòng Include MentorAssignment này vào:
+                .Include(g => g.MentorAssignment)
                 .FirstOrDefaultAsync(g => g.GroupId == groupId);
         }
         public async Task<User?> GetUserByEmailAsync(string email)
@@ -277,7 +272,6 @@ namespace CapstoneProject.Infrastructure.Repostitory
                 }
                 _context.WeeklyReports.RemoveRange(reports);
 
-                // 3. Xóa Defense Schedules & Scores
                 var schedules = await _context.DefenseSchedules.Where(s => s.GroupId == groupId).ToListAsync();
                 foreach (var s in schedules)
                 {
@@ -286,15 +280,12 @@ namespace CapstoneProject.Infrastructure.Repostitory
                 }
                 _context.DefenseSchedules.RemoveRange(schedules);
 
-                // 4. Xóa các bảng phụ khác (Bổ sung thêm MentorRequests và GradeComplaints)
                 _context.MentorRequests.RemoveRange(_context.MentorRequests.Where(mr => mr.GroupId == groupId));
                 _context.GradeComplaints.RemoveRange(_context.GradeComplaints.Where(gc => gc.GroupId == groupId));
                 _context.GroupMembers.RemoveRange(_context.GroupMembers.Where(m => m.GroupId == groupId));
                 _context.GroupInvitations.RemoveRange(_context.GroupInvitations.Where(i => i.GroupId == groupId));
                 _context.MentorAssignments.RemoveRange(_context.MentorAssignments.Where(a => a.GroupId == groupId));
                 _context.FinalGrades.RemoveRange(_context.FinalGrades.Where(f => f.GroupId == groupId));
-
-                // 5. Cuối cùng xóa Group
                 _context.Groups.Remove(group);
 
                 await _context.SaveChangesAsync();
@@ -307,8 +298,6 @@ namespace CapstoneProject.Infrastructure.Repostitory
                 throw;
             }
         }
-
-        // Cần thêm hàm này để Service check quyền Leader
         public async Task<int?> GetGroupLeaderIdAsync(int groupId)
         {
             return await _context.Groups
@@ -332,6 +321,12 @@ namespace CapstoneProject.Infrastructure.Repostitory
 
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        public async Task UpdateGroupAsync(Group group)
+        {
+            _context.Groups.Update(group);
+            await _context.SaveChangesAsync();
         }
     }
 }
