@@ -84,5 +84,17 @@ namespace CapstoneProject.Infrastructure.Repostitory
         {
             return await _context.MentorAssignments.AnyAsync(ma => ma.GroupId == groupId);
         }
+
+        public async Task<IEnumerable<TopicVersion>> GetTopicVersionsByMentorAsync(int mentorId)
+        {
+            return await _context.TopicVersions
+                .AsNoTracking() 
+                .Include(v => v.Topic)
+                    .ThenInclude(t => t.Group)
+                .Where(v => _context.MentorAssignments
+                    .Any(ma => ma.MentorId == mentorId && ma.GroupId == v.Topic.GroupId))
+                .OrderByDescending(v => v.SubmittedAt)
+                .ToListAsync();
+        }
     }
 }

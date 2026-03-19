@@ -3,11 +3,9 @@ using CapstoneProject.Application.Interface.IService;
 using CapstoneProject.Application.Interface.IRepository;
 using CapstoneProject.Domain.Entities;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Linq;
 using System.Net;
 using System.Net.Mail;
-using System.Threading.Tasks;
+
 
 namespace CapstoneProject.Infrastructure.Services
 {
@@ -346,19 +344,26 @@ namespace CapstoneProject.Infrastructure.Services
             }
         }
 
-        public async Task<bool> AssignMentorAsync(int groupId, int mentorId)
+        public async Task<string> AssignMentorAsync(int groupId, int mentorId)
         {
             var group = await _groupRepository.GetGroupByIdAsync(groupId);
 
             if (group == null)
             {
-                return false;
+                return "Group not found.";
+            }
+
+            var memberCount = group.GroupMembers?.Count ?? 0;
+            if (memberCount < 5)
+            {
+                return $"Cannot assign mentor. This group only has {memberCount}/5 members.";
             }
 
             if (group.MentorAssignment == null)
             {
                 group.MentorAssignment = new MentorAssignment
                 {
+                    GroupId = groupId, 
                     MentorId = mentorId,
                     AssignedAt = DateTime.Now
                 };
@@ -369,15 +374,20 @@ namespace CapstoneProject.Infrastructure.Services
                 group.MentorAssignment.AssignedAt = DateTime.Now;
             }
 
-            if (group.GroupMembers != null && group.GroupMembers.Count >= 4)
+            group.Status = "Active";
+
+            try
             {
-                group.Status = "Active";
+                await _groupRepository.UpdateGroupAsync(group);
+                return "SUCCESS";
             }
-
-            await _groupRepository.UpdateGroupAsync(group);
-
-            return true;
+            catch (Exception ex)
+            {
+                return $"Error updating group: {ex.Message}";
+            }
         }
+
+      
     }
 
 }

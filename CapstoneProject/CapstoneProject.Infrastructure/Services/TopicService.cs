@@ -116,7 +116,7 @@ namespace CapstoneProject.Infrastructure.Services
 
             if (request.Status == "Approved")
             {
-                topic.Status = "Active";    
+                topic.Status = "Approved";    
                 version.Status = "Approved"; 
             }
             else if (request.Status == "Rejected")
@@ -136,16 +136,16 @@ namespace CapstoneProject.Infrastructure.Services
 
         public async Task<IEnumerable<TopicDto>> GetPendingTopicsForMentorAsync(int mentorId)
         {
-            var pendingVersions = await _topicRepository.GetPendingTopicVersionsByMentorAsync(mentorId);
+            var versions = await _topicRepository.GetTopicVersionsByMentorAsync(mentorId);
 
-            return pendingVersions.Select(v => new TopicDto
+            return versions.Select(v => new TopicDto
             {
-                TopicId = v.TopicId ?? 0, 
-                VersionId = v.Id,       
-
+                TopicId = v.TopicId ?? 0,
+                VersionId = v.Id,
                 Title = v.Title,
                 Description = v.Description,
-                Status = v.Status,
+                // SỬA TẠI ĐÂY: Lấy status từ Topic chính để hiện chữ "Pending"
+                Status = v.Topic?.Status ?? "Pending",
                 SubmittedAt = v.SubmittedAt,
                 GroupId = v.Topic?.GroupId ?? 0,
                 GroupName = v.Topic?.Group?.GroupName ?? "N/A"

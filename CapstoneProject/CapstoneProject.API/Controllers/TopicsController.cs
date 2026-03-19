@@ -1,7 +1,9 @@
-﻿using CapstoneProject.Application.DTO;
+﻿using CapstoneProject.API.Hubs;
+using CapstoneProject.Application.DTO;
 using CapstoneProject.Application.Interface.IService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
 
 namespace CapstoneProject.API.Controllers
@@ -12,10 +14,17 @@ namespace CapstoneProject.API.Controllers
     public class TopicsController : ControllerBase
     {
         private readonly ITopicService _topicService;
+        private readonly IGroupService _groupService; 
+        private readonly IHubContext<NotificationHub> _hubContext;
 
-        public TopicsController(ITopicService topicService)
+        public TopicsController(
+            ITopicService topicService,
+            IGroupService groupService,
+            IHubContext<NotificationHub> hubContext)
         {
             _topicService = topicService;
+            _groupService = groupService;
+            _hubContext = hubContext;
         }
 
         [HttpPost("submit")]
