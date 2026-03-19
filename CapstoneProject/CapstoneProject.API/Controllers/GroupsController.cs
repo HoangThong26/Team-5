@@ -211,6 +211,7 @@ namespace CapstoneProject.API.Controllers
 
         [HttpPost("admin/assign-mentor")]
         [Authorize(Roles = "Admin")]
+        [HttpPost("assign-mentor")]
         public async Task<IActionResult> AssignMentor([FromBody] AssignMentorDto request)
         {
             if (request == null || request.GroupId <= 0 || request.MentorId <= 0)
@@ -220,14 +221,23 @@ namespace CapstoneProject.API.Controllers
 
             try
             {
-                bool isSuccess = await _groupService.AssignMentorAsync(request.GroupId, request.MentorId);
+                string result = await _groupService.AssignMentorAsync(request.GroupId, request.MentorId);
 
-                if (!isSuccess)
+                if (result == "SUCCESS")
                 {
-                    return NotFound(new { message = $"Group with ID {request.GroupId} was not found." });
+                    return Ok(new
+                    {
+                        message = "Mentor assigned successfully!",
+                        status = "Active"
+                    });
                 }
 
-                return Ok(new { message = "Mentor assigned successfully!" });
+                if (result == "Group not found.")
+                {
+                    return NotFound(new { message = result });
+                }
+
+                return BadRequest(new { message = result });
             }
             catch (Exception ex)
             {

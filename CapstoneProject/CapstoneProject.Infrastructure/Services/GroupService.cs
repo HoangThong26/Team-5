@@ -3,11 +3,9 @@ using CapstoneProject.Application.Interface.IService;
 using CapstoneProject.Application.Interface.IRepository;
 using CapstoneProject.Domain.Entities;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Linq;
 using System.Net;
 using System.Net.Mail;
-using System.Threading.Tasks;
+
 
 namespace CapstoneProject.Infrastructure.Services
 {
@@ -101,8 +99,8 @@ namespace CapstoneProject.Infrastructure.Services
             if (group == null) return "Group not found!";
             if (group.LeaderId != leaderId) return "You are not the group leader, you do not have permission to invite members!";
 
-            if (group.IsLocked == true || group.Status != "Forming")
-                return "The group is locked or no longer in forming status!";
+            //if (group.IsLocked == true || group.Status != "Forming")
+            //    return "The group is locked or no longer in forming status!";
 
             int currentMembers = await _groupRepository.GetMemberCountAsync(request.GroupId);
             if (currentMembers >= 5) return "The group has reached the maximum capacity (5 members)!";
@@ -260,8 +258,8 @@ namespace CapstoneProject.Infrastructure.Services
             if (group.LeaderId != requesterId)
                 throw new Exception("Only the Leader can kick members.");
 
-            if (group.IsLocked == true || group.Status != "Forming")
-                throw new Exception("The group is locked or no longer in the forming stage.");
+            //if (group.IsLocked == true || group.Status != "Forming")
+            //    throw new Exception("The group is locked or no longer in the forming stage.");
 
             if (requesterId == targetUserId)
                 throw new Exception("The Leader cannot kick themselves.");
@@ -346,19 +344,26 @@ namespace CapstoneProject.Infrastructure.Services
             }
         }
 
-        public async Task<bool> AssignMentorAsync(int groupId, int mentorId)
+        public async Task<string> AssignMentorAsync(int groupId, int mentorId)
         {
             var group = await _groupRepository.GetGroupByIdAsync(groupId);
 
             if (group == null)
             {
-                return false;
+                return "Group not found.";
+            }
+
+            var memberCount = group.GroupMembers?.Count ?? 0;
+            if (memberCount < 5)
+            {
+                return $"Cannot assign mentor. This group only has {memberCount}/5 members.";
             }
 
             if (group.MentorAssignment == null)
             {
                 group.MentorAssignment = new MentorAssignment
                 {
+                    GroupId = groupId, 
                     MentorId = mentorId,
                     AssignedAt = DateTime.Now
                 };
@@ -369,15 +374,20 @@ namespace CapstoneProject.Infrastructure.Services
                 group.MentorAssignment.AssignedAt = DateTime.Now;
             }
 
-            if (group.GroupMembers != null && group.GroupMembers.Count >= 4)
+            group.Status = "Active";
+
+            try
             {
-                group.Status = "Active";
+                await _groupRepository.UpdateGroupAsync(group);
+                return "SUCCESS";
             }
-
-            await _groupRepository.UpdateGroupAsync(group);
-
-            return true;
+            catch (Exception ex)
+            {
+                return $"Error updating group: {ex.Message}";
+            }
         }
+
+      
     }
 
 }
