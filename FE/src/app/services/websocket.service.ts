@@ -22,8 +22,8 @@ export class WebsocketService {
 
     // 2. Khởi động kết nối
     this.hubConnection.start()
-      .then(() => console.log('✅ SignalR Connected Successfully!'))
-      .catch(err => console.error('❌ Error while starting SignalR: ', err));
+      .then(() => console.log(' SignalR Connected Successfully!'))
+      .catch(err => console.error(' Error while starting SignalR: ', err));
 
     // 3. Lắng nghe ĐÚNG KÊNH "ReceiveNotification" mà C# đang phát sóng
     this.hubConnection.on('ReceiveNotification', (data) => {

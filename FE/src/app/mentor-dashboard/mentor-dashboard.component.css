@@ -259,7 +259,7 @@ textarea {
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 16px;
-    color: #fff;
+    color: #fff ;
     padding: 15px;
     margin-top: 10px;
     resize: none;
@@ -332,3 +332,49 @@ textarea:focus {
 }
 
 .empty-state i { font-size: 3rem; margin-bottom: 15px; }
+
+/* Badge Colors */
+.card-status-badge {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.card-status-badge.pending { background: #fff7ed; color: #c2410c; border: 1px solid #ffedd5; }
+.card-status-badge.approved { background: #f0fdf4; color: #15803d; border: 1px solid #dcfce7; }
+.card-status-badge.rejected { background: #fef2f2; color: #b91c1c; border: 1px solid #fee2e2; }
+
+.status-text.approved { color: #15803d; font-weight: bold; }
+.status-text.rejected { color: #b91c1c; font-weight: bold; }
+.status-text.pending { color: #c2410c; font-weight: bold; }
+
+.topic-card.reviewed {
+  opacity: 0.85;
+  background-color: #f9fafb;
+}
+
+.reviewed-info {
+  color: #6b7280;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.custom-textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  min-height: 100px;
+  font-family: inherit;
+}
+
+.feedback-readonly{
+    color: white;
+}
