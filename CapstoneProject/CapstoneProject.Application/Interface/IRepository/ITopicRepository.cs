@@ -16,6 +16,7 @@ namespace CapstoneProject.Application.Interface.IRepository
         Task<TopicVersion?> GetVersionByIdAsync(int id);
         Task<bool> HasMentorAssignedAsync(int groupId);
         Task<IEnumerable<TopicVersion>> GetTopicVersionsByMentorAsync(int mentorId);
+        Task<bool> IsGroupLeaderAsync(int groupId, int userId);
         Task<int> SaveChangesAsync();
     }
 }

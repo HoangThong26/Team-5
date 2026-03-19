@@ -87,14 +87,25 @@ namespace CapstoneProject.Infrastructure.Repostitory
 
         public async Task<IEnumerable<TopicVersion>> GetTopicVersionsByMentorAsync(int mentorId)
         {
-            return await _context.TopicVersions
-                .AsNoTracking() 
+            var allVersions = await _context.TopicVersions
+                .AsNoTracking()
                 .Include(v => v.Topic)
                     .ThenInclude(t => t.Group)
                 .Where(v => _context.MentorAssignments
                     .Any(ma => ma.MentorId == mentorId && ma.GroupId == v.Topic.GroupId))
-                .OrderByDescending(v => v.SubmittedAt)
                 .ToListAsync();
+
+            return allVersions
+                .GroupBy(v => v.TopicId)
+                .Select(g => g.OrderByDescending(v => v.SubmittedAt).First())
+                .OrderByDescending(v => v.SubmittedAt)
+                .ToList();
+        }
+
+        public async Task<bool> IsGroupLeaderAsync(int groupId, int userId)
+        {
+            return await _context.GroupMembers
+                .AnyAsync(gm => gm.GroupId == groupId && gm.UserId == userId && gm.RoleInGroup == "Leader");
         }
     }
 }

@@ -16,11 +16,17 @@ namespace CapstoneProject.Infrastructure.Services
 
         public async Task SubmitTopicAsync(int userId, TopicSubmitRequest request)
         {
-            var isMember = await _topicRepository.IsUserInGroupAsync(request.GroupId, userId);
-            if (!isMember) throw new Exception("You are not a member of this group.");
+            var isLeader = await _topicRepository.IsGroupLeaderAsync(request.GroupId, userId);
+            if (!isLeader)
+            {
+                throw new Exception("Access Denied: Only the Group Leader has permission to submit or update the topic.");
+            }
 
             var hasMentor = await _topicRepository.HasMentorAssignedAsync(request.GroupId);
-            if (!hasMentor) throw new Exception("The group has not yet been assigned a mentor. Please contact the Admin.");
+            if (!hasMentor)
+            {
+                throw new Exception("Assignment Error: Your group has not been assigned a mentor yet. Please contact the Admin.");
+            }
 
             var topic = await _topicRepository.GetByGroupIdAsync(request.GroupId);
 
@@ -39,8 +45,11 @@ namespace CapstoneProject.Infrastructure.Services
             }
             else
             {
-                if (topic.Status == "Approved" || topic.Status == "Active" || topic.Status == "Completed")
-                    throw new Exception("The theme has been approved or is under development. It cannot be reloaded.");
+                string[] finalizedStatuses = { "Approved", "Active", "Completed" };
+                if (finalizedStatuses.Contains(topic.Status))
+                {
+                    throw new Exception("Submission Blocked: This topic has already been approved or is currently active. Changes are no longer allowed.");
+                }
 
                 topic.CurrentVersion += 1;
                 topic.Title = request.Title;
@@ -49,6 +58,7 @@ namespace CapstoneProject.Infrastructure.Services
             }
 
             await _topicRepository.SaveChangesAsync();
+
             var version = new TopicVersion
             {
                 TopicId = topic.TopicId,

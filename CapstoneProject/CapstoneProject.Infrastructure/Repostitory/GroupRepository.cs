@@ -78,7 +78,7 @@ namespace CapstoneProject.Infrastructure.Repostitory
                 int memberCount = await _context.GroupMembers.CountAsync(m => m.GroupId == invite.GroupId);
 
                 string statusNotification = "";
-                if (memberCount >= 4)
+                if (memberCount == 5)
                 {
                     bool hasMentor = await _context.MentorAssignments.AnyAsync(a => a.GroupId == invite.GroupId);
 
