@@ -295,7 +295,6 @@ export class AdminDashboardComponent implements OnInit {
     });
   }
 
-  // --- QUẢN LÝ GROUP & MENTOR ---
   switchView(mode: 'users' | 'groups') {
     this.viewMode = mode;
     this.successMessage = '';
@@ -307,7 +306,7 @@ export class AdminDashboardComponent implements OnInit {
       }
     } else if (mode === 'groups') {
       this.loadGroups();
-      this.loadMentors(); // Gọi hàm load Mentors khi sang tab Groups
+      this.loadMentors(); 
     }
   }
 
@@ -325,7 +324,6 @@ export class AdminDashboardComponent implements OnInit {
     });
   }
 
-  // --- THÊM HÀM LOAD MENTOR ---
   loadMentors() {
     if (this.users.length > 0) {
       this.mentors = this.users.filter(u => u.role === 'Mentor');
@@ -340,32 +338,29 @@ export class AdminDashboardComponent implements OnInit {
     }
   }
 
-  // --- THÊM HÀM XỬ LÝ ASSIGN MENTOR ---
   handleAssignMentor(groupId: number, mentorId: number) {
-    console.log('--- TEST ASSIGN MENTOR ---');
-    console.log('Group ID:', groupId);
-    console.log('Mentor ID:', mentorId);
-    if (!mentorId) {
-      this.errorMessage = 'Lỗi: Mentor ID bị trống hoặc bằng 0. Hãy kiểm tra lại file HTML xem đã đổi m.id thành m.userId chưa!';
-      return; 
-    }
-
-    this.isLoadingGroups = true;
-    this.successMessage = '';
-    this.errorMessage = '';
-
-    this.adminService.assignMentor(groupId, mentorId).subscribe({
-      next: (res: any) => {
-        this.successMessage = res?.message || 'Mentor assigned successfully!';
-        this.loadGroups(); // Refresh lại danh sách để hiện tên Mentor
-      },
-      error: (err) => {
-        this.isLoadingGroups = false;
-        this.errorMessage = this.extractError(err, 'Failed to assign mentor.');
-        console.error('Lỗi từ API trả về:', err);
-      }
-    });
+  if (!mentorId) {
+    this.errorMessage = 'Please select a mentor first.';
+    return; 
   }
+
+  this.isLoadingGroups = true;
+  this.successMessage = '';
+  this.errorMessage = '';
+
+  this.adminService.assignMentor(groupId, mentorId).subscribe({
+    next: (res: any) => {
+      this.isLoadingGroups = false; 
+      this.successMessage = res?.message || 'Mentor assigned successfully!';
+      this.loadGroups(); 
+    },
+    error: (err) => {
+      this.isLoadingGroups = false;
+      this.errorMessage = this.extractError(err, 'Failed to assign mentor.');
+      console.error('Lỗi từ API:', err);
+    }
+  });
+}
 
   handleKickMentor(groupId: number) {
     if (confirm('Are you sure you want to remove the mentor from this group?')) {
