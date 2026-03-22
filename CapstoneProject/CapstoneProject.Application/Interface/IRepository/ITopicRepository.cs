@@ -1,4 +1,4 @@
-﻿using CapstoneProject.Domain.Entities;
+using CapstoneProject.Domain.Entities;
 
 namespace CapstoneProject.Application.Interface.IRepository
 {
@@ -17,6 +17,9 @@ namespace CapstoneProject.Application.Interface.IRepository
         Task<bool> HasMentorAssignedAsync(int groupId);
         Task<IEnumerable<TopicVersion>> GetTopicVersionsByMentorAsync(int mentorId);
         Task<bool> IsGroupLeaderAsync(int groupId, int userId);
+        Task<int?> GetMentorIdByGroupIdAsync(int groupId);
+        Task<int?> GetGroupIdByTopicIdAsync(int topicId);
         Task<int> SaveChangesAsync();
+        Task<string?> GetMentorEmailByGroupIdAsync(int groupId);
     }
 }

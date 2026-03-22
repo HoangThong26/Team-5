@@ -1,4 +1,4 @@
-﻿using CapstoneProject.Application.Interface.IRepository;
+using CapstoneProject.Application.Interface.IRepository;
 using CapstoneProject.Domain.Entities;
 using CapstoneProject.Infrastructure.Database.AppDbContext;
 using Microsoft.EntityFrameworkCore;
@@ -87,25 +87,49 @@ namespace CapstoneProject.Infrastructure.Repostitory
 
         public async Task<IEnumerable<TopicVersion>> GetTopicVersionsByMentorAsync(int mentorId)
         {
-            var allVersions = await _context.TopicVersions
+            return await _context.TopicVersions
                 .AsNoTracking()
                 .Include(v => v.Topic)
                     .ThenInclude(t => t.Group)
                 .Where(v => _context.MentorAssignments
                     .Any(ma => ma.MentorId == mentorId && ma.GroupId == v.Topic.GroupId))
-                .ToListAsync();
-
-            return allVersions
-                .GroupBy(v => v.TopicId)
-                .Select(g => g.OrderByDescending(v => v.SubmittedAt).First())
+                // Lọc lấy Version cao nhất của mỗi TopicId ngay tại SQL
+                .Where(v => v.VersionNumber == _context.TopicVersions
+                    .Where(v2 => v2.TopicId == v.TopicId)
+                    .Max(v2 => v2.VersionNumber))
                 .OrderByDescending(v => v.SubmittedAt)
-                .ToList();
+                .ToListAsync();
         }
 
         public async Task<bool> IsGroupLeaderAsync(int groupId, int userId)
         {
             return await _context.GroupMembers
                 .AnyAsync(gm => gm.GroupId == groupId && gm.UserId == userId && gm.RoleInGroup == "Leader");
+        }
+
+        public async Task<int?> GetMentorIdByGroupIdAsync(int groupId)
+        {
+            return await _context.MentorAssignments
+                .Where(ma => ma.GroupId == groupId)
+                .Select(ma => ma.MentorId)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<int?> GetGroupIdByTopicIdAsync(int topicId)
+        {
+            return await _context.Topics
+                .Where(t => t.TopicId == topicId)
+                .Select(t => t.GroupId)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<string?> GetMentorEmailByGroupIdAsync(int groupId)
+        {
+            return await _context.MentorAssignments
+                .Where(ma => ma.GroupId == groupId)
+                .Include(ma => ma.Mentor)
+                .Select(ma => ma.Mentor.Email)
+                .FirstOrDefaultAsync();
         }
     }
 }

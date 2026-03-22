@@ -99,8 +99,8 @@ namespace CapstoneProject.Infrastructure.Services
             if (group == null) return "Group not found!";
             if (group.LeaderId != leaderId) return "You are not the group leader, you do not have permission to invite members!";
 
-            //if (group.IsLocked == true || group.Status != "Forming")
-            //    return "The group is locked or no longer in forming status!";
+            if (group.IsLocked == true || group.Status != "Forming")
+                return "The group is locked or no longer in forming status!";
 
             int currentMembers = await _groupRepository.GetMemberCountAsync(request.GroupId);
             if (currentMembers >= 5) return "The group has reached the maximum capacity (5 members)!";
@@ -258,8 +258,8 @@ namespace CapstoneProject.Infrastructure.Services
             if (group.LeaderId != requesterId)
                 throw new Exception("Only the Leader can kick members.");
 
-            //if (group.IsLocked == true || group.Status != "Forming")
-            //    throw new Exception("The group is locked or no longer in the forming stage.");
+            if (group.IsLocked == true || group.Status != "Forming")
+                throw new Exception("The group is locked or no longer in the forming stage.");
 
             if (requesterId == targetUserId)
                 throw new Exception("The Leader cannot kick themselves.");
@@ -331,6 +331,11 @@ namespace CapstoneProject.Infrastructure.Services
         {
             try
             {
+                var group = await _groupRepository.GetGroupByIdAsync(groupId);
+                if(group?.Status == "Active")
+                {
+                    return "This group is currently active. Active groups can not kick mentor";
+                }
                 bool isKicked = await _groupRepository.RemoveMentorFromGroupAsync(groupId);
                 if (!isKicked)
                 {

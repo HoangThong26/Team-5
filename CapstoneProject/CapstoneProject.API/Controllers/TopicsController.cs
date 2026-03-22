@@ -1,4 +1,4 @@
-﻿using CapstoneProject.API.Hubs;
+using CapstoneProject.API.Hubs;
 using CapstoneProject.Application.DTO;
 using CapstoneProject.Application.Interface.IService;
 using Microsoft.AspNetCore.Authorization;
@@ -34,12 +34,23 @@ namespace CapstoneProject.API.Controllers
             {
                 var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
                 await _topicService.SubmitTopicAsync(userId, request);
-                return Ok(new { message = "Topic submitted successfully. Pending approval." });
+
+                // Lấy Email Mentor
+                var mentorEmail = await _topicService.GetMentorEmailByGroupId(request.GroupId);
+
+                if (!string.IsNullOrEmpty(mentorEmail))
+                {
+                    // Gửi qua SignalR bằng Email
+                    await _hubContext.Clients.User(mentorEmail).SendAsync("ReceiveNotification", new
+                    {
+                        type = "TOPIC_SUBMITTED", // Frontend dựa vào type này để load lại trang
+                        message = $"Group {request.GroupId} has submitted a new topic!",
+                        groupId = request.GroupId
+                    });
+                }
+                return Ok(new { message = "Topic submitted successfully!" });
             }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
+            catch (Exception ex) { return BadRequest(new { message = ex.Message }); }
         }
 
         [HttpPut("edit/{topicId}")]
@@ -49,12 +60,23 @@ namespace CapstoneProject.API.Controllers
             {
                 var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
                 await _topicService.EditTopicAsync(userId, topicId, request);
+
+                var groupId = await _topicService.GetGroupIdByTopicIdAsync(topicId);
+                if (groupId.HasValue)
+                {
+                    var mentorEmail = await _topicService.GetMentorEmailByGroupId(groupId.Value);
+                    if (!string.IsNullOrEmpty(mentorEmail))
+                    {
+                        await _hubContext.Clients.User(mentorEmail).SendAsync("ReceiveNotification", new
+                        {
+                            type = "TOPIC_SUBMITTED", // Dùng chung type để Mentor tự cập nhật bảng
+                            message = "A topic has been updated."
+                        });
+                    }
+                }
                 return Ok(new { message = "Topic updated successfully." });
             }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
+            catch (Exception ex) { return BadRequest(new { message = ex.Message }); }
         }
         [HttpGet("group/{groupId}")]
         public async Task<IActionResult> GetTopicByGroupId(int groupId)
@@ -70,12 +92,12 @@ namespace CapstoneProject.API.Controllers
             }
         }
 
-        [HttpGet("mentor/pending-topics")]
+        [HttpGet("mentor/all-topics")]
         [Authorize(Roles = "Mentor")]
         public async Task<IActionResult> GetPendingTopics()
         { 
             var mentorId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            var topics = await _topicService.GetPendingTopicsForMentorAsync(mentorId);
+            var topics = await _topicService.GetAllTopicsForMentorAsync(mentorId);
 
             return Ok(topics);
         }
