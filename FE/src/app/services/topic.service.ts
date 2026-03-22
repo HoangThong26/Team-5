@@ -22,12 +22,10 @@ export class TopicService {
 }
 
 getPendingTopics(): Observable<TopicDto[]> {
-  // Bỏ chữ /Topic/ đi, chỉ để đường dẫn tương đối từ [Route("api/[controller]")]
-  return this.http.get<TopicDto[]>(`${this.apiUrl}/mentor/pending-topics`); 
+  return this.http.get<TopicDto[]>(`${this.apiUrl}/mentor/all-topics`); 
 }
 
 approveTopic(request: TopicApprovalRequest): Observable<any> {
-    // URL sẽ là: https://localhost:7084/api/Mentor/approve
     return this.http.post(`${this.mentorUrl}/topics/approve`, request);
   }
 }

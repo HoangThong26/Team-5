@@ -1,324 +1,434 @@
-<div class="admin-bg">
-  <div class="admin-container">
+<div class="admin-shell">
 
-    <div class="admin-header">
-      <div class="admin-icon">
-        <i class="fas fa-shield-halved"></i>
+  <!-- ═══ SIDEBAR ═══ -->
+  <aside class="admin-sidebar">
+    <div class="sb-brand">
+      <div class="sb-logomark">
+        <svg width="28" height="28" viewBox="0 0 36 36" fill="none">
+          <rect width="36" height="36" rx="10" fill="url(#ag)"/>
+          <path d="M18 8L28 13V19C28 24.5 23.5 28.8 18 30C12.5 28.8 8 24.5 8 19V13L18 8Z" fill="rgba(255,255,255,0.2)"/>
+          <path d="M12 18L16 22L24 14" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <defs><linearGradient id="ag" x1="0" y1="0" x2="36" y2="36"><stop stop-color="#2563EB"/><stop offset="1" stop-color="#10B981"/></linearGradient></defs>
+        </svg>
       </div>
-      <h2>System Administration</h2>
-      <p class="admin-subtitle">Admin Dashboard</p>
+      <span class="sb-appname">ThesisPro</span>
     </div>
 
-    @if (successMessage) {
-      <div class="alert alert-success">
-        <i class="fas fa-check-circle"></i> {{ successMessage }}
-      </div>
-    }
-
-    @if (errorMessage) {
-      <div class="alert alert-error">
-        <i class="fas fa-exclamation-circle"></i> {{ errorMessage }}
-      </div>
-    }
-
-    <div class="tab-nav">
-      <button class="tab-btn" [class.active]="viewMode === 'users'" (click)="switchView('users')">
-        <i class="fas fa-user-friends"></i> User Management
+    <div class="sb-section-label">MANAGEMENT</div>
+    <nav class="sb-nav">
+      <button class="sb-item" [class.active]="viewMode === 'users'" (click)="switchView('users')">
+        <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+        </svg>
+        <span>Users</span>
+        <span class="sb-count">{{ users.length }}</span>
       </button>
-      <button class="tab-btn" [class.active]="viewMode === 'groups'" (click)="switchView('groups')">
-        <i class="fas fa-layer-group"></i> Group Management
+      <button class="sb-item" [class.active]="viewMode === 'groups'" (click)="switchView('groups')">
+        <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="7" width="20" height="14" rx="2"/>
+          <path d="M16 7V5a2 2 0 00-4 0v2M8 7V5a2 2 0 014 0v2"/>
+          <line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/>
+        </svg>
+        <span>Groups</span>
+        <span class="sb-count">{{ groups.length }}</span>
+      </button>
+    </nav>
+
+    <div class="sb-section-label" style="margin-top: auto;"></div>
+    <div class="sb-footer">
+      <div class="sb-admin-pill">
+        <div class="sb-admin-dot"></div>
+        <span>Administrator</span>
+      </div>
+      <button class="sb-logout" (click)="logout()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+        Sign Out
       </button>
     </div>
+  </aside>
 
-    @if (viewMode === 'users') {
-      <div class="action-bar">
-        <button class="action-btn create-btn" (click)="toggleCreateForm()">
-          <i class="fas fa-user-plus"></i>
-          {{ showCreateForm ? 'Close' : 'Create User' }}
-        </button>
+  <!-- ═══ MAIN AREA ═══ -->
+  <main class="admin-main">
 
-        <button class="action-btn" (click)="toggleImportForm()" style="background-color: #217346; color: white;">
-          <i class="fas fa-file-import"></i>
-          {{ showImportForm ? 'Close Import' : 'Import Excel' }}
-        </button>
-
-        <button class="action-btn" (click)="downloadStudentList()" [disabled]="isExporting" style="background-color: #107c41; color: white;">
-          @if (isExporting) {
-            <i class="fas fa-spinner fa-spin"></i> Exporting...
-          } @else {
-            <i class="fas fa-file-export"></i> Export Students
+    <!-- GRADIENT HEADER -->
+    <header class="admin-header">
+      <div class="ah-left">
+        <div class="ah-icon-wrap">
+          @if (viewMode === 'users') {
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+            </svg>
           }
-        </button>
-
-        <button class="action-btn refresh-btn" (click)="loadUsers()">
-          <i class="fas fa-sync-alt"></i> Refresh
-        </button>
-        <button class="action-btn logout-btn" (click)="logout()">
-          <i class="fas fa-sign-out-alt"></i> Logout
-        </button>
+          @if (viewMode === 'groups') {
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <rect x="2" y="7" width="20" height="14" rx="2"/>
+              <path d="M16 7V5a2 2 0 00-4 0v2M8 7V5a2 2 0 014 0v2"/>
+            </svg>
+          }
+        </div>
+        <div>
+          <h1 class="ah-title">
+            @if (viewMode === 'users') { User Management }
+            @if (viewMode === 'groups') { Group Management }
+          </h1>
+          <p class="ah-sub">ThesisPro Admin Console · Manage your academic system</p>
+        </div>
       </div>
+      <div class="ah-stat-pills">
+        <div class="ah-stat-pill">
+          <p class="asp-n">{{ users.length }}</p>
+          <p class="asp-l">Users</p>
+        </div>
+        <div class="ah-stat-pill">
+          <p class="asp-n">{{ groups.length }}</p>
+          <p class="asp-l">Groups</p>
+        </div>
+        <div class="ah-stat-pill">
+          <p class="asp-n">{{ mentors.length }}</p>
+          <p class="asp-l">Mentors</p>
+        </div>
+        <div class="ah-stat-pill">
+          <p class="asp-n">{{ users.length - mentors.length }}</p>
+          <p class="asp-l">Students</p>
+        </div>
+      </div>
+    </header>
 
-      @if (showImportForm) {
-        <div class="create-form" style="border-color: #217346;">
-          <h3 style="color: #2ecc71;"><i class="fas fa-file-excel"></i> Import Users from Excel</h3>
-          <div class="form-grid" style="align-items: end; grid-template-columns: 1fr auto;">
-            <div class="input-group">
-              <label>Select Excel File (.xls, .xlsx)</label>
-              <input 
-                type="file" 
-                (change)="onFileSelected($event)" 
-                accept=".xls,.xlsx" 
-                [disabled]="isImporting"
-                style="padding: 10px; border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; width: 100%;"
-              />
-            </div>
-            <button class="submit-btn" style="background: linear-gradient(135deg, #2ecc71, #27ae60); box-shadow: 0 6px 20px rgba(46, 204, 113, 0.3); margin-top: 0;" (click)="onUpload()" [disabled]="!selectedFile || isImporting">
-              @if (isImporting) {
-                <i class="fas fa-spinner fa-spin"></i> Uploading...
-              } @else {
-                <i class="fas fa-upload"></i> Upload Data
-              }
-            </button>
-          </div>
+    <div class="admin-body">
+
+      <!-- ALERTS -->
+      @if (successMessage) {
+        <div class="alert ok">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>
+          {{ successMessage }}
+          <button class="alert-x" (click)="successMessage = ''">✕</button>
+        </div>
+      }
+      @if (errorMessage) {
+        <div class="alert err">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r="1" fill="currentColor"/></svg>
+          {{ errorMessage }}
+          <button class="alert-x" (click)="errorMessage = ''">✕</button>
         </div>
       }
 
-      @if (showCreateForm) {
-        <div class="create-form">
-          <h3><i class="fas fa-user-plus"></i> Create New User</h3>
-          <form (ngSubmit)="createUser()" #createForm="ngForm">
-            <div class="form-grid">
-              <div class="input-group">
-                <label>Email</label>
-                <input type="email" required [(ngModel)]="newEmail" name="newEmail" placeholder="email@example.com" />
-              </div>
-              <div class="input-group">
-                <label>Full Name</label>
-                <input type="text" required [(ngModel)]="newFullName" name="newFullName" placeholder="John Doe" />
-              </div>
-              <div class="input-group">
-                <label>Phone Number</label>
-                <input type="tel" [(ngModel)]="newPhone" name="newPhone" placeholder="0912 345 678" />
-              </div>
-              <div class="input-group">
-                <label>Role</label>
-                <select [(ngModel)]="newRole" name="newRole">
-                  <option value="Student">Student</option>
-                  <option value="Mentor">Mentor</option>
-                  <option value="Council">Council</option>
-                  <option value="Admin">Admin</option>
-                </select>
-              </div>
-              <div class="input-group">
-                <label>Password</label>
-                <input type="password" required [(ngModel)]="newPassword" name="newPassword" placeholder="••••••••" />
-              </div>
-            </div>
-            <button class="submit-btn" type="submit" [disabled]="createForm.invalid || isCreating">
-              @if (isCreating) {
-                <i class="fas fa-spinner fa-spin"></i> Creating...
+      <!-- ═══ USERS VIEW ═══ -->
+      @if (viewMode === 'users') {
+
+        <!-- Toolbar -->
+        <div class="toolbar">
+          <div class="search-wrap">
+            <svg class="search-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input class="search-input" type="text" [(ngModel)]="searchKeyword" name="searchKeyword"
+              placeholder="Search users by email or name..." (keyup.enter)="searchUsers()">
+            @if (searchKeyword) {
+              <button class="search-clear" (click)="clearSearch()">✕</button>
+            }
+          </div>
+          <div class="toolbar-actions">
+            <button class="tbtn ghost" (click)="loadUsers()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+              Refresh
+            </button>
+            <button class="tbtn primary" (click)="toggleCreateForm()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                @if (showCreateForm) { <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/> }
+                @else { <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/> }
+              </svg>
+              {{ showCreateForm ? 'Cancel' : 'New User' }}
+            </button>
+            <button class="tbtn green" (click)="toggleImportForm()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                @if (showImportForm) { <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/> }
+                @else { <path d="M12 2v13M5 9l7 7 7-7"/><rect x="3" y="17" width="18" height="4" rx="1"/> }
+              </svg>
+              {{ showImportForm ? 'Cancel' : 'Import' }}
+            </button>
+            <button class="tbtn slate" (click)="downloadStudentList()" [disabled]="isExporting">
+              @if (isExporting) {
+                <span class="spin-sm"></span> Exporting...
               } @else {
-                <i class="fas fa-plus"></i> Create
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Export
               }
             </button>
-          </form>
-        </div>
-      }
-
-      <div class="search-bar">
-        <div class="search-input-wrapper">
-          <i class="fas fa-search search-icon"></i>
-          <input
-            type="text"
-            [(ngModel)]="searchKeyword"
-            name="searchKeyword"
-            placeholder="Search by email..."
-            (keyup.enter)="searchUsers()"
-          />
-          @if (searchKeyword) {
-            <button class="action-btn" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); padding: 6px 10px; background: transparent; color: #ff4d4d;" (click)="clearSearch()" title="Clear search">
-              <i class="fas fa-times"></i>
-            </button>
-          }
-        </div>
-        <button class="action-btn refresh-btn" style="color: #fff; background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2);" (click)="searchUsers()" [disabled]="isSearching">
-          @if (isSearching) {
-            <i class="fas fa-spinner fa-spin"></i>
-          } @else {
-            <i class="fas fa-search"></i> Search
-          }
-        </button>
-      </div>
-
-      <div class="users-section">
-        @if (isLoadingUsers) {
-          <div style="text-align: center; color: #ffe600; padding: 40px; font-size: 1.2rem;">
-            <i class="fas fa-spinner fa-spin"></i> Loading users...
           </div>
-        } @else {
-          <div class="table-wrapper">
-            <table>
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Email</th>
-                  <th>Full Name</th>
-                  <th>Role</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (user of pagedUsers; track user.userId || user.id) {
-                  <tr>
-                    <td style="color: rgba(255,255,255,0.5);">#{{ user.userId || user.id }}</td>
-                    <td>{{ user.email }}</td>
-                    <td style="font-weight: 600;">{{ user.fullName }}</td>
-                    <td><span class="member-tag">{{ user.role }}</span></td>
-                    <td>
-                      <span class="status-badge" [class.active]="user.status === 'Active'" [class.inactive]="user.status !== 'Active'">
-                        {{ user.status }}
-                      </span>
-                    </td>
-                  </tr>
-                } @empty {
-                  <tr>
-                    <td colspan="5" style="text-align: center; color: rgba(255,255,255,0.5); padding: 20px;">
-                      No users found.
-                    </td>
-                  </tr>
-                }
-              </tbody>
-            </table>
-          </div>
+        </div>
 
-          @if (users.length > 0) {
-            <div class="pagination">
-              <button class="page-btn" [disabled]="currentPage === 1" (click)="previousPage()">
-                <i class="fas fa-chevron-left"></i> Prev
-              </button>
-
-              @for (page of pageNumbers; track page) {
-                <button class="page-btn" [class.active-page]="currentPage === page" (click)="goToPage(page)">
-                  {{ page }}
-                </button>
-              }
-
-              <button class="page-btn" [disabled]="currentPage === totalPages" (click)="nextPage()">
-                Next <i class="fas fa-chevron-right"></i>
+        <!-- IMPORT FORM PANEL -->
+        @if (showImportForm) {
+          <div class="panel-card green-accent animate-drop">
+            <div class="panel-hd">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+              Bulk Import from Excel
+            </div>
+            <div class="panel-body row-layout">
+              <div class="f-group flex-1">
+                <label>Select Excel file (.xls / .xlsx)</label>
+                <div class="file-zone">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                  <input type="file" (change)="onFileSelected($event)" accept=".xls,.xlsx" [disabled]="isImporting">
+                  <p class="fz-hint">Drag &amp; drop or click to browse</p>
+                </div>
+              </div>
+              <button class="tbtn green lg" (click)="onUpload()" [disabled]="!selectedFile || isImporting">
+                @if (isImporting) { <span class="spin-sm"></span> Uploading... } @else { Upload Data }
               </button>
             </div>
-          }
+          </div>
         }
-      </div>
-    }
 
-   @if (viewMode === 'groups') {
-      <div class="action-bar" style="justify-content: flex-end;">
-         <button class="action-btn refresh-btn" (click)="loadGroups()">
-          <i class="fas fa-sync-alt"></i> Refresh Groups
-        </button>
-      </div>
-
-      <div class="users-section">
-        @if (isLoadingGroups) {
-          <div style="text-align: center; color: #ffe600; padding: 40px; font-size: 1.2rem;">
-            <i class="fas fa-spinner fa-spin"></i> Loading groups...
+        <!-- CREATE USER FORM -->
+        @if (showCreateForm) {
+          <div class="panel-card blue-accent animate-drop">
+            <div class="panel-hd">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/><line x1="18" y1="8" x2="23" y2="8"/><line x1="20.5" y1="5.5" x2="20.5" y2="10.5"/></svg>
+              Create New User Account
+            </div>
+            <form (ngSubmit)="createUser()" #createForm="ngForm" class="panel-body">
+              <div class="form-grid">
+                <div class="f-group">
+                  <label>Full Name <span class="req">*</span></label>
+                  <input class="f-input" type="text" required [(ngModel)]="newFullName" name="newFullName" placeholder="Nguyen Van A">
+                </div>
+                <div class="f-group">
+                  <label>Email <span class="req">*</span></label>
+                  <input class="f-input" type="email" required [(ngModel)]="newEmail" name="newEmail" placeholder="user@example.com">
+                </div>
+                <div class="f-group">
+                  <label>Phone</label>
+                  <input class="f-input" type="tel" [(ngModel)]="newPhone" name="newPhone" placeholder="090...">
+                </div>
+                <div class="f-group">
+                  <label>Role</label>
+                  <select class="f-input" [(ngModel)]="newRole" name="newRole">
+                    <option value="Student">Student</option>
+                    <option value="Mentor">Mentor</option>
+                    <option value="Council">Council</option>
+                    <option value="Admin">Admin</option>
+                  </select>
+                </div>
+                <div class="f-group">
+                  <label>Password <span class="req">*</span></label>
+                  <input class="f-input" type="password" required [(ngModel)]="newPassword" name="newPassword" placeholder="Min. 6 characters">
+                </div>
+              </div>
+              <div style="margin-top:.75rem">
+                <button class="tbtn primary" type="submit" [disabled]="createForm.invalid || isCreating">
+                  @if (isCreating) { <span class="spin-sm"></span> Creating... }
+                  @else {
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    Create Account
+                  }
+                </button>
+              </div>
+            </form>
           </div>
-        } @else {
-          <div class="table-wrapper">
-            <table class="group-table">
-              <thead>
-                <tr>
-                  <th>Group Information</th>
-                  <th>Mentor</th>
-                  <th>Members</th>
-                  <th>Status</th>
-                  <th style="text-align: center;">Management</th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (group of groups; track group.groupId) {
-                  <tr>     
-                    <td>
-                      <div style="font-weight: 700; color: #ffe600; font-size: 1rem;">{{ group.groupName }}</div>
-                    </td>
+        }
 
-                    <td>
-                      @if (group.mentorName) {
-                        <div style="color: #a0c4ff; display: flex; align-items: center; gap: 8px;">
-                          <i class="fas fa-user-tie"></i> <span>{{ group.mentorName }}</span>
-                        </div>
-                      } @else {
-                        <span style="color: rgba(255,255,255,0.4); font-style: italic;">No Mentor</span>
-                      }
-                    </td>
+        <!-- DATA TABLE CARD -->
+        <div class="table-card">
+          <div class="tc-header">
+            <div>
+              <h3 class="tc-title">All Users</h3>
+              <p class="tc-sub">{{ users.length }} total · Page {{ currentPage }} of {{ totalPages }}</p>
+            </div>
+          </div>
 
-                    <td>
-                      <div class="member-list">
-                        @for (member of group.members; track member.userId) {
-                          <div class="member-tag">
-                            <i class="fas fa-user-graduate" style="font-size: 0.7rem; margin-right: 5px; opacity: 0.6;"></i> 
-                            {{ member.fullName }}
+          @if (isLoadingUsers) {
+            <div class="shimmer-wrap">
+              @for (i of [1,2,3,4,5]; track i) {
+                <div class="shimmer-row"><div class="sh sh-40"></div><div class="sh sh-grow"></div><div class="sh sh-120"></div><div class="sh sh-80"></div></div>
+              }
+            </div>
+          } @else {
+            <div class="table-scroll">
+              <table class="dt">
+                <thead>
+                  <tr>
+                    <th>User</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (user of pagedUsers; track user.userId || user.id) {
+                    <tr class="dt-row">
+                      <td>
+                        <div class="user-cell">
+                          <div>
+                            <p class="uc-name">{{ user.fullName }}</p>
+                            <p class="uc-id">#{{ user.userId || user.id }}</p>
                           </div>
-                        } @empty {
-                          <span style="color: rgba(255,255,255,0.4);">Empty Slot</span>
+                        </div>
+                      </td>
+                      <td class="td-email">{{ user.email }}</td>
+                      <td class="td-phone">{{ user.phone || '—' }}</td>
+                      <td><span class="role-tag {{ user.role }}">{{ user.role }}</span></td>
+                      <td>
+                        <div class="status-dot-label" [class.active]="user.status !== 'Inactive'">
+                          <span class="dot"></span>
+                          {{ user.status || 'Active' }}
+                        </div>
+                      </td>
+                    </tr>
+                  } @empty {
+                    <tr>
+                      <td colspan="5" class="empty-cell">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                        <p>No users found.</p>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+
+            @if (users.length > 0) {
+              <div class="pager">
+                <p class="pager-info">Showing {{ (currentPage-1)*pageSize + 1 }}–{{ [currentPage*pageSize, users.length] }} of {{ users.length }}</p>
+                <div class="pager-controls">
+                  <button class="pg-btn" [disabled]="currentPage===1" (click)="previousPage()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+                  </button>
+                  @for (p of pageNumbers; track p) {
+                    <button class="pg-btn" [class.active]="currentPage===p" (click)="goToPage(p)">{{ p }}</button>
+                  }
+                  <button class="pg-btn" [disabled]="currentPage===totalPages" (click)="nextPage()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                  </button>
+                </div>
+              </div>
+            }
+          }
+        </div>
+      }
+
+      <!-- ═══ GROUPS VIEW ═══ -->
+      @if (viewMode === 'groups') {
+        <div class="toolbar">
+          <p class="toolbar-note">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="8"/></svg>
+            Manage groups and assign mentors
+          </p>
+          <button class="tbtn ghost" (click)="loadGroups()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+            Refresh
+          </button>
+        </div>
+
+        <div class="table-card">
+          <div class="tc-header">
+            <div>
+              <h3 class="tc-title">All Groups</h3>
+              <p class="tc-sub">{{ groups.length }} groups total</p>
+            </div>
+          </div>
+
+          @if (isLoadingGroups) {
+            <div class="shimmer-wrap">
+              @for (i of [1,2,3]; track i) {
+                <div class="shimmer-row"><div class="sh sh-120"></div><div class="sh sh-grow"></div><div class="sh sh-80"></div><div class="sh sh-80"></div></div>
+              }
+            </div>
+          } @else {
+            <div class="table-scroll">
+              <table class="dt">
+                <thead>
+                  <tr>
+                    <th>Group</th>
+                    <th>Members</th>
+                    <th>Mentor</th>
+                    <th>Status</th>
+                    <th style="text-align:center">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (group of groups; track group.groupId) {
+                    <tr class="dt-row">
+                      <td>
+                        <div class="group-cell">
+                          <div class="gc-icon">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+                          </div>
+                          <strong>{{ group.groupName }}</strong>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="bubbles">
+                          @for (m of (group.members || []).slice(0,4); track m.userId) {
+                          <div class="bubble" [attr.data-name]="m.fullName">{{ (m.fullName || '?')[0] }}</div>
+                          }
+                          @if ((group.members || []).length > 4) {
+                            <div class="bubble more" [attr.data-name]="getExtraNames(group.members)">+{{ group.members.length - 4 }}</div>
+                          }
+                          @if (!(group.members || []).length) {
+                            <span class="td-muted">No members</span>
+                          }
+                        </div>
+                      </td>
+                      <td>
+                        @if (group.mentorName) {
+                          <div class="mentor-cell">
+                            <div class="mcell-av"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+                            {{ group.mentorName }}
+                          </div>
+                        } @else {
+                          <span class="td-muted italic">Unassigned</span>
                         }
-                      </div>
-                    </td>
-
-                    <td>
-                      <span class="status-badge" [class.active]="group.status === 'Active' || group.status === 'Forming'" [class.inactive]="group.status !== 'Active' && group.status !== 'Forming'">
-                        {{ group.status || 'Unknown' }}
-                      </span>
-                    </td>
-
-                    <td>
-                      <div style="display: flex; justify-content: center; gap: 10px; align-items: center;">
-                        
-                        @if (!group.mentorName) {
-                          <div class="assign-mentor-wrapper">
-                            <select #mentorSelect 
-                                    style="background: rgba(74, 144, 226, 0.15); color: #a0c4ff; border: 1px solid rgba(74, 144, 226, 0.3); padding: 5px; border-radius: 8px; font-size: 0.8rem; outline: none; cursor: pointer;"
-                                    (change)="handleAssignMentor(group.groupId, +mentorSelect.value); mentorSelect.value = ''">
-                              <option value="" disabled selected>+ Assign Mentor</option>
-                              @for (m of mentors; track m.id) {
-                                <option [value]="m.userId" style="background: #1a1a2e; color: #fff;">{{ m.fullName }}</option>
+                      </td>
+                      <td>
+                        <div class="status-dot-label active">
+                          <span class="dot"></span>
+                          {{ group.status || 'Active' }}
+                        </div>
+                      </td>
+                      <td>
+                        <div class="actions-cell">
+                          @if (!group.mentorName) {
+                            <select class="assign-sel" #ms (change)="handleAssignMentor(group.groupId, +ms.value); ms.value=''">
+                              <option value="" disabled selected>Assign mentor</option>
+                              @for (m of mentors; track m.userId) {
+                                <option [value]="m.userId">{{ m.fullName }}</option>
                               }
                             </select>
-                          </div>
-                        }
-
-                        @if (group.mentorName) {
-                          <button style="background: rgba(255, 152, 0, 0.2); color: #ff9800; border: 1px solid rgba(255, 152, 0, 0.4); padding: 6px 12px; border-radius: 8px; cursor: pointer;" 
-                                  (click)="handleKickMentor(group.groupId)" title="Kick Mentor"
-                                  onmouseover="this.style.background='#ff9800'; this.style.color='#000'"
-                                  onmouseout="this.style.background='rgba(255, 152, 0, 0.2)'; this.style.color='#ff9800'">
-                            <i class="fas fa-user-slash"></i>
+                          }
+                          @if (group.mentorName) {
+                            <button class="icon-btn warn" (click)="handleKickMentor(group.groupId)" title="Remove mentor">
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 00-4-4H8"/><circle cx="10" cy="7" r="4"/><line x1="17" y1="11" x2="23" y2="17"/><line x1="23" y1="11" x2="17" y2="17"/></svg>
+                            </button>
+                          }
+                          <button class="icon-btn danger" (click)="handleDeleteGroup(group.groupId)" title="Delete group">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
                           </button>
-                        }
-                        
-                        <button style="background: rgba(255, 82, 82, 0.15); color: #ffb3b3; border: 1px solid rgba(255, 82, 82, 0.3); padding: 6px 12px; border-radius: 8px; cursor: pointer;" 
-                                (click)="handleDeleteGroup(group.groupId)" title="Delete Group"
-                                onmouseover="this.style.background='#ff5252'; this.style.color='#fff'"
-                                onmouseout="this.style.background='rgba(255, 82, 82, 0.15)'; this.style.color='#ffb3b3'">
-                          <i class="fas fa-trash-alt"></i>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                } @empty {
-                  <tr>
-                    <td colspan="6" style="text-align: center; padding: 40px; color: rgba(255,255,255,0.4);">
-                      <i class="fas fa-folder-open" style="font-size: 2rem; display: block; margin-bottom: 10px;"></i>
-                      No groups found in the system.
-                    </td>
-                  </tr>
-                }
-              </tbody>
-            </table>
-          </div>
-        }
-      </div>
-    }
-  </div>
+                        </div>
+                      </td>
+                    </tr>
+                  } @empty {
+                    <tr>
+                      <td colspan="5" class="empty-cell">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-4 0v2M8 7V5a2 2 0 014 0v2"/></svg>
+                        <p>No groups found.</p>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        </div>
+      }
+
+    </div>
+  </main>
 </div>

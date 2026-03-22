@@ -120,8 +120,9 @@ export class AuthService {
   isLoggedIn(): boolean {
     if (!this.isBrowser) return false;
     const token = this.getAccessToken();
-    // Chỉ check xem có token hay không, việc hết hạn hãy để Interceptor xử lý
-    return !!token;
+    const user = this.getCurrentUser();
+    // Check if both token and user are present to avoid "half-logged-in" states
+    return !!token && !!user;
   }
 
   clearToken(): void {

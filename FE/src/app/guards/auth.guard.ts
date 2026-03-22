@@ -50,15 +50,21 @@ export const guestGuard: CanActivateFn = () => {
     const user = authService.getCurrentUser();
     const role = user?.role?.toLowerCase();
 
-    // Nếu đã login, tùy vào role mà đẩy về trang tương ứng
     if (role === 'admin') {
       router.navigate(['/admin']);
+      return false;
     } else if (role === 'mentor') {
       router.navigate(['/mentor-dashboard']);
+      return false;
+    } else if (role === 'student' || role === 'user') {
+      router.navigate(['/dashboard']);
+      return false;
     } else {
-      router.navigate(['/dashboard']); // Trang của Student
+      // Nếu có token nhưng ko tìm thấy role hợp lệ, xóa token để user login lại
+      console.warn('Logged in but no valid role found. Clearing auth state.');
+      authService.clearToken();
+      return true; 
     }
-    return false;
   }
   return true; 
 };
@@ -92,17 +98,32 @@ export const roleGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
+  if (!authService.isLoggedIn()) {
+    router.navigate(['/login']);
+    return false;
+  }
+
   const user = authService.getCurrentUser();
   const userRole = user?.role?.toLowerCase();
-  
-  // Lấy role mong muốn từ khai báo trong App Routing (data: { role: 'student' })
   const expectedRole = route.data['role']?.toLowerCase();
 
-  if (authService.isLoggedIn() && userRole === expectedRole) {
+  if (userRole === expectedRole) {
     return true;
   }
 
-  alert("Access Denied: You don't have permission to access this page!");
-  router.navigate(['/login']);
+  // Nếu không đúng role, đừng vội đẩy về login gây loop. 
+  // Kiểm tra xem họ có thể vào dashboard nào khác không.
+  if (userRole === 'admin') {
+    router.navigate(['/admin']);
+  } else if (userRole === 'mentor') {
+    router.navigate(['/mentor-dashboard']);
+  } else if (userRole === 'student' || userRole === 'user') {
+    router.navigate(['/dashboard']);
+  } else {
+    alert("Access Denied: You don't have permission to access this page!");
+    authService.clearToken();
+    router.navigate(['/login']);
+  }
+
   return false;
 };
