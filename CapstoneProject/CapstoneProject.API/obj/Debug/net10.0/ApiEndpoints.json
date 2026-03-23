@@ -186,6 +186,43 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "CapstoneProject.WebAPI.Controllers.DefenseController",
+    "Method": "GetMyEvaluation",
+    "RelativePath": "api/Defense/my-evaluation/{defenseId}/{userId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "defenseId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "userId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CapstoneProject.WebAPI.Controllers.DefenseController",
+    "Method": "SubmitEvaluation",
+    "RelativePath": "api/Defense/submit-evaluation",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "CapstoneProject.Application.DTO.DefenseEvaluationRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "CapstoneProject.API.Controllers.GroupsController",
     "Method": "GetMyGroup",
     "RelativePath": "api/Groups",
@@ -334,6 +371,59 @@
         "Name": "invitationId",
         "Type": "System.Int32",
         "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CapstoneProject.API.Controllers.TopicsController",
+    "Method": "EditTopic",
+    "RelativePath": "api/Topics/edit/{topicId}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "topicId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "CapstoneProject.Application.DTO.TopicUpdateDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CapstoneProject.API.Controllers.TopicsController",
+    "Method": "GetTopicByGroupId",
+    "RelativePath": "api/Topics/group/{groupId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "groupId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CapstoneProject.API.Controllers.TopicsController",
+    "Method": "SubmitTopic",
+    "RelativePath": "api/Topics/submit",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "CapstoneProject.Application.DTO.TopicSubmitRequest",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
