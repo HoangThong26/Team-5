@@ -21,7 +21,7 @@ import { TopicService } from '../services/topic.service';
 })
 export class UserDashboardComponent implements OnInit, OnDestroy { 
   
-  activeModal: 'none' | 'details' | 'create' | 'invite' | 'members' = 'none';
+  activeModal: 'none' | 'details' | 'create' | 'invite' | 'members' | 'topic' = 'none';
   showGroupDetails: boolean = false;
   private isBrowser: boolean;
   myGroup: GroupDetailResponse | null = null;
@@ -254,12 +254,17 @@ handleTopicSubmit() {
           this.wsSubscription = this.wsService.getMessages().subscribe({
             next: (message) => {
               console.log('Received from Backend:', message);
+              const msgType = message.type || message.Type;
+              
               if (
-                message.type === 'GROUP_UPDATED' || message.Type === 'GROUP_UPDATED' ||
-                message.type === 'MEMBER_ACCEPTED' || message.Type === 'MEMBER_ACCEPTED'
+                msgType === 'GROUP_UPDATED' || 
+                msgType === 'MEMBER_ACCEPTED' ||
+                msgType === 'TOPIC_STATUS_UPDATED' ||
+                msgType === 'TOPIC_SUBMITTED'
               ) {
                 this.loadMyGroupSilently();
-                this.successMessage = 'Group data has been updated automatically!';
+                this.successMessage = message.message || 'Data has been updated automatically!';
+                setTimeout(() => this.successMessage = '', 4000);
               }
             },
             error: (err) => console.error('WebSocket Error:', err)

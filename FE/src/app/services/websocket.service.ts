@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { Subject, Observable } from 'rxjs';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,24 +12,25 @@ export class WebsocketService {
   // Dùng Subject để đẩy data sang cho Dashboard
   private messageSubject = new Subject<any>();
 
-  constructor() { }
+  constructor(private authService: AuthService) { }
 
-  public connect(userId: string) {
-    // 1. Cấu hình kết nối tới Hub của C# (Đổi lại domain localhost:7084 cho đúng với Backend của bạn nhé)
+  public connect(userId?: string) {
+    // 1. Cấu hình kết nối tới Hub với Access Token để xác thực
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(`https://localhost:7084/ws/notifications?userId=${userId}`) 
+      .withUrl(`https://localhost:7084/ws/notifications`, {
+        accessTokenFactory: () => this.authService.getAccessToken() || ''
+      }) 
       .withAutomaticReconnect()
       .build();
 
     // 2. Khởi động kết nối
     this.hubConnection.start()
-      .then(() => console.log(' SignalR Connected Successfully!'))
-      .catch(err => console.error(' Error while starting SignalR: ', err));
+      .then(() => console.log(`✅ SignalR Connected Successfully!${userId ? ' (User: ' + userId + ')' : ''}`))
+      .catch(err => console.error('❌ Error while starting SignalR: ', err));
 
-    // 3. Lắng nghe ĐÚNG KÊNH "ReceiveNotification" mà C# đang phát sóng
+    // 3. Lắng nghe Hub - ReceiveNotification
     this.hubConnection.on('ReceiveNotification', (data) => {
-      console.log('SignalR received data:', data);
-      // Đẩy data sang cho Component
+      console.log('📬 SignalR received:', data);
       this.messageSubject.next(data); 
     });
   }

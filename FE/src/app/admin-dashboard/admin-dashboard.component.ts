@@ -96,6 +96,22 @@ export class AdminDashboardComponent implements OnInit {
 
   ngOnInit() {
     this.loadUsers();
+    this.loadAllStatsOnInit();
+  }
+
+  /** Load groups & mentors silently on startup so stat cards have correct data */
+  private loadAllStatsOnInit() {
+    this.adminService.getAllGroups().subscribe({
+      next: (res) => { this.groups = res; },
+      error: () => {}
+    });
+    this.adminService.getAllUsers().subscribe({
+      next: (res: any[]) => {
+        if (this.users.length === 0) this.users = res;
+        this.mentors = res.filter(u => u.role === 'Mentor');
+      },
+      error: () => {}
+    });
   }
 
   private extractError(err: any, fallback: string): string {
@@ -385,4 +401,20 @@ export class AdminDashboardComponent implements OnInit {
       });
     }
   }
-}
+
+  getRoleGradient(role: string): string {
+    switch ((role || '').toLowerCase()) {
+      case 'admin':   return 'linear-gradient(135deg,#ef4444,#b91c1c)';
+      case 'mentor':  return 'linear-gradient(135deg,#7c3aed,#a855f7)';
+      case 'council': return 'linear-gradient(135deg,#d97706,#f59e0b)';
+      default:        return 'linear-gradient(135deg,#2563eb,#3b82f6)';
+    }
+  }
+
+  /** Returns full names of members beyond index 3, for the +N bubble tooltip */
+  getExtraNames(members: any[]): string {
+    if (!members || members.length <= 4) return '';
+    return members.slice(4).map((m: any) => m.fullName || 'Unknown').join(', ');
+  }
+
+}
