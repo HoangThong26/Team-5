@@ -1,18 +1,18 @@
+// 1. THÊM USING NÀY ĐỂ PROGRAM NHẬN DIỆN ĐƯỢC HUB CỦA BẠN
+using CapstoneProject.API.Hubs;
 using CapstoneProject.Application.Interface.IRepository;
 using CapstoneProject.Application.Interface.IService;
 using CapstoneProject.Infrastructure.Database.AppDbContext;
 using CapstoneProject.Infrastructure.Repostitory;
 using CapstoneProject.Infrastructure.Services;
 using CapstoneProject.Infrastructure.Validation;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using FluentValidation;
-using FluentValidation.AspNetCore;
-
-// 1. THÊM USING NÀY ĐỂ PROGRAM NHẬN DIỆN ĐƯỢC HUB CỦA BẠN
-using CapstoneProject.API.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -60,6 +60,9 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IPasswordResetTokenRepository, PasswordResetTokenRepository>();
 builder.Services.AddScoped<IGroupRepository, GroupRepository>();
 builder.Services.AddScoped<IGroupService, GroupService>();
+builder.Services.AddScoped<IGroupMemberRepository,GroupMemberRepository>();
+builder.Services.AddScoped<IMentorAssignmentRepository, MentorAssignmentRepository>();
+builder.Services.AddSingleton<IUserIdProvider, EmailBasedUserIdProvider>();
 
 builder.Services.AddCors(options => {
     options.AddPolicy("AllowAll", builder => {

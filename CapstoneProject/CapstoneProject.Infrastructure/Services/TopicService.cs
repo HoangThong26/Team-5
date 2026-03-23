@@ -1,4 +1,4 @@
-﻿using CapstoneProject.Application.DTO;
+using CapstoneProject.Application.DTO;
 using CapstoneProject.Application.Interface.IRepository;
 using CapstoneProject.Application.Interface.IService;
 using CapstoneProject.Domain.Entities;
@@ -144,7 +144,7 @@ namespace CapstoneProject.Infrastructure.Services
             await _topicRepository.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<TopicDto>> GetPendingTopicsForMentorAsync(int mentorId)
+        public async Task<IEnumerable<TopicDto>> GetAllTopicsForMentorAsync(int mentorId)
         {
             var versions = await _topicRepository.GetTopicVersionsByMentorAsync(mentorId);
 
@@ -154,12 +154,32 @@ namespace CapstoneProject.Infrastructure.Services
                 VersionId = v.Id,
                 Title = v.Title,
                 Description = v.Description,
-                // SỬA TẠI ĐÂY: Lấy status từ Topic chính để hiện chữ "Pending"
                 Status = v.Topic?.Status ?? "Pending",
                 SubmittedAt = v.SubmittedAt,
                 GroupId = v.Topic?.GroupId ?? 0,
                 GroupName = v.Topic?.Group?.GroupName ?? "N/A"
             });
+        }
+
+        public async Task<int?> GetMentorIdByGroupIdAsync(int groupId)
+        {
+            return await _topicRepository.GetMentorIdByGroupIdAsync(groupId);
+        }
+
+        public async Task<int?> GetGroupIdByTopicIdAsync(int topicId)
+        {
+            return await _topicRepository.GetGroupIdByTopicIdAsync(topicId);
+        }
+        public async Task<string?> GetMentorEmailByGroupId(int groupId)
+        {
+            var email = await _topicRepository.GetMentorEmailByGroupIdAsync(groupId);
+
+            if (string.IsNullOrEmpty(email))
+            {
+                return null;
+            }
+
+            return email;
         }
     }
 }
