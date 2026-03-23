@@ -15,7 +15,7 @@ namespace CapstoneProject.Application.Interface.IService
         Task<string> KickMemberAsync(int requesterId, int groupId, int targetUserId);
         Task<List<GroupDetailResponse>> GetAllGroupsForAdminAsync();
         Task<string> DeleteGroupByAdminAsync(int groupId, int currentUserId, string currentUserRole);
-        
+        Task<string> AssignMentorAsync(int groupId, int mentorId);
         Task<string> KickMentorByAdminAsync(int groupId);
     }
 }

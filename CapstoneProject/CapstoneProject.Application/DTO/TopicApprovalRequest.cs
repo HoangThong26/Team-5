@@ -6,8 +6,9 @@ namespace CapstoneProject.Application.DTO
 {
     public class TopicApprovalRequest
     {
+        public int VersionId { get; set; }
         public int TopicId { get; set; }
-        public bool IsApproved { get; set; }
-        public string? Comment { get; set; }
+        public string Status { get; set; } = string.Empty;
+        public string? ReviewComment { get; set; }
     }
 }

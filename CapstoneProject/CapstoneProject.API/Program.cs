@@ -11,6 +11,7 @@ using CapstoneProject.Infrastructure.Validation;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -61,8 +62,14 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IPasswordResetTokenRepository, PasswordResetTokenRepository>();
 builder.Services.AddScoped<IGroupRepository, GroupRepository>();
 builder.Services.AddScoped<IGroupService, GroupService>();
+<<<<<<< HEAD
 builder.Services.AddScoped<IDefenseRepository, DefenseRepository>();
 builder.Services.AddScoped<IDefenseService, DefenseService>();
+=======
+builder.Services.AddScoped<IGroupMemberRepository,GroupMemberRepository>();
+builder.Services.AddScoped<IMentorAssignmentRepository, MentorAssignmentRepository>();
+builder.Services.AddSingleton<IUserIdProvider, EmailBasedUserIdProvider>();
+>>>>>>> BackEnd
 
 builder.Services.AddCors(options => {
     options.AddPolicy("AllowAll", builder => {
@@ -74,12 +81,13 @@ builder.Services.AddCors(options => {
 });
 
 var app = builder.Build();
-
+app.UseCors("AllowAll");
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 
 app.UseCors("AllowAll");
 app.UseHttpsRedirection();

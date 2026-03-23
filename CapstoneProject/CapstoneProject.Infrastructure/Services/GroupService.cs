@@ -3,11 +3,9 @@ using CapstoneProject.Application.Interface.IService;
 using CapstoneProject.Application.Interface.IRepository;
 using CapstoneProject.Domain.Entities;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Linq;
 using System.Net;
 using System.Net.Mail;
-using System.Threading.Tasks;
+
 
 namespace CapstoneProject.Infrastructure.Services
 {
@@ -333,6 +331,11 @@ namespace CapstoneProject.Infrastructure.Services
         {
             try
             {
+                var group = await _groupRepository.GetGroupByIdAsync(groupId);
+                if(group?.Status == "Active")
+                {
+                    return "This group is currently active. Active groups can not kick mentor";
+                }
                 bool isKicked = await _groupRepository.RemoveMentorFromGroupAsync(groupId);
                 if (!isKicked)
                 {
@@ -346,5 +349,50 @@ namespace CapstoneProject.Infrastructure.Services
             }
         }
 
+        public async Task<string> AssignMentorAsync(int groupId, int mentorId)
+        {
+            var group = await _groupRepository.GetGroupByIdAsync(groupId);
+
+            if (group == null)
+            {
+                return "Group not found.";
+            }
+
+            var memberCount = group.GroupMembers?.Count ?? 0;
+            if (memberCount < 5)
+            {
+                return $"Cannot assign mentor. This group only has {memberCount}/5 members.";
+            }
+
+            if (group.MentorAssignment == null)
+            {
+                group.MentorAssignment = new MentorAssignment
+                {
+                    GroupId = groupId, 
+                    MentorId = mentorId,
+                    AssignedAt = DateTime.Now
+                };
+            }
+            else
+            {
+                group.MentorAssignment.MentorId = mentorId;
+                group.MentorAssignment.AssignedAt = DateTime.Now;
+            }
+
+            group.Status = "Active";
+
+            try
+            {
+                await _groupRepository.UpdateGroupAsync(group);
+                return "SUCCESS";
+            }
+            catch (Exception ex)
+            {
+                return $"Error updating group: {ex.Message}";
+            }
+        }
+
+      
     }
+
 }
