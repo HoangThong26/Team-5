@@ -83,7 +83,11 @@ export class AdminDashboardComponent implements OnInit {
   // Group Management
   groups: any[] = [];
   isLoadingGroups = false;
-  viewMode: 'users' | 'groups' = 'users';
+  viewMode: 'users' | 'groups' | 'timeline' = 'users';
+
+  // Timeline Setup
+  projectStartDate: string = '';
+  isSettingTimeline = false;
 
   // --- THÊM BIẾN LƯU DANH SÁCH MENTOR ---
   mentors: any[] = []; 
@@ -311,7 +315,7 @@ export class AdminDashboardComponent implements OnInit {
     });
   }
 
-  switchView(mode: 'users' | 'groups') {
+  switchView(mode: 'users' | 'groups' | 'timeline') {
     this.viewMode = mode;
     this.successMessage = '';
     this.errorMessage = '';
@@ -323,6 +327,8 @@ export class AdminDashboardComponent implements OnInit {
     } else if (mode === 'groups') {
       this.loadGroups();
       this.loadMentors(); 
+    } else if (mode === 'timeline') {
+      // Có thể load ngày hiện tại từ API nếu cần
     }
   }
 
@@ -389,7 +395,6 @@ export class AdminDashboardComponent implements OnInit {
       });
     }
   }
-
   handleDeleteGroup(groupId: number) {
     if (confirm('WARNING: This will delete the group and all its assignments. Proceed?')) {
       this.adminService.deleteGroup(groupId).subscribe({
@@ -400,6 +405,28 @@ export class AdminDashboardComponent implements OnInit {
         error: (err) => this.errorMessage = this.extractError(err, 'Failed to delete group.')
       });
     }
+  }
+
+  handleSetupTimeline() {
+    if (!this.projectStartDate) {
+      this.errorMessage = 'Please select a start date.';
+      return;
+    }
+
+    this.isSettingTimeline = true;
+    this.successMessage = '';
+    this.errorMessage = '';
+
+    this.adminService.setupTimeline(this.projectStartDate).subscribe({
+      next: (res: any) => {
+        this.isSettingTimeline = false;
+        this.successMessage = res?.message || 'Project timeline has been set successfully!';
+      },
+      error: (err) => {
+        this.isSettingTimeline = false;
+        this.errorMessage = this.extractError(err, 'Failed to setup timeline.');
+      }
+    });
   }
 
   getRoleGradient(role: string): string {
@@ -417,4 +444,4 @@ export class AdminDashboardComponent implements OnInit {
     return members.slice(4).map((m: any) => m.fullName || 'Unknown').join(', ');
   }
 
-}
+}

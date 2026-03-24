@@ -407,3 +407,16 @@
 ══════════════════════════ */
 .animate-drop { animation: drop .3s ease-out; }
 @keyframes drop { from { opacity:0; transform: translateY(-8px); } to { opacity:1; transform: none; } }
+
+/* ══════════════════════════
+   TIMELINE SPECIAL
+   ══════════════════════════ */
+.modal-desc { font-size: .875rem; color: #64748b; line-height: 1.6; margin-bottom: 1.5rem; }
+.notice-box {
+  display: flex; gap: .75rem; padding: 1rem;
+  background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px;
+  font-size: .8rem; color: #64748b; line-height: 1.5;
+}
+.notice-box svg { flex-shrink: 0; color: #2563eb; }
+.w-full { width: 100%; }
+.mt-4 { margin-top: 1rem; }

@@ -6,6 +6,8 @@ import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { WebsocketService } from '../services/websocket.service';
 import { Subscription } from 'rxjs';
+import { WeeklyReportService } from '../services/weekly-report.service';
+import { WeeklyEvaluationService } from '../services/weekly-evaluation.service';
 
 @Component({
   selector: 'app-mentor-dashboard',
@@ -21,6 +23,18 @@ export class MentorDashboardComponent implements OnInit, OnDestroy {
   reviewComment: string = '';
   
   successMessage: string = '';
+  viewMode: 'topics' | 'reports' = 'topics';
+  mentorName: string = 'Mentor';
+  sidebarCollapsed: boolean = false;
+
+  // Weekly Reports
+  weeklyReports: any[] = [];
+  isLoadingReports = false;
+  selectedReport: any = null;
+  evaluationScore: number = 0;
+  evaluationComment: string = '';
+  isEvaluating = false;
+  isReadOnly = false;
   private wsSubscription?: Subscription;
   private isBrowser: boolean;
 
@@ -28,6 +42,8 @@ export class MentorDashboardComponent implements OnInit, OnDestroy {
     private topicService: TopicService,
     private authService: AuthService,
     private wsService: WebsocketService,
+    private weeklyReportService: WeeklyReportService,
+    private evaluationService: WeeklyEvaluationService,
     private router: Router,
     @Inject(PLATFORM_ID) platformId: Object
   ) { 
@@ -37,14 +53,21 @@ export class MentorDashboardComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.loadTopics();
     this.setupWebsocket();
+    
+    // Fetch user profile info
+    const user = this.authService.getCurrentUser();
+    if (user && user.fullName) {
+      this.mentorName = user.fullName;
+    }
+
+    // Load reports initially for badge counts
+    this.loadMentorInbox();
   }
 
   ngOnDestroy() {
     if (this.wsSubscription) {
       this.wsSubscription.unsubscribe();
     }
-    // Không disconnect ở đây vì có thể user vẫn đang dùng app nhưng ở page khác 
-    // (tuy nhiên Mentor Dashboard thường là component chính cho mentor)
   }
 
   setupWebsocket() {
@@ -63,6 +86,10 @@ export class MentorDashboardComponent implements OnInit, OnDestroy {
             if (type === 'TOPIC_SUBMITTED') {
               this.loadTopics();
               this.successMessage = message.message || 'A new topic has been submitted!';
+              setTimeout(() => this.successMessage = '', 5000);
+            } else if (type === 'WEEKLY_REPORT_SUBMITTED') {
+              this.loadMentorInbox();
+              this.successMessage = message.message || 'A new weekly report has been submitted!';
               setTimeout(() => this.successMessage = '', 5000);
             }
           },
@@ -124,6 +151,28 @@ export class MentorDashboardComponent implements OnInit, OnDestroy {
     });
   }
 
+  downloadReportFile(fileUrl: string | undefined): void {
+    if (!fileUrl) return;
+    const fileName = fileUrl.split('/').pop();
+    if (!fileName) return;
+
+    this.weeklyReportService.downloadFile(fileName).subscribe({
+      next: (blob: Blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName; // Quan trọng: bật tính năng tải file
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        a.remove();
+      },
+      error: (err) => {
+        alert('Failed to download file.');
+      }
+    });
+  }
+
   logout() {
     if (confirm('Do you want to logou?')) {
       this.authService.logout().subscribe({
@@ -151,6 +200,16 @@ export class MentorDashboardComponent implements OnInit, OnDestroy {
     return 'pending';
   }
 
+  /** Helper to ensure absolute URL for external links */
+  ensureExternalLink(url: string | undefined | null): string {
+    if (!url) return '';
+    const trimmedUrl = url.trim();
+    if (trimmedUrl.startsWith('http://') || trimmedUrl.startsWith('https://')) {
+      return trimmedUrl;
+    }
+    return 'https://' + trimmedUrl;
+  }
+
   /** Percentage of topics that have been reviewed (not Pending) */
   getReviewedPct(): number {
     if (!this.allTopics.length) return 0;
@@ -165,6 +224,83 @@ export class MentorDashboardComponent implements OnInit, OnDestroy {
   getPct(status: string): number {
     if (!this.allTopics.length) return 0;
     return Math.round((this.countByStatus(status) / this.allTopics.length) * 100);
+  }
+
+  // ===== Weekly Report Methods =====
+  switchView(mode: 'topics' | 'reports') {
+    this.viewMode = mode;
+    if (mode === 'reports') {
+      this.loadMentorInbox();
+    }
+  }
+
+  loadMentorInbox() {
+    this.isLoadingReports = true;
+    console.log('Fetching mentor inbox...');
+    this.weeklyReportService.getMentorInbox().subscribe({
+      next: (res) => {
+        console.log('Mentor inbox received:', res);
+        this.weeklyReports = res;
+        this.isLoadingReports = false;
+      },
+      error: (err) => {
+        this.isLoadingReports = false;
+        console.error('Lỗi load inbox:', err);
+      }
+    });
+  }
+
+  selectReport(report: any) {
+    this.selectedReport = { ...report };
+    this.evaluationScore = 0;
+    this.evaluationComment = '';
+
+    const status = (report.status || report.Status || '').toLowerCase();
+    this.isReadOnly = (status === 'reviewed');
+
+    if (this.isReadOnly) {
+      // Fetch saved evaluation from API so the score/comment are shown correctly
+      this.evaluationService.getEvaluation(report.reportId).subscribe({
+        next: (res: any) => {
+          this.evaluationScore = res.score ?? res.Score ?? 0;
+          this.evaluationComment = res.comment ?? res.Comment ?? '';
+        },
+        error: () => {
+          // Fallback to whatever is on the report object
+          this.evaluationScore = report.score ?? report.Score ?? 0;
+          this.evaluationComment = report.comment ?? report.Comment ?? '';
+        }
+      });
+    } else {
+      // Not yet reviewed — pre-fill if already set
+      this.evaluationScore = report.score ?? report.Score ?? 0;
+      this.evaluationComment = report.comment ?? report.Comment ?? '';
+    }
+  }
+
+  submitEvaluation() {
+    if (!this.selectedReport || this.isEvaluating) return;
+
+    this.isEvaluating = true;
+    const request = {
+      reportId: this.selectedReport.reportId,
+      score: this.evaluationScore,
+      comment: this.evaluationComment
+    };
+
+    this.evaluationService.submitEvaluation(request).subscribe({
+      next: (res) => {
+        this.isEvaluating = false;
+        this.successMessage = res.message || 'Evaluation submitted successfully!';
+        this.selectedReport = null;
+        this.loadMentorInbox();
+        setTimeout(() => this.successMessage = '', 3000);
+      },
+      error: (err) => {
+        this.isEvaluating = false;
+        alert('Evaluation failed: ' + (err.error?.message || 'Unknown error'));
+      }
+    });
   }
 }
 
