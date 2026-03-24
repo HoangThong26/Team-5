@@ -13,10 +13,12 @@ namespace CapstoneProject.Infrastructure.Services
     public class AdminService : IAdminService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IWeeklyReportRepository _weeklyReportRepository;
 
-        public AdminService(IUserRepository userRepository)
+        public AdminService(IUserRepository userRepository, IWeeklyReportRepository weeklyReportRepository)
         {
             _userRepository = userRepository;
+            _weeklyReportRepository = weeklyReportRepository;
         }
 
         public async Task<string> CreateUserByRoleAsync(AdminCreateUserRequest request)
@@ -135,8 +137,6 @@ namespace CapstoneProject.Infrastructure.Services
 
             return usersToImport.Count;
         }
-
-
         public async Task<byte[]> ExportStudentsToExcelAsync()
         {
 
@@ -171,6 +171,13 @@ namespace CapstoneProject.Infrastructure.Services
                     return stream.ToArray();
                 }
             }
+        }
+        public async Task SetupTimelineAsync(DateTime startDate)
+        {
+            var startDateOnly = DateOnly.FromDateTime(startDate);
+
+            await _weeklyReportRepository.UpdateProjectStartDateAsync(startDateOnly);
+            await _weeklyReportRepository.SaveChangesAsync();
         }
     }
 }

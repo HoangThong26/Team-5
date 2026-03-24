@@ -34,4 +34,37 @@ namespace CapstoneProject.Infrastructure.Validation
                 .When(x => !string.IsNullOrEmpty(x.Phone));
         }
     }
+
+    public class EvaluationRequestValidator : AbstractValidator<EvaluationRequest>
+    {
+        public EvaluationRequestValidator()
+        {
+            RuleFor(x => x.ReportId)
+                .NotEmpty().WithMessage("Report ID is required.")
+                .GreaterThan(0).WithMessage("Invalid Report ID.");
+
+            RuleFor(x => x.Score)
+                .InclusiveBetween(0, 10).WithMessage("Score must be between 0 and 10.")
+                .NotNull().WithMessage("Score cannot be empty.");
+
+            RuleFor(x => x.Comment)
+                .MaximumLength(1000).WithMessage("Comment cannot exceed 1000 characters.");
+        }
+    }
+
+    public class AdminSetupRequestValidator : AbstractValidator<AdminSetupRequest>
+    {
+        public AdminSetupRequestValidator()
+        {
+            RuleFor(x => x.StartDate)
+                .NotEmpty().WithMessage("Project start date is required.")
+                .Must(BeAValidStartDate).WithMessage("Start date cannot be in the past.")
+                .LessThan(DateTime.Now.AddYears(1)).WithMessage("Start date is too far in the future.");
+        }
+
+        private bool BeAValidStartDate(DateTime startDate)
+        {
+            return startDate.Date >= DateTime.Today;
+        }
+    }
 }

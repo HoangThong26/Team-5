@@ -21,7 +21,12 @@ builder.Services.AddValidatorsFromAssemblyContaining<LoginRequestValidator>();
 // Đăng ký các dịch vụ cho Topic
 builder.Services.AddScoped<ITopicRepository, TopicRepository>();
 builder.Services.AddScoped<ITopicService, TopicService>();
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.WriteIndented = true;
+    });
 builder.Services.AddSignalR(); // Đã có sẵn, rất tốt!
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -62,7 +67,11 @@ builder.Services.AddScoped<IGroupRepository, GroupRepository>();
 builder.Services.AddScoped<IGroupService, GroupService>();
 builder.Services.AddScoped<IGroupMemberRepository,GroupMemberRepository>();
 builder.Services.AddScoped<IMentorAssignmentRepository, MentorAssignmentRepository>();
-builder.Services.AddSingleton<IUserIdProvider, EmailBasedUserIdProvider>();
+builder.Services.AddSingleton<IUserIdProvider, EmailBasedUserIdProvider>(); 
+builder.Services.AddScoped<IWeeklyReportRepository, WeeklyReportRepository>(); 
+builder.Services.AddScoped<IWeeklyReportService, WeeklyReportService>();
+builder.Services.AddScoped<IWeeklyEvaluationRepository, WeeklyEvaluationRepository>();
+builder.Services.AddScoped<IWeeklyEvaluationService, WeeklyEvaluationService>();
 
 builder.Services.AddCors(options => {
     options.AddPolicy("AllowAll", builder => {
@@ -86,7 +95,7 @@ app.UseCors("AllowAll");
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseStaticFiles();
 app.MapControllers();
 
 app.MapHub<NotificationHub>("/ws/notifications");

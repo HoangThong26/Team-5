@@ -136,8 +136,6 @@ namespace CapstoneProject.API.Controllers
                     });
                 }
             }
-
-
         [HttpGet("export-students")]
         public async Task<IActionResult> ExportStudents()
         {
@@ -152,6 +150,24 @@ namespace CapstoneProject.API.Controllers
             catch (System.Exception ex)
             {
                 return StatusCode(500, new { Message = "Errol Export file Excel.", Error = ex.Message });
+            }
+        }
+
+        [HttpPost("setup-timeline")]
+        public async Task<IActionResult> SetupTimeline([FromBody] AdminSetupRequest request)
+        {
+            try
+            {
+                if (request.StartDate == default)
+                    return BadRequest(new { message = "Invalid start date." });
+
+                await _adminService.SetupTimelineAsync(request.StartDate);
+
+                return Ok(new { message = "Project timeline has been initialized successfully!" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
             }
         }
     }
