@@ -93,6 +93,15 @@ public partial class ApplicationDbContext : DbContext
 
             entity.Property(e => e.IsPublished).HasDefaultValue(false);
 
+            entity.Property(e => e.PresentationScore).HasPrecision(5, 2);
+            entity.Property(e => e.DemoScore).HasPrecision(5, 2);
+            entity.Property(e => e.QAScore).HasPrecision(5, 2);
+            entity.Property(e => e.Score).HasPrecision(5, 2);
+
+            entity.HasIndex(e => new { e.DefenseId, e.CouncilMemberId })
+          .IsUnique()
+          .HasDatabaseName("UQ_Defense_CouncilMember");
+
             entity.HasOne(d => d.CouncilMember).WithMany(p => p.DefenseScores).HasConstraintName("FK__DefenseSc__Counc__2739D489");
 
             entity.HasOne(d => d.Defense).WithMany(p => p.DefenseScores).HasConstraintName("FK__DefenseSc__Defen__2645B050");

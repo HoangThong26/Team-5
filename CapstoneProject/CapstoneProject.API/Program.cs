@@ -62,14 +62,11 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IPasswordResetTokenRepository, PasswordResetTokenRepository>();
 builder.Services.AddScoped<IGroupRepository, GroupRepository>();
 builder.Services.AddScoped<IGroupService, GroupService>();
-<<<<<<< HEAD
 builder.Services.AddScoped<IDefenseRepository, DefenseRepository>();
 builder.Services.AddScoped<IDefenseService, DefenseService>();
-=======
 builder.Services.AddScoped<IGroupMemberRepository,GroupMemberRepository>();
 builder.Services.AddScoped<IMentorAssignmentRepository, MentorAssignmentRepository>();
 builder.Services.AddSingleton<IUserIdProvider, EmailBasedUserIdProvider>();
->>>>>>> BackEnd
 
 builder.Services.AddCors(options => {
     options.AddPolicy("AllowAll", builder => {
