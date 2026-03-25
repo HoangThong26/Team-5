@@ -1,3 +1,9 @@
+<<<<<<< Updated upstream
+=======
+// 1. THÊM USING NÀY ĐỂ PROGRAM NHẬN DIỆN ĐƯỢC HUB CỦA BẠN
+using CapstoneProject.API.Hubs;
+using CapstoneProject.Application.Interface;
+>>>>>>> Stashed changes
 using CapstoneProject.Application.Interface.IRepository;
 using CapstoneProject.Application.Interface.IService;
 using CapstoneProject.Infrastructure.Database.AppDbContext;
@@ -60,6 +66,17 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IPasswordResetTokenRepository, PasswordResetTokenRepository>();
 builder.Services.AddScoped<IGroupRepository, GroupRepository>();
 builder.Services.AddScoped<IGroupService, GroupService>();
+<<<<<<< Updated upstream
+=======
+
+builder.Services.AddScoped<IDefenseRepository, DefenseRepository>();
+builder.Services.AddScoped<IDefenseService, DefenseService>();
+
+builder.Services.AddScoped<IGroupMemberRepository,GroupMemberRepository>();
+builder.Services.AddScoped<IMentorAssignmentRepository, MentorAssignmentRepository>();
+builder.Services.AddSingleton<IUserIdProvider, EmailBasedUserIdProvider>();
+builder.Services.AddScoped<ITopicSearchService, TopicSearchService>();
+>>>>>>> Stashed changes
 
 builder.Services.AddCors(options => {
     options.AddPolicy("AllowAll", builder => {
