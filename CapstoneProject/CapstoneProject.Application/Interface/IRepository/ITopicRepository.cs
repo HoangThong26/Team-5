@@ -21,5 +21,7 @@ namespace CapstoneProject.Application.Interface.IRepository
         Task<int?> GetGroupIdByTopicIdAsync(int topicId);
         Task<int> SaveChangesAsync();
         Task<string?> GetMentorEmailByGroupIdAsync(int groupId);
+        Task<IEnumerable<TopicVersion>> GetMentorBoardVersionsAsync(int mentorId);
+        Task<bool> IsTopicApprovedForGroupAsync(int groupId);
     }
 }

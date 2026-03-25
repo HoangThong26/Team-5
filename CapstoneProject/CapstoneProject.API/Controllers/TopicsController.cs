@@ -34,16 +34,13 @@ namespace CapstoneProject.API.Controllers
             {
                 var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
                 await _topicService.SubmitTopicAsync(userId, request);
-
-                // Lấy Email Mentor
                 var mentorEmail = await _topicService.GetMentorEmailByGroupId(request.GroupId);
 
                 if (!string.IsNullOrEmpty(mentorEmail))
                 {
-                    // Gửi qua SignalR bằng Email
                     await _hubContext.Clients.User(mentorEmail).SendAsync("ReceiveNotification", new
                     {
-                        type = "TOPIC_SUBMITTED", // Frontend dựa vào type này để load lại trang
+                        type = "TOPIC_SUBMITTED", 
                         message = $"Group {request.GroupId} has submitted a new topic!",
                         groupId = request.GroupId
                     });
@@ -69,7 +66,7 @@ namespace CapstoneProject.API.Controllers
                     {
                         await _hubContext.Clients.User(mentorEmail).SendAsync("ReceiveNotification", new
                         {
-                            type = "TOPIC_SUBMITTED", // Dùng chung type để Mentor tự cập nhật bảng
+                            type = "TOPIC_SUBMITTED", 
                             message = "A topic has been updated."
                         });
                     }
@@ -100,6 +97,27 @@ namespace CapstoneProject.API.Controllers
             var topics = await _topicService.GetAllTopicsForMentorAsync(mentorId);
 
             return Ok(topics);
+        }
+
+        [HttpGet("mentor-board")]
+        public async Task<IActionResult> GetMentorBoard()
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null)
+            {
+                return Unauthorized(new { Message = "Invalid token: User ID not found." });
+            }
+
+            int mentorId = int.Parse(userIdClaim.Value);
+
+            var response = await _topicService.GetMentorProposalBoardAsync(mentorId);
+
+            if (response.Success)
+            {
+                return Ok(response);
+            }
+
+            return BadRequest(response);
         }
     }
 }

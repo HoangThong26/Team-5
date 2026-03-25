@@ -1,4 +1,5 @@
 using CapstoneProject.Application.DTO;
+using CapstoneProject.Domain.Entities;
 
 namespace CapstoneProject.Application.Interface.IService
 {
@@ -12,5 +13,8 @@ namespace CapstoneProject.Application.Interface.IService
         Task<int?> GetMentorIdByGroupIdAsync(int groupId);
         Task<int?> GetGroupIdByTopicIdAsync(int topicId);
         Task<string?> GetMentorEmailByGroupId(int groupId);
-    }
+        Task<ServiceResponse<object>> GetMentorProposalBoardAsync(int mentorId);
+
+
+        }
 }

@@ -2,12 +2,7 @@
 using CapstoneProject.Application.Interface.IRepository;
 using CapstoneProject.Application.Interface.IService;
 using CapstoneProject.Domain.Entities;
-using CapstoneProject.Infrastructure.Repostitory;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CapstoneProject.Infrastructure.Services
 {
@@ -15,11 +10,14 @@ namespace CapstoneProject.Infrastructure.Services
     {
         private readonly IWeeklyReportRepository _weeklyReportRepository;
         private readonly IWebHostEnvironment _environment;
-        public WeeklyReportService(IWeeklyReportRepository weeklyReportRepository, IWebHostEnvironment environment)
+        private readonly ITopicRepository _topicRepository;
+        public WeeklyReportService(IWeeklyReportRepository weeklyReportRepository, IWebHostEnvironment environment, ITopicRepository topicRepository)
         {
             _weeklyReportRepository = weeklyReportRepository;
             _environment = environment;
+            _topicRepository = topicRepository;
         }
+
 
         public async Task<ServiceResponse<WeeklyReport>> SubmitReportAsync(int userId, WeeklyReportRequest request)
         {
@@ -27,33 +25,27 @@ namespace CapstoneProject.Infrastructure.Services
 
             try
             {
+                var isTopicApproved = await _topicRepository.IsTopicApprovedForGroupAsync(request.GroupId);
+                if (!isTopicApproved)
+                {
+                    throw new Exception("Forbidden: Your group topic is either not registered or not 'Approved' by Mentor. You cannot submit weekly reports yet.");
+                }
                 var startDateOnly = await _weeklyReportRepository.GetStartDateOfFirstWeekAsync();
                 if (startDateOnly == null)
                     throw new Exception("System Error: Project timeline has not been configured by Admin.");
 
                 DateTime startDate = startDateOnly.Value.ToDateTime(TimeOnly.MinValue);
                 DateTime now = DateTime.Now;
-
                 int currentSystemWeek = (int)Math.Floor((now - startDate).TotalDays / 7) + 1;
 
                 var targetWeek = await _weeklyReportRepository.GetWeekDefinitionByNumberAsync(request.WeekId);
                 if (targetWeek == null)
-                    throw new Exception($"Error: Week {request.WeekId} is not valid in the system.");
-
+                    throw new Exception($"Error: Week {request.WeekId} is not valid.");
                 if (request.WeekId > currentSystemWeek)
-                {
-                    throw new Exception($"Forbidden: You cannot submit for Week {request.WeekId} yet. Current progress is at Week {currentSystemWeek}.");
-                }
-
-                if (!targetWeek.EndDate.HasValue)
-                    throw new Exception("System Error: Week EndDate is missing.");
-
+                    throw new Exception($"Forbidden: You cannot submit for Week {request.WeekId} yet. Current progress is Week {currentSystemWeek}.");
                 DateTime deadline = targetWeek.EndDate.Value.ToDateTime(new TimeOnly(23, 59, 59));
                 if (now > deadline)
-                {
-                    throw new Exception($"Overdue: Deadline for Week {request.WeekId} was {targetWeek.EndDate.Value:dd/MM/yyyy}. Submission portal is closed.");
-                }
-
+                    throw new Exception($"Overdue: Deadline for Week {request.WeekId} was {targetWeek.EndDate.Value:dd/MM/yyyy}. Submission closed.");
                 var isLeader = await _weeklyReportRepository.IsLeaderAsync(request.GroupId, userId);
                 if (!isLeader)
                     throw new Exception("Access Denied: Only the Group Leader can submit reports.");
@@ -96,23 +88,18 @@ namespace CapstoneProject.Infrastructure.Services
                 }
                 else
                 {
-
                     if (existingReport.Status == "Reviewed")
-                        throw new Exception($"Locked: Report for Week {request.WeekId} is already reviewed and cannot be edited.");
+                        throw new Exception("Locked: Report is already reviewed and cannot be edited.");
 
                     existingReport.Content = request.Content;
                     existingReport.GithubLink = request.GithubLink;
-
-                    if (!string.IsNullOrEmpty(savedFileName))
-                        existingReport.FileUrl = savedFileName;
-
+                    if (!string.IsNullOrEmpty(savedFileName)) existingReport.FileUrl = savedFileName;
                     existingReport.SubmittedAt = now;
                     existingReport.Status = "Submitted";
                     response.Message = $"Report for Week {request.WeekId} updated successfully.";
                 }
 
                 await _weeklyReportRepository.SaveChangesAsync();
-
                 response.Data = existingReport;
                 response.Success = true;
             }
