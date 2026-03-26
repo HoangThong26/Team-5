@@ -1,4 +1,4 @@
-// 1. THÊM USING NÀY ĐỂ PROGRAM NHẬN DIỆN ĐƯỢC HUB CỦA BẠN
+
 using CapstoneProject.API.Hubs;
 using CapstoneProject.Application.Interface.IRepository;
 using CapstoneProject.Application.Interface.IService;
@@ -18,7 +18,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<LoginRequestValidator>();
-// Đăng ký các dịch vụ cho Topic
 builder.Services.AddScoped<ITopicRepository, TopicRepository>();
 builder.Services.AddScoped<ITopicService, TopicService>();
 builder.Services.AddControllers()
@@ -27,7 +26,7 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
         options.JsonSerializerOptions.WriteIndented = true;
     });
-builder.Services.AddSignalR(); // Đã có sẵn, rất tốt!
+builder.Services.AddSignalR();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -65,30 +64,33 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IPasswordResetTokenRepository, PasswordResetTokenRepository>();
 builder.Services.AddScoped<IGroupRepository, GroupRepository>();
 builder.Services.AddScoped<IGroupService, GroupService>();
-builder.Services.AddScoped<IGroupMemberRepository,GroupMemberRepository>();
+builder.Services.AddScoped<IGroupMemberRepository, GroupMemberRepository>();
 builder.Services.AddScoped<IMentorAssignmentRepository, MentorAssignmentRepository>();
-builder.Services.AddSingleton<IUserIdProvider, EmailBasedUserIdProvider>(); 
-builder.Services.AddScoped<IWeeklyReportRepository, WeeklyReportRepository>(); 
+builder.Services.AddSingleton<IUserIdProvider, EmailBasedUserIdProvider>();
+builder.Services.AddScoped<IWeeklyReportRepository, WeeklyReportRepository>();
 builder.Services.AddScoped<IWeeklyReportService, WeeklyReportService>();
 builder.Services.AddScoped<IWeeklyEvaluationRepository, WeeklyEvaluationRepository>();
 builder.Services.AddScoped<IWeeklyEvaluationService, WeeklyEvaluationService>();
 
-builder.Services.AddCors(options => {
-    options.AddPolicy("AllowAll", builder => {
-        builder.WithOrigins("http://localhost:4200") 
-               .AllowAnyMethod()
-               .AllowAnyHeader()
-               .AllowCredentials(); 
-    });
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowVercel",
+        policy =>
+        {
+            policy.AllowAnyOrigin()
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+        });
 });
 
 var app = builder.Build();
-app.UseCors("AllowAll");
-if (app.Environment.IsDevelopment())
+app.UseCors("AllowVercel");
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+});
 
 
 app.UseCors("AllowAll");
@@ -101,3 +103,5 @@ app.MapControllers();
 app.MapHub<NotificationHub>("/ws/notifications");
 
 app.Run();
+
+

@@ -1,12 +1,10 @@
-﻿    using CapstoneProject.Application.DTO;
-    using CapstoneProject.Application.Interface.IRepository;
-    using CapstoneProject.Application.Interface.IService;
-    using CapstoneProject.Domain.Entities;
-using CapstoneProject.Infrastructure.Repostitory;
+﻿using CapstoneProject.Application.DTO;
+using CapstoneProject.Application.Interface.IRepository;
+using CapstoneProject.Application.Interface.IService;
+using CapstoneProject.Domain.Entities;
 using ClosedXML.Excel;
 using ExcelDataReader;
 using System.Data;
-using System.Drawing;
 
 namespace CapstoneProject.Infrastructure.Services
 {
@@ -49,7 +47,7 @@ namespace CapstoneProject.Infrastructure.Services
         }
 
         public async Task DeleteAsync(int userId)
-        {   
+        {
             await _userRepository.DeleteAsync(userId);
         }
 
@@ -62,7 +60,7 @@ namespace CapstoneProject.Infrastructure.Services
             var users = await _userRepository.SearchUsersAsync(keyword);
 
             return users
-                .Where(u => u.UserId != currentUserId) 
+                .Where(u => u.UserId != currentUserId)
                 .Select(u => new AdminUserResponse
                 {
                     UserId = u.UserId,
@@ -182,4 +180,4 @@ namespace CapstoneProject.Infrastructure.Services
     }
 }
 
-    
+
