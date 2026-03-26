@@ -80,6 +80,14 @@ export class AdminDashboardComponent implements OnInit {
   successMessage = '';
   errorMessage = '';
 
+  // Group Management
+  groups: any[] = [];
+  isLoadingGroups = false;
+  viewMode: 'users' | 'groups' = 'users';
+
+  // --- THÊM BIẾN LƯU DANH SÁCH MENTOR ---
+  mentors: any[] = []; 
+
   constructor(
     private adminService: AdminService,
     private authService: AuthService,
@@ -88,6 +96,22 @@ export class AdminDashboardComponent implements OnInit {
 
   ngOnInit() {
     this.loadUsers();
+    this.loadAllStatsOnInit();
+  }
+
+  /** Load groups & mentors silently on startup so stat cards have correct data */
+  private loadAllStatsOnInit() {
+    this.adminService.getAllGroups().subscribe({
+      next: (res) => { this.groups = res; },
+      error: () => {}
+    });
+    this.adminService.getAllUsers().subscribe({
+      next: (res: any[]) => {
+        if (this.users.length === 0) this.users = res;
+        this.mentors = res.filter(u => u.role === 'Mentor');
+      },
+      error: () => {}
+    });
   }
 
   private extractError(err: any, fallback: string): string {
@@ -252,9 +276,10 @@ export class AdminDashboardComponent implements OnInit {
       }
     });
   }
+
   downloadStudentList() {
     this.isExporting = true;
-    this.errorMessage = ''; // Xóa thông báo lỗi cũ (nếu có) trước khi chạy
+    this.errorMessage = ''; 
     this.successMessage = ''; 
 
     this.adminService.exportStudents().subscribe({
@@ -269,7 +294,6 @@ export class AdminDashboardComponent implements OnInit {
         const mm = String(today.getMonth() + 1).padStart(2, '0'); 
         const yyyy = today.getFullYear();
         
-        // Đổi tên file sang tiếng Anh
         a.download = `StudentList_${dd}${mm}${yyyy}.xlsx`; 
       
         document.body.appendChild(a);
@@ -278,37 +302,29 @@ export class AdminDashboardComponent implements OnInit {
         window.URL.revokeObjectURL(url); 
         
         this.isExporting = false;
-        
-        // (Tùy chọn) Bạn có thể bật dòng dưới nếu muốn hiện thông báo thành công màu xanh
-        // this.successMessage = 'Student list exported successfully!'; 
       },
       error: (error) => {
         console.error('Error exporting Excel file:', error);
-        
-        // Sử dụng biến errorMessage thay cho alert() để đồng bộ UI
         this.errorMessage = 'An error occurred while exporting the student list!';
         this.isExporting = false;
       }
     });
   }
 
-
-  groups: any[] = [];
-  isLoadingGroups = false;
-  viewMode: 'users' | 'groups' = 'users'; // Để chuyển đổi giữa quản lý User và Group
-
-  // ... (ngOnInit) ...
-switchView(mode: 'users' | 'groups') {
-  this.viewMode = mode;
-  if (mode === 'users') {
-    // Đảm bảo users không bị rỗng, nếu rỗng thì load lại
-    if (this.users.length === 0) {
-      this.loadUsers();
+  switchView(mode: 'users' | 'groups') {
+    this.viewMode = mode;
+    this.successMessage = '';
+    this.errorMessage = '';
+    
+    if (mode === 'users') {
+      if (this.users.length === 0) {
+        this.loadUsers();
+      }
+    } else if (mode === 'groups') {
+      this.loadGroups();
+      this.loadMentors(); 
     }
-  } else if (mode === 'groups') {
-    this.loadGroups();
   }
-}
 
   loadGroups() {
     this.isLoadingGroups = true;
@@ -324,12 +340,50 @@ switchView(mode: 'users' | 'groups') {
     });
   }
 
+  loadMentors() {
+    if (this.users.length > 0) {
+      this.mentors = this.users.filter(u => u.role === 'Mentor');
+    } else {
+      this.adminService.getAllUsers().subscribe({
+        next: (res: any[]) => {
+          this.users = res;
+          this.mentors = res.filter(u => u.role === 'Mentor');
+        },
+        error: (err) => console.error('Could not load mentor list', err)
+      });
+    }
+  }
+
+  handleAssignMentor(groupId: number, mentorId: number) {
+  if (!mentorId) {
+    this.errorMessage = 'Please select a mentor first.';
+    return; 
+  }
+
+  this.isLoadingGroups = true;
+  this.successMessage = '';
+  this.errorMessage = '';
+
+  this.adminService.assignMentor(groupId, mentorId).subscribe({
+    next: (res: any) => {
+      this.isLoadingGroups = false; 
+      this.successMessage = res?.message || 'Mentor assigned successfully!';
+      this.loadGroups(); 
+    },
+    error: (err) => {
+      this.isLoadingGroups = false;
+      this.errorMessage = this.extractError(err, 'Failed to assign mentor.');
+      console.error('Lỗi từ API:', err);
+    }
+  });
+}
+
   handleKickMentor(groupId: number) {
     if (confirm('Are you sure you want to remove the mentor from this group?')) {
       this.adminService.kickMentor(groupId).subscribe({
         next: (res: any) => {
           this.successMessage = res.message;
-          this.loadGroups(); // Refresh lại danh sách
+          this.loadGroups();
         },
         error: (err) => this.errorMessage = this.extractError(err, 'Failed to kick mentor.')
       });
@@ -347,4 +401,20 @@ switchView(mode: 'users' | 'groups') {
       });
     }
   }
-}
+
+  getRoleGradient(role: string): string {
+    switch ((role || '').toLowerCase()) {
+      case 'admin':   return 'linear-gradient(135deg,#ef4444,#b91c1c)';
+      case 'mentor':  return 'linear-gradient(135deg,#7c3aed,#a855f7)';
+      case 'council': return 'linear-gradient(135deg,#d97706,#f59e0b)';
+      default:        return 'linear-gradient(135deg,#2563eb,#3b82f6)';
+    }
+  }
+
+  /** Returns full names of members beyond index 3, for the +N bubble tooltip */
+  getExtraNames(members: any[]): string {
+    if (!members || members.length <= 4) return '';
+    return members.slice(4).map((m: any) => m.fullName || 'Unknown').join(', ');
+  }
+
+}

@@ -17,7 +17,7 @@ export class LoginComponent {
   errorMessage = '';
   isLoading = false;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) { }
 
   private extractError(err: any): string {
     console.log('[Login Error]', err?.status, err?.error, err);
@@ -67,16 +67,21 @@ export class LoginComponent {
 
         // Verify token was saved
         const savedUser = this.authService.getCurrentUser();
+        console.log('[Login] Success. User context:', savedUser);
         if (!savedUser) {
           this.errorMessage = 'Failed to save session. Please try again.';
           return;
         }
-
-        // Redirect based on role (case-insensitive)
         const role = savedUser.role?.toLowerCase();
+
         if (role === 'admin') {
           this.router.navigate(['/admin']);
-        } else {
+        } else if (role === 'mentor') {
+          this.router.navigate(['/mentor-dashboard']);
+        } else if (role === 'council') {
+          this.router.navigate(['/council-dashboard']);
+        }
+        else {
           this.router.navigate(['/dashboard']);
         }
       },
