@@ -163,25 +163,25 @@
 
         <!-- Filter Tabs -->
         <div class="filter-tabs">
-          <div class="tab-item active-tab">
+          <div class="tab-item" [class.active-tab]="activeTab === 'All'" (click)="setTab('All')">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             All
             <span class="tab-count">{{ allTopics.length }}</span>
           </div>
-          <div class="tab-item">
+          <div class="tab-item" [class.active-tab]="activeTab === 'Pending'" (click)="setTab('Pending')">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             Pending
-            <span class="tab-count pending-chip">{{ countByStatus('Pending') }}</span>
+            <span class="tab-count pending-chip">{{ pendingTopics.length }}</span>
           </div>
-          <div class="tab-item">
+          <div class="tab-item" [class.active-tab]="activeTab === 'Approved'" (click)="setTab('Approved')">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>
             Approved
-            <span class="tab-count approved-chip">{{ countByStatus('Approved') }}</span>
+            <span class="tab-count approved-chip">{{ approvedTopics.length }}</span>
           </div>
-          <div class="tab-item">
+          <div class="tab-item" [class.active-tab]="activeTab === 'Rejected'" (click)="setTab('Rejected')">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
             Rejected
-            <span class="tab-count rejected-chip">{{ countByStatus('Rejected') }}</span>
+            <span class="tab-count rejected-chip">{{ rejectedTopics.length }}</span>
           </div>
         </div>
 
@@ -196,14 +196,14 @@
                 <path d="M67 68l3 3 5-5" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </div>
-            <h3>All Clear!</h3>
-            <p>No proposals are waiting for your review.</p>
+            <h3>Nothing Here!</h3>
+            <p>No proposals match the current filter.</p>
           </div>
         }
 
         <!-- Proposal Grid -->
         <div class="proposal-grid">
-          @for (topic of allTopics; track topic.topicId || topic.TopicId) {
+          @for (topic of allTopics; track topic.VersionId || topic.versionId || topic.topicId || topic) {
             <div class="p-card" (click)="selectTopic(topic)">
               <div class="p-strip" [ngClass]="getStatusClass(topic.Status || topic.status)"></div>
               <div class="p-body">
@@ -213,13 +213,13 @@
                       <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/>
                       <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
                     </svg>
-                    {{ topic.GroupName || topic.groupName || 'Unknown' }}
+                    {{ topic.TeamName || topic.teamName || topic.GroupName || topic.groupName || 'Unknown Team' }}
                   </div>
                   <span class="p-status-badge" [ngClass]="getStatusClass(topic.Status || topic.status)">
                     {{ topic.Status || topic.status }}
                   </span>
                 </div>
-                <h3 class="p-title">{{ topic.Title || topic.title }}</h3>
+                <h3 class="p-title">{{ topic.TopicName || topic.topicName || topic.Title || topic.title }}</h3>
                 <p class="p-desc">{{ (topic.Description || topic.description) || 'No description provided.' }}</p>
                 <div class="p-foot">
                   <div class="p-doc-icon">

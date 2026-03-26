@@ -28,4 +28,7 @@ getPendingTopics(): Observable<TopicDto[]> {
 approveTopic(request: TopicApprovalRequest): Observable<any> {
     return this.http.post(`${this.mentorUrl}/topics/approve`, request);
   }
+   getMentorBoardTopicVersions(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/mentor-board`);
+  }
 }

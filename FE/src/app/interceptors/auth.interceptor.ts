@@ -41,7 +41,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
           }),
           catchError((refreshError) => {
             authService.clearToken();
-            // router.navigate(['/login']);
+            router.navigate(['/login']);
             return throwError(() => refreshError);
           })
         );

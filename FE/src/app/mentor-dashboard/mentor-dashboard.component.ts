@@ -22,6 +22,21 @@ export class MentorDashboardComponent implements OnInit, OnDestroy {
   selectedTopic: any = null;
   reviewComment: string = '';
   
+  // Tab filtering
+  selectedTab: string = 'All';
+  topicBoardData: {
+    All: any[];
+    Pending: any[];
+    Approved: any[];
+    Rejected: any[];
+    [key: string]: any[];
+  } = {
+    All: [],
+    Pending: [],
+    Approved: [],
+    Rejected: []
+  };
+  
   successMessage: string = '';
   viewMode: 'topics' | 'reports' = 'topics';
   mentorName: string = 'Mentor';
@@ -100,12 +115,45 @@ export class MentorDashboardComponent implements OnInit, OnDestroy {
   }
 
   loadTopics() {
-    this.topicService.getPendingTopics().subscribe({
+    this.topicService.getMentorBoardTopicVersions().subscribe({
       next: (res: any) => {
-        this.allTopics = res;
+        const success = res.success || res.Success;
+        const data = res.data || res.Data;
+
+        if (success && data) {
+          this.topicBoardData = {
+            All: data.All || data.all || [],
+            Pending: data.Pending || data.pending || [],
+            Approved: data.Approved || data.approved || [],
+            Rejected: data.Rejected || data.rejected || []
+          };
+          this.allTopics = this.topicBoardData.All;
+        } else if (Array.isArray(res)) {
+          this.allTopics = res;
+          this.topicBoardData = {
+            All: res,
+            Pending: res.filter((t: any) => {
+              const s = (t.Status || t.status || '').toLowerCase();
+              return s === 'pending' || s === 'submitted';
+            }),
+            Approved: res.filter((t: any) => {
+              const s = (t.Status || t.status || '').toLowerCase();
+              return s === 'approved' || s === 'active';
+            }),
+            Rejected: res.filter((t: any) => (t.Status || t.status || '').toLowerCase() === 'rejected')
+          };
+        }
       },
       error: (err) => console.error('Lỗi API:', err)
     });
+  }
+
+  selectTab(tab: string) {
+    this.selectedTab = tab;
+  }
+
+  get displayedTopics(): any[] {
+    return this.topicBoardData[this.selectedTab] || [];
   }
 
   selectTopic(topic: any) {
@@ -115,39 +163,29 @@ export class MentorDashboardComponent implements OnInit, OnDestroy {
 
   handleApproval(status: string) {
     if (!this.selectedTopic) return;
-
+ 
     const request = {
       versionId: this.selectedTopic.VersionId || this.selectedTopic.versionId,
       topicId: this.selectedTopic.TopicId || this.selectedTopic.topicId,
       status: status,
       reviewComment: this.reviewComment
     };
-
+ 
     this.topicService.approveTopic(request).subscribe({
       next: (res) => {
-        alert('Successfull!');
-
-        const newStatus = (status === 'Approved') ? 'Active' : 'Rejected';
-        this.allTopics = this.allTopics.map((t: any) => {
-          if ((t.TopicId || t.topicId) === request.topicId) {
-            return {
-              ...t,
-              Status: newStatus,
-              status: newStatus,
-              ReviewComment: this.reviewComment
-            };
-          }
-          return t;
-        });
+        alert('Successful!');
+        this.loadTopics(); // Refresh everything from backend
+        
+        const newStatus = (status === 'Approved') ? 'Approved' : 'Rejected';
         if (this.selectedTopic) {
           this.selectedTopic.Status = newStatus;
           this.selectedTopic.status = newStatus;
         }
-
-        // Nếu bạn muốn bấm xong đóng luôn modal thì thêm dòng này:
+ 
+        // Optional: Close modal after decision
         // this.selectedTopic = null;
       },
-      error: (err) => alert('Error: ' + err.error?.message)
+      error: (err) => alert('Error: ' + (err.error?.message || 'Action failed'))
     });
   }
 
