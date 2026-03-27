@@ -138,11 +138,27 @@ namespace CapstoneProject.Infrastructure.Services
 
             try
             {
+                // 1. Tìm bản báo cáo cũ
                 var existingReport = await _weeklyReportRepository.GetByIdAsync(reportId);
                 if (existingReport == null)
                 {
                     response.Success = false;
                     response.Message = "Weekly report not found.";
+                    return response;
+                }
+
+                var targetWeek = await _weeklyReportRepository.GetWeekDefinitionByNumberAsync(existingReport.WeekId ?? 0);
+                if (targetWeek == null || !targetWeek.EndDate.HasValue)
+                {
+                    throw new Exception("System Error: Week timeline is not configured properly.");
+                }
+                DateTime now = DateTime.Now;
+                DateTime deadline = targetWeek.EndDate.Value.ToDateTime(new TimeOnly(23, 59, 59));
+
+                if (now > deadline)
+                {
+                    response.Success = false;
+                    response.Message = $"Update Failed: The deadline for Week {existingReport.WeekId} has passed ({targetWeek.EndDate.Value:dd/MM/yyyy}). Submission portal is closed.";
                     return response;
                 }
 
@@ -155,17 +171,16 @@ namespace CapstoneProject.Infrastructure.Services
 
                 if (request.ReportFile != null && request.ReportFile.Length > 0)
                 {
-                    string projectRootPath = Directory.GetCurrentDirectory();
-                    var uploadsFolder = Path.Combine(projectRootPath, "UploadedReports");
-
-                    if (!Directory.Exists(uploadsFolder))
-                    {
-                        Directory.CreateDirectory(uploadsFolder);
-                    }
-
                     var extension = Path.GetExtension(request.ReportFile.FileName).ToLower();
+                    if (extension != ".doc" && extension != ".docx")
+                        throw new Exception("Invalid file type. Only .doc and .docx are allowed.");
+
+                    string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "UploadedReports");
+                    if (!Directory.Exists(uploadsFolder)) Directory.CreateDirectory(uploadsFolder);
+
                     var fileName = $"Update_Grp{existingReport.GroupId}_W{existingReport.WeekId}_{Guid.NewGuid()}{extension}";
                     var filePath = Path.Combine(uploadsFolder, fileName);
+
                     using (var fileStream = new FileStream(filePath, FileMode.Create))
                     {
                         await request.ReportFile.CopyToAsync(fileStream);
@@ -174,10 +189,11 @@ namespace CapstoneProject.Infrastructure.Services
                     existingReport.FileUrl = fileName;
                 }
 
+                // 5. Cập nhật thông tin
                 existingReport.Content = request.Content;
                 existingReport.GithubLink = request.GithubLink;
-                existingReport.SubmittedAt = DateTime.Now;
-                existingReport.Status = "Submitted";
+                existingReport.SubmittedAt = now;
+                existingReport.Status = "Submitted"; // Reset về Submitted để Mentor biết có bản cập nhật
 
                 await _weeklyReportRepository.SaveChangesAsync();
 
