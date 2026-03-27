@@ -138,7 +138,6 @@ namespace CapstoneProject.Infrastructure.Services
 
             try
             {
-                // 1. Tìm bản báo cáo cũ
                 var existingReport = await _weeklyReportRepository.GetByIdAsync(reportId);
                 if (existingReport == null)
                 {
@@ -189,11 +188,10 @@ namespace CapstoneProject.Infrastructure.Services
                     existingReport.FileUrl = fileName;
                 }
 
-                // 5. Cập nhật thông tin
                 existingReport.Content = request.Content;
                 existingReport.GithubLink = request.GithubLink;
                 existingReport.SubmittedAt = now;
-                existingReport.Status = "Submitted"; // Reset về Submitted để Mentor biết có bản cập nhật
+                existingReport.Status = "Submitted";
 
                 await _weeklyReportRepository.SaveChangesAsync();
 
