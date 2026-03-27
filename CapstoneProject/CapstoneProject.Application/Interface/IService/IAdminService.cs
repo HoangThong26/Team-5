@@ -13,7 +13,7 @@ namespace CapstoneProject.Application.Interface.IService
         Task DeleteAsync(int userId);
         Task UnlockAccountAsync(int userId);
         Task<List<AdminUserResponse>> SearchUsersAsync(string keyword, int currentUserId);
-
+        Task SetupTimelineAsync(DateTime startDate);
         Task<int> ImportUsersFromExcelAsync(Stream excelStream);
         Task<byte[]> ExportStudentsToExcelAsync();
     }

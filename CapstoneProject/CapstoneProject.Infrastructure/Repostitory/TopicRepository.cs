@@ -131,5 +131,29 @@ namespace CapstoneProject.Infrastructure.Repostitory
                 .Select(ma => ma.Mentor.Email)
                 .FirstOrDefaultAsync();
         }
+        public async Task<IEnumerable<TopicVersion>> GetMentorBoardVersionsAsync(int mentorId)
+        {
+            return await _context.TopicVersions
+                .AsNoTracking()
+                .Include(v => v.Topic)
+                    .ThenInclude(t => t.Group)
+                .Where(v => _context.MentorAssignments
+                    .Any(ma => ma.MentorId == mentorId && ma.GroupId == v.Topic.GroupId))
+                .Where(v => v.VersionNumber == _context.TopicVersions
+                    .Where(v2 => v2.TopicId == v.TopicId)
+                    .Max(v2 => v2.VersionNumber))
+                .OrderByDescending(v => v.SubmittedAt)
+                .ToListAsync();
+        }
+        public async Task<bool> IsTopicApprovedForGroupAsync(int groupId)
+        {
+            return await _context.Topics
+                .AnyAsync(t => t.GroupId == groupId &&
+                               _context.TopicVersions
+                                   .Where(v => v.TopicId == t.TopicId)
+                                   .OrderByDescending(v => v.VersionNumber)
+                                   .Select(v => v.Status)
+                                   .FirstOrDefault() == "Approved");
+        }
     }
 }

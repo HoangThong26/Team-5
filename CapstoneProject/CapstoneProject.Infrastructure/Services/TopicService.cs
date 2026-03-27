@@ -181,5 +181,39 @@ namespace CapstoneProject.Infrastructure.Services
 
             return email;
         }
+
+        public async Task<ServiceResponse<object>> GetMentorProposalBoardAsync(int mentorId)
+        {
+            var response = new ServiceResponse<object>();
+            try
+            {
+                var versions = await _topicRepository.GetMentorBoardVersionsAsync(mentorId);
+
+                var allList = versions.Select(v => new TopicBoardDto
+                {
+                    VersionId = v.Id,
+                    TeamName = v.Topic?.Group?.GroupName ?? "No Team",
+                    TopicName = v.Topic?.Title ?? "No Topic Name",
+                    Description = v.Description,
+                    Status = v.Status,
+                    SubmittedAt = v.SubmittedAt
+                }).ToList();
+                response.Data = new
+                {
+                    All = allList,
+                    Pending = allList.Where(x => x.Status == "Submitted" || x.Status == "Pending").ToList(),
+                    Approved = allList.Where(x => x.Status == "Approved").ToList(),
+                    Rejected = allList.Where(x => x.Status == "Rejected").ToList()
+                };
+
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
     }
 }
