@@ -10,6 +10,7 @@ export class AdminService {
 
   private apiUrl = 'https://localhost:7084/api/Admin';
   private apiUrlGroup = 'https://localhost:7084/api/Groups';
+  private apiUrlAdminTimeline = 'https://localhost:7084/api/Admin/setup-timeline';
 
   constructor(private http: HttpClient) { }
 
@@ -56,5 +57,10 @@ export class AdminService {
       groupId: groupId,
       mentorId: mentorId
     });
+  }
+
+  setupTimeline(startDate: string): Observable<any> {
+    const body = { startDate: startDate };
+    return this.http.post(this.apiUrlAdminTimeline, body);
   }
 }
