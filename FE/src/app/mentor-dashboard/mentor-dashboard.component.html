@@ -163,30 +163,30 @@
 
         <!-- Filter Tabs -->
         <div class="filter-tabs">
-          <div class="tab-item" [class.active-tab]="activeTab === 'All'" (click)="setTab('All')">
+          <div class="tab-item" [class.active-tab]="selectedTab === 'All'" (click)="selectTab('All')">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             All
             <span class="tab-count">{{ allTopics.length }}</span>
           </div>
-          <div class="tab-item" [class.active-tab]="activeTab === 'Pending'" (click)="setTab('Pending')">
+          <div class="tab-item" [class.active-tab]="selectedTab === 'Pending'" (click)="selectTab('Pending')">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             Pending
-            <span class="tab-count pending-chip">{{ pendingTopics.length }}</span>
+            <span class="tab-count pending-chip">{{ topicBoardData.Pending.length }}</span>
           </div>
-          <div class="tab-item" [class.active-tab]="activeTab === 'Approved'" (click)="setTab('Approved')">
+          <div class="tab-item" [class.active-tab]="selectedTab === 'Approved'" (click)="selectTab('Approved')">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>
             Approved
-            <span class="tab-count approved-chip">{{ approvedTopics.length }}</span>
+            <span class="tab-count approved-chip">{{ topicBoardData.Approved.length }}</span>
           </div>
-          <div class="tab-item" [class.active-tab]="activeTab === 'Rejected'" (click)="setTab('Rejected')">
+          <div class="tab-item" [class.active-tab]="selectedTab === 'Rejected'" (click)="selectTab('Rejected')">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
             Rejected
-            <span class="tab-count rejected-chip">{{ rejectedTopics.length }}</span>
+            <span class="tab-count rejected-chip">{{ topicBoardData.Rejected.length }}</span>
           </div>
         </div>
 
         <!-- Empty State -->
-        @if (allTopics.length === 0) {
+        @if (displayedTopics.length === 0) {
           <div class="empty-board">
             <div class="eb-graphic">
               <svg width="90" height="90" viewBox="0 0 100 100" fill="none">
@@ -203,7 +203,7 @@
 
         <!-- Proposal Grid -->
         <div class="proposal-grid">
-          @for (topic of allTopics; track topic.VersionId || topic.versionId || topic.topicId || topic) {
+          @for (topic of displayedTopics; track topic.VersionId || topic.versionId || topic.topicId || topic) {
             <div class="p-card" (click)="selectTopic(topic)">
               <div class="p-strip" [ngClass]="getStatusClass(topic.Status || topic.status)"></div>
               <div class="p-body">

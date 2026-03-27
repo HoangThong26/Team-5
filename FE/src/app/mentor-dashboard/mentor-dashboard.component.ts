@@ -212,7 +212,7 @@ export class MentorDashboardComponent implements OnInit, OnDestroy {
   }
 
   logout() {
-    if (confirm('Do you want to logou?')) {
+    if (confirm('Do you want to logout?')) {
       this.authService.logout().subscribe({
         next: () => this.router.navigate(['/login']),
         error: () => {
