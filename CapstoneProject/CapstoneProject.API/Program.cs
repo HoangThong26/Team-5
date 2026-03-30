@@ -1,24 +1,24 @@
-<<<<<<< Updated upstream
-=======
-// 1. THÊM USING NÀY ĐỂ PROGRAM NHẬN DIỆN ĐƯỢC HUB CỦA BẠN
-using CapstoneProject.API.Hubs;
+
 using CapstoneProject.Application.Interface;
->>>>>>> Stashed changes
+using CapstoneProject.API.Hubs;
+
 using CapstoneProject.Application.Interface.IRepository;
 using CapstoneProject.Application.Interface.IService;
+using CapstoneProject.Application.Service;
 using CapstoneProject.Infrastructure.Database.AppDbContext;
+using CapstoneProject.Infrastructure.Repository;
 using CapstoneProject.Infrastructure.Repostitory;
 using CapstoneProject.Infrastructure.Services;
 using CapstoneProject.Infrastructure.Validation;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using FluentValidation;
-using FluentValidation.AspNetCore;
-
-// 1. THÊM USING NÀY ĐỂ PROGRAM NHẬN DIỆN ĐƯỢC HUB CỦA BẠN
-using CapstoneProject.API.Hubs;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,7 +27,13 @@ builder.Services.AddValidatorsFromAssemblyContaining<LoginRequestValidator>();
 // Đăng ký các dịch vụ cho Topic
 builder.Services.AddScoped<ITopicRepository, TopicRepository>();
 builder.Services.AddScoped<ITopicService, TopicService>();
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString;
+    });
 builder.Services.AddSignalR(); // Đã có sẵn, rất tốt!
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -66,9 +72,6 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IPasswordResetTokenRepository, PasswordResetTokenRepository>();
 builder.Services.AddScoped<IGroupRepository, GroupRepository>();
 builder.Services.AddScoped<IGroupService, GroupService>();
-<<<<<<< Updated upstream
-=======
-
 builder.Services.AddScoped<IDefenseRepository, DefenseRepository>();
 builder.Services.AddScoped<IDefenseService, DefenseService>();
 
@@ -76,24 +79,35 @@ builder.Services.AddScoped<IGroupMemberRepository,GroupMemberRepository>();
 builder.Services.AddScoped<IMentorAssignmentRepository, MentorAssignmentRepository>();
 builder.Services.AddSingleton<IUserIdProvider, EmailBasedUserIdProvider>();
 builder.Services.AddScoped<ITopicSearchService, TopicSearchService>();
->>>>>>> Stashed changes
+builder.Services.AddScoped<IDefenseRepository, DefenseRepository>();
+builder.Services.AddScoped<IDefenseService, DefenseService>();
+builder.Services.AddScoped<IGroupMemberRepository, GroupMemberRepository>();
+builder.Services.AddScoped<IMentorAssignmentRepository, MentorAssignmentRepository>();
+builder.Services.AddScoped<IWeeklyReportRepository, WeeklyReportRepository>();
+builder.Services.AddScoped<IWeeklyReportService, WeeklyReportService>();
+builder.Services.AddScoped<IWeeklyEvaluationRepository, WeeklyEvaluationRepository>();
+builder.Services.AddScoped<IWeeklyEvaluationService, WeeklyEvaluationService>();
+builder.Services.AddSingleton<IUserIdProvider, EmailBasedUserIdProvider>();
 
-builder.Services.AddCors(options => {
-    options.AddPolicy("AllowAll", builder => {
-        builder.WithOrigins("http://localhost:4200") 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", builder =>
+    {
+        builder.WithOrigins("http://localhost:4200")
                .AllowAnyMethod()
                .AllowAnyHeader()
-               .AllowCredentials(); 
+               .AllowCredentials();
     });
 });
 
 var app = builder.Build();
-
+app.UseCors("AllowAll");
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 
 app.UseCors("AllowAll");
 app.UseHttpsRedirection();

@@ -1,4 +1,4 @@
-﻿using CapstoneProject.Application.DTO;
+using CapstoneProject.Application.DTO;
 using CapstoneProject.Application.Interface.IRepository;
 using CapstoneProject.Application.Interface.IService;
 using CapstoneProject.Domain.Entities;
@@ -16,8 +16,17 @@ namespace CapstoneProject.Infrastructure.Services
 
         public async Task SubmitTopicAsync(int userId, TopicSubmitRequest request)
         {
-            var isMember = await _topicRepository.IsUserInGroupAsync(request.GroupId, userId);
-            if (!isMember) throw new Exception("You are not a member of this group.");
+            var isLeader = await _topicRepository.IsGroupLeaderAsync(request.GroupId, userId);
+            if (!isLeader)
+            {
+                throw new Exception("Access Denied: Only the Group Leader has permission to submit or update the topic.");
+            }
+
+            var hasMentor = await _topicRepository.HasMentorAssignedAsync(request.GroupId);
+            if (!hasMentor)
+            {
+                throw new Exception("Assignment Error: Your group has not been assigned a mentor yet. Please contact the Admin.");
+            }
 
             var topic = await _topicRepository.GetByGroupIdAsync(request.GroupId);
 
@@ -36,13 +45,16 @@ namespace CapstoneProject.Infrastructure.Services
             }
             else
             {
-                if (topic.Status == "Approved" || topic.Status == "Active")
-                    throw new Exception("Topic already approved. Cannot resubmit.");
+                string[] finalizedStatuses = { "Approved", "Active", "Completed" };
+                if (finalizedStatuses.Contains(topic.Status))
+                {
+                    throw new Exception("Submission Blocked: This topic has already been approved or is currently active. Changes are no longer allowed.");
+                }
 
                 topic.CurrentVersion += 1;
                 topic.Title = request.Title;
                 topic.Description = request.Description;
-                topic.Status = "Pending";
+                topic.Status = "Pending"; 
             }
 
             await _topicRepository.SaveChangesAsync();
@@ -53,9 +65,10 @@ namespace CapstoneProject.Infrastructure.Services
                 VersionNumber = topic.CurrentVersion,
                 Title = request.Title,
                 Description = request.Description,
-                Status = "Submitted",
+                Status = "Submitted", 
                 SubmittedAt = DateTime.UtcNow
             };
+
             await _topicRepository.AddVersionAsync(version);
             await _topicRepository.SaveChangesAsync();
         }
@@ -68,14 +81,11 @@ namespace CapstoneProject.Infrastructure.Services
             var isMember = await _topicRepository.IsUserInGroupAsync(topic.GroupId ?? 0, userId);
             if (!isMember) throw new Exception("You are not authorized to edit this topic.");
 
-            // Rule US-12: Only allow editing if status is Pending
             if (topic.Status != "Pending")
                 throw new Exception("Only topics with 'Pending' status can be edited.");
 
             topic.Title = request.Title;
             topic.Description = request.Description;
-
-            // Update the latest version as well
             var latestVersion = await _topicRepository.GetLatestVersionAsync(topicId);
             if (latestVersion != null && latestVersion.Status == "Submitted")
             {
@@ -88,25 +98,122 @@ namespace CapstoneProject.Infrastructure.Services
 
         public async Task<TopicDto?> GetTopicByGroupIdAsync(int groupId)
         {
-            // Giả sử bạn có ITopicRepository đã được inject
             var topic = await _topicRepository.GetByGroupIdAsync(groupId);
-
             if (topic == null) return null;
+            var latestVersion = await _topicRepository.GetLatestVersionAsync(topic.TopicId);
 
-            // Chuyển đổi từ Entity sang DTO (Bạn tự viết hoặc dùng AutoMapper)
             return new TopicDto
             {
                 TopicId = topic.TopicId,
                 GroupId = topic.GroupId ?? 0,
                 Title = topic.Title ?? string.Empty,
                 Description = topic.Description ?? string.Empty,
-                Status = topic.Status ?? string.Empty
+                Status = topic.Status ?? string.Empty,
+                ReviewComment = latestVersion?.ReviewComment,
+                VersionId = latestVersion?.Id ?? 0
             };
         }
 
         public async Task ApproveTopicAsync(int reviewerId, TopicApprovalRequest request)
         {
-            // Existing approval logic...
+            var version = await _topicRepository.GetVersionByIdAsync(request.VersionId);
+            if (version == null) throw new Exception("Topic version not found.");
+            var topic = await _topicRepository.GetByIdAsync(version.TopicId.Value);
+            if (topic == null) throw new Exception("Original topic not found.");
+
+            var isMentor = await _topicRepository.IsMentorOfGroupAsync(topic.GroupId ?? 0, reviewerId);
+            if (!isMentor) throw new Exception("Access denied. You are not authorized to review this group's topic.");
+
+            if (request.Status == "Approved")
+            {
+                topic.Status = "Approved";    
+                version.Status = "Approved"; 
+            }
+            else if (request.Status == "Rejected")
+            {
+                topic.Status = "Rejected";   
+                version.Status = "Rejected"; 
+            }
+            else
+            {
+                throw new Exception("The approval status is invalid.");
+            }
+            version.ReviewedBy = reviewerId;
+            version.ReviewComment = request.ReviewComment;
+
+            await _topicRepository.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<TopicDto>> GetAllTopicsForMentorAsync(int mentorId)
+        {
+            var versions = await _topicRepository.GetTopicVersionsByMentorAsync(mentorId);
+
+            return versions.Select(v => new TopicDto
+            {
+                TopicId = v.TopicId ?? 0,
+                VersionId = v.Id,
+                Title = v.Title,
+                Description = v.Description,
+                Status = v.Topic?.Status ?? "Pending",
+                SubmittedAt = v.SubmittedAt,
+                GroupId = v.Topic?.GroupId ?? 0,
+                GroupName = v.Topic?.Group?.GroupName ?? "N/A"
+            });
+        }
+
+        public async Task<int?> GetMentorIdByGroupIdAsync(int groupId)
+        {
+            return await _topicRepository.GetMentorIdByGroupIdAsync(groupId);
+        }
+
+        public async Task<int?> GetGroupIdByTopicIdAsync(int topicId)
+        {
+            return await _topicRepository.GetGroupIdByTopicIdAsync(topicId);
+        }
+        public async Task<string?> GetMentorEmailByGroupId(int groupId)
+        {
+            var email = await _topicRepository.GetMentorEmailByGroupIdAsync(groupId);
+
+            if (string.IsNullOrEmpty(email))
+            {
+                return null;
+            }
+
+            return email;
+        }
+
+        public async Task<ServiceResponse<object>> GetMentorProposalBoardAsync(int mentorId)
+        {
+            var response = new ServiceResponse<object>();
+            try
+            {
+                var versions = await _topicRepository.GetMentorBoardVersionsAsync(mentorId);
+
+                var allList = versions.Select(v => new TopicBoardDto
+                {
+                    VersionId = v.Id,
+                    TeamName = v.Topic?.Group?.GroupName ?? "No Team",
+                    TopicName = v.Topic?.Title ?? "No Topic Name",
+                    Description = v.Description,
+                    Status = v.Status,
+                    SubmittedAt = v.SubmittedAt
+                }).ToList();
+                response.Data = new
+                {
+                    All = allList,
+                    Pending = allList.Where(x => x.Status == "Submitted" || x.Status == "Pending").ToList(),
+                    Approved = allList.Where(x => x.Status == "Approved").ToList(),
+                    Rejected = allList.Where(x => x.Status == "Rejected").ToList()
+                };
+
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = ex.Message;
+            }
+            return response;
         }
     }
 }

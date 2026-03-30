@@ -208,5 +208,41 @@ namespace CapstoneProject.API.Controllers
 
             return StatusCode(500, new { message = result });
         }
+
+        [HttpPost("admin/assign-mentor")]
+        [Authorize(Roles = "Admin")]
+        [HttpPost("assign-mentor")]
+        public async Task<IActionResult> AssignMentor([FromBody] AssignMentorDto request)
+        {
+            if (request == null || request.GroupId <= 0 || request.MentorId <= 0)
+            {
+                return BadRequest(new { message = "Invalid Group ID or Mentor ID." });
+            }
+
+            try
+            {
+                string result = await _groupService.AssignMentorAsync(request.GroupId, request.MentorId);
+
+                if (result == "SUCCESS")
+                {
+                    return Ok(new
+                    {
+                        message = "Mentor assigned successfully!",
+                        status = "Active"
+                    });
+                }
+
+                if (result == "Group not found.")
+                {
+                    return NotFound(new { message = result });
+                }
+
+                return BadRequest(new { message = result });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Internal server error: " + ex.Message });
+            }
+        }
     }
 }
