@@ -14,17 +14,19 @@ namespace CapstoneProject.API.Controllers
     public class TopicsController : ControllerBase
     {
         private readonly ITopicService _topicService;
-        private readonly IGroupService _groupService; 
+        private readonly IGroupService _groupService;
         private readonly IHubContext<NotificationHub> _hubContext;
+        private readonly ITopicAiService _topicAiService;
 
         public TopicsController(
             ITopicService topicService,
             IGroupService groupService,
-            IHubContext<NotificationHub> hubContext)
+            IHubContext<NotificationHub> hubContext, ITopicAiService topicAiService)
         {
             _topicService = topicService;
             _groupService = groupService;
             _hubContext = hubContext;
+            _topicAiService = topicAiService;
         }
 
         [HttpPost("submit")]
@@ -40,7 +42,7 @@ namespace CapstoneProject.API.Controllers
                 {
                     await _hubContext.Clients.User(mentorEmail).SendAsync("ReceiveNotification", new
                     {
-                        type = "TOPIC_SUBMITTED", 
+                        type = "TOPIC_SUBMITTED",
                         message = $"Group {request.GroupId} has submitted a new topic!",
                         groupId = request.GroupId
                     });
@@ -66,7 +68,7 @@ namespace CapstoneProject.API.Controllers
                     {
                         await _hubContext.Clients.User(mentorEmail).SendAsync("ReceiveNotification", new
                         {
-                            type = "TOPIC_SUBMITTED", 
+                            type = "TOPIC_SUBMITTED",
                             message = "A topic has been updated."
                         });
                     }
@@ -92,7 +94,7 @@ namespace CapstoneProject.API.Controllers
         [HttpGet("mentor/all-topics")]
         [Authorize(Roles = "Mentor")]
         public async Task<IActionResult> GetPendingTopics()
-        { 
+        {
             var mentorId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             var topics = await _topicService.GetAllTopicsForMentorAsync(mentorId);
 
@@ -118,6 +120,31 @@ namespace CapstoneProject.API.Controllers
             }
 
             return BadRequest(response);
+        }
+
+        [HttpPost("suggest")]
+        public async Task<IActionResult> SuggestTopics([FromBody] TopicRequest request)
+        {
+            try
+            {
+                // Gọi service xử lý AI
+                var result = await _topicAiService.GenerateTopicsForSubmissionAsync(request.Keywords);
+
+                // Trả về JSON chuẩn cho Frontend
+                return Ok(new
+                {
+                    success = true,
+                    message = result
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = ex.Message
+                });
+            }
         }
     }
 }
