@@ -12,7 +12,7 @@ import { GroupService, GroupDetailResponse } from '../services/group.service';
 import { WebsocketService } from '../services/websocket.service';
 import { TopicService } from '../services/topic.service';
 import { WeeklyReportService } from '../services/weekly-report.service';
-import {WeeklyReportHistoryDto} from '../models/weekly-report.model'
+import { WeeklyReportHistoryDto } from '../models/weekly-report.model'
 import { WeeklyEvaluationService } from '../services/weekly-evaluation.service';
 
 @Component({
@@ -86,6 +86,12 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
   editingReportId: number | null = null;
   selectedReportFile: File | null = null;
   isFileReading: boolean = false;
+
+  // AI Suggestions
+  chatMessages: any[] = [];
+  isSuggestingTopics: boolean = false;
+  showAISuggestions: boolean = false;
+  aiQuery: string = '';
 
 
   // ==========================================
@@ -261,7 +267,7 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
 
     const content = this.reportContent.trim();
     const githubLink = this.reportGithubLink.trim();
-    
+
     // Validation for all fields
     if (!content) {
       alert('Please enter report content.');
@@ -277,16 +283,16 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
     }
 
     this.isReportLoading = true;
-    
+
     const formData = new FormData();
     formData.append('GroupId', this.myGroup.groupId.toString());
     formData.append('Content', this.reportContent);
     formData.append('WeekId', this.reportWeek.toString());
-    
+
     if (this.reportGithubLink) {
       formData.append('GithubLink', this.reportGithubLink);
     }
-    
+
     if (this.selectedReportFile) {
       formData.append('ReportFile', this.selectedReportFile, this.selectedReportFile.name);
     }
@@ -296,7 +302,7 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
         next: (res: any) => {
           const isSuccess = res.success !== undefined ? res.success : res.Success;
           const msg = res.message || res.Message || 'Weekly report updated successfully!';
-          
+
           if (isSuccess === false) {
             this.isReportLoading = false;
             alert(msg);
@@ -314,7 +320,7 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
         next: (res: any) => {
           const isSuccess = res.success !== undefined ? res.success : res.Success;
           const msg = res.message || res.Message || 'Weekly report submitted successfully!';
-          
+
           if (isSuccess === false) {
             this.isReportLoading = false;
             alert(msg);
@@ -349,11 +355,11 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
       const file = input.files[0];
-      
+
       // Validate file extension
       const allowedExtensions = ['.doc', '.docx'];
       const fileExtension = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
-      
+
       if (!allowedExtensions.includes(fileExtension)) {
         alert('Only Word documents (.doc or .docx) are allowed.');
         input.value = ''; // Reset input
@@ -398,31 +404,31 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
       }
     });
   }
-selectHistoryItem(report: any) {
-  this.selectedReport = report;
-  this.isReportAdding = false; // Tắt form nộp bài nếu đang mở để xem chi tiết
-  
-  // Focus or scroll to detail view if needed
-  const status = (report.status || report.Status || '').toLowerCase();
-  if (status === 'reviewed') {
-    const reportId = report.reportId || report.ReportId;
-    if (reportId) {
-      this.weeklyEvaluationService.getEvaluation(reportId).subscribe({
-        next: (evRes: any) => {
-          this.selectedReport = {
-            ...this.selectedReport,
-            score: evRes.score || evRes.Score,
-            isPass: evRes.isPass !== undefined ? evRes.isPass : evRes.IsPass,
-            mentorComment: evRes.comment || evRes.Comment,
-            mentorName: evRes.mentorName || evRes.MentorName,
-            reviewedAt: evRes.reviewedAt || evRes.ReviewedAt
-          };
-        },
-        error: (err) => console.error('Failed to load evaluation details', err)
-      });
+  selectHistoryItem(report: any) {
+    this.selectedReport = report;
+    this.isReportAdding = false; // Tắt form nộp bài nếu đang mở để xem chi tiết
+
+    // Focus or scroll to detail view if needed
+    const status = (report.status || report.Status || '').toLowerCase();
+    if (status === 'reviewed') {
+      const reportId = report.reportId || report.ReportId;
+      if (reportId) {
+        this.weeklyEvaluationService.getEvaluation(reportId).subscribe({
+          next: (evRes: any) => {
+            this.selectedReport = {
+              ...this.selectedReport,
+              score: evRes.score || evRes.Score,
+              isPass: evRes.isPass !== undefined ? evRes.isPass : evRes.IsPass,
+              mentorComment: evRes.comment || evRes.Comment,
+              mentorName: evRes.mentorName || evRes.MentorName,
+              reviewedAt: evRes.reviewedAt || evRes.ReviewedAt
+            };
+          },
+          error: (err) => console.error('Failed to load evaluation details', err)
+        });
+      }
     }
   }
-}
   getStatusColor(status: string): string {
     const s = (status || '').toLowerCase();
     if (s === 'reviewed') return '#10b981'; // Xanh lá
@@ -491,13 +497,29 @@ selectHistoryItem(report: any) {
     this.reportFileUrl = '';
   }
 
-
-
   ngOnInit() {
     if (this.isBrowser) {
       this.loadProfile();
       this.loadMyGroup();
       this.loadMyGroupSilently();
+
+      // Load AI Chat History
+      const savedChat = localStorage.getItem('ai_chat_history');
+      if (savedChat) {
+        try {
+          this.chatMessages = JSON.parse(savedChat);
+        } catch (e) {
+          this.chatMessages = [];
+        }
+      }
+      
+      if (this.chatMessages.length === 0) {
+        this.chatMessages.push({
+          role: 'assistant',
+          content: "Hello! I'm your ThesisPro Assistant. How can I help you today? You can ask for project ideas or tech advice.",
+          timestamp: new Date()
+        });
+      }
 
       const currentUser = this.getCurrentUser();
       const userId = currentUser?.email;
@@ -543,8 +565,6 @@ selectHistoryItem(report: any) {
   toggleSidebar() {
     this.sidebarCollapsed = !this.sidebarCollapsed;
   }
-
-
 
   handleCreateGroup() {
     if (!this.newGroupName.trim()) {
@@ -921,9 +941,102 @@ selectHistoryItem(report: any) {
     });
   }
 
+  aiError: string | null = null;
 
+  // ===== AI Topic Suggestions =====
+  toggleAIChat() {
+    this.showAISuggestions = !this.showAISuggestions;
+    if (this.showAISuggestions && this.chatMessages.length === 0) {
+      this.chatMessages = [{
+        role: 'assistant',
+        content: "Hello! I'm your ThesisPro Assistant. How can I help you today? You can ask for project ideas or tech advice.",
+        timestamp: new Date()
+      }];
+    }
+  }
 
+  closeAISuggestions() {
+    this.showAISuggestions = false;
+  }
 
+  fetchAISuggestions() {
+    const query = this.aiQuery.trim();
+    if (!query) return;
 
+    // 1. Append User Message
+    this.chatMessages = [...this.chatMessages, {
+      role: 'user',
+      content: query,
+      timestamp: new Date()
+    }];
+
+    this.saveChatHistory();
+    this.isSuggestingTopics = true;
+    this.showAISuggestions = true;
+    this.aiQuery = '';
+    this.aiError = null;
+
+    this.topicService.suggestTopics(query).subscribe({
+      next: (res: any) => {
+        this.isSuggestingTopics = false;
+        
+        let rawContent = typeof res === 'string' ? res : (res.message || res.Message || JSON.stringify(res));
+        let aiMsg: any = {
+          role: 'assistant',
+          timestamp: new Date()
+        };
+
+        // CHECK: If it matches JSON Array
+        const trimmed = rawContent.trim();
+        if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
+          try {
+            aiMsg.suggestions = JSON.parse(trimmed);
+            aiMsg.content = "I found these top-rated project topics for you:";
+          } catch (e) {
+            aiMsg.content = rawContent;
+          }
+        } else {
+          aiMsg.content = rawContent;
+        }
+
+        this.chatMessages = [...this.chatMessages, aiMsg];
+        this.saveChatHistory();
+        this.scrollToBottom();
+      },
+      error: (err) => {
+        console.error('API Error:', err);
+        this.isSuggestingTopics = false;
+        this.chatMessages = [...this.chatMessages, {
+          role: 'error',
+          content: 'Oops! AI is currently unavailable. Please check your backend connection.',
+          timestamp: new Date()
+        }];
+        this.saveChatHistory();
+      }
+    });
+  }
+
+  private saveChatHistory() {
+    if (this.isBrowser) {
+      localStorage.setItem('ai_chat_history', JSON.stringify(this.chatMessages));
+    }
+  }
+
+  clearChatHistory() {
+    this.chatMessages = [];
+    if (this.isBrowser) {
+      localStorage.removeItem('ai_chat_history');
+    }
+    this.toggleAIChat(); // Opens and adds welcome msg
+  }
+
+  private scrollToBottom() {
+    setTimeout(() => {
+      const container = document.querySelector('.custom-scrollbar');
+      if (container) {
+        container.scrollTop = container.scrollHeight;
+      }
+    }, 100);
+  }
 }
 
