@@ -1,35 +1,54 @@
-﻿using CapstoneProject.Application.DTO;
+﻿using Microsoft.AspNetCore.Mvc;
+using CapstoneProject.Application.DTO;
 using CapstoneProject.Application.Interface;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace CapstoneProject.API.Controllers
 {
-    [Route("api/topics-search")] // Tạo đường dẫn API riêng không đụng chạm đến API cũ
+    [Route("api/topics-search")]
     [ApiController]
     public class TopicSearchController : ControllerBase
     {
-        private readonly ITopicSearchService _searchService;
+        private readonly ITopicSearchService _topicSearchService;
 
-        public TopicSearchController(ITopicSearchService searchService)
+        public TopicSearchController(ITopicSearchService topicSearchService)
         {
-            _searchService = searchService;
+            _topicSearchService = topicSearchService;
         }
 
-        // Endpoint này dành riêng cho chức năng Search Global của Admin
+        // ==========================================
+        // 1. API DÀNH CHO ADMIN (Xem toàn bộ)
+        // ==========================================
         [HttpGet("admin")]
-        // [Authorize(Roles = "Admin")] // Bạn có thể mở comment dòng này sau khi test FE thành công để bảo mật
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> SearchGlobal([FromQuery] TopicSearchRequest request)
         {
-            try
+            var result = await _topicSearchService.SearchGlobalAsync(request);
+            return Ok(result);
+        }
+
+        // ==========================================
+        // 2. API DÀNH CHO MENTOR (Chỉ xem nhóm mình)
+        // ==========================================
+        [HttpGet("mentor")]
+        [Authorize(Roles = "Mentor")]
+        public async Task<IActionResult> SearchForMentor([FromQuery] TopicSearchRequest request)
+        {
+            // Bóc tách ID của Mentor từ Token một cách tự động và bảo mật
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                           ?? User.FindFirst("id")?.Value
+                           ?? User.FindFirst("UserId")?.Value;
+
+            if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out int currentMentorId))
             {
-                var result = await _searchService.SearchGlobalAsync(request);
-                return Ok(result);
+                return Unauthorized(new { message = "Không xác định được danh tính Mentor từ Token. Vui lòng đăng nhập lại." });
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { Message = "Lỗi hệ thống khi tìm kiếm", Details = ex.Message });
-            }
+
+            // Truyền ID lấy từ Token xuống Service
+            var result = await _topicSearchService.SearchForMentorAsync(request, currentMentorId);
+
+            return Ok(result);
         }
     }
 }

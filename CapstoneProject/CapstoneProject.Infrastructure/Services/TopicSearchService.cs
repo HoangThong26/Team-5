@@ -89,5 +89,74 @@ namespace CapstoneProject.Infrastructure.Services
                 TotalPages = (int)Math.Ceiling(totalRecords / (double)request.PageSize)
             };
         }
+
+        public async Task<object> SearchForMentorAsync(TopicSearchRequest request, int currentMentorId)
+        {
+            // 1. Dựng Query gốc (GIỐNG ADMIN) nhưng ÉP BUỘC ĐIỀU KIỆN MENTOR ID
+            var query = _context.Topics
+                .Include(t => t.Group)
+                    .ThenInclude(g => g.Leader)
+                .Include(t => t.Group)
+                    .ThenInclude(g => g.MentorAssignment)
+                        .ThenInclude(ma => ma.Mentor)
+                .AsNoTracking()
+                // BẢO MẬT: Chỉ lấy đề tài mà Mentor này đang hướng dẫn
+                .Where(t => t.Group != null
+                         && t.Group.MentorAssignment != null
+                         && t.Group.MentorAssignment.MentorId == currentMentorId)
+                .AsQueryable();
+
+            // ================= 2. NGHIỆP VỤ LỌC (FILTER) =================
+            // (Mentor tự lọc trong danh sách của mình, ví dụ xem nhóm nào đang Pending)
+            if (!string.IsNullOrWhiteSpace(request.Status))
+            {
+                query = query.Where(t => t.Status == request.Status.Trim());
+            }
+
+            // Bỏ qua lọc theo MentorId của request vì ta đã khóa cứng currentMentorId ở trên rồi
+
+            // ================= 3. NGHIỆP VỤ TÌM KIẾM (SEARCH) =================
+            if (!string.IsNullOrWhiteSpace(request.Keyword))
+            {
+                var k = request.Keyword.Trim().ToLower();
+                bool isNumeric = int.TryParse(k, out int topicId);
+
+                query = query.Where(t =>
+                    (isNumeric && t.TopicId == topicId) ||
+                    (t.Title != null && t.Title.ToLower().Contains(k)) ||
+                    (t.Group != null && t.Group.Leader != null && t.Group.Leader.FullName.ToLower().Contains(k))
+                );
+            }
+
+            // ================= 4. SẮP XẾP & PHÂN TRANG =================
+            int totalRecords = await query.CountAsync();
+
+            var data = await query
+                .OrderByDescending(t => t.CreatedAt) // Mới nhất lên đầu
+                .Skip((request.PageIndex - 1) * request.PageSize)
+                .Take(request.PageSize)
+                .Select(t => new TopicSearchResponse
+                {
+                    TopicId = t.TopicId,
+                    Title = t.Title,
+                    TitleEn = "", // DB chưa có nên để rỗng
+                    Status = t.Status,
+                    GroupId = t.GroupId,
+                    LeaderName = t.Group != null && t.Group.Leader != null ? t.Group.Leader.FullName : "N/A",
+                    // Đã là API của Mentor thì tên Mentor chắc chắn là tên của chính họ
+                    MentorName = t.Group!.MentorAssignment!.Mentor!.FullName,
+                    CreatedAt = t.CreatedAt
+                })
+                .ToListAsync();
+
+            return new
+            {
+                Data = data,
+                TotalRecords = totalRecords,
+                PageIndex = request.PageIndex,
+                PageSize = request.PageSize,
+                TotalPages = (int)Math.Ceiling(totalRecords / (double)request.PageSize)
+            };
+        }
     }
 }
