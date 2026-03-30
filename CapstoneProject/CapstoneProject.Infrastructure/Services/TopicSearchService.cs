@@ -1,6 +1,5 @@
 ﻿using CapstoneProject.Application.DTO;
 using CapstoneProject.Application.Interface;
-using CapstoneProject.Infrastructure.Database; // Thay bằng namespace trỏ tới file DbContext của bạn nếu khác
 using CapstoneProject.Infrastructure.Database.AppDbContext;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,7 +7,7 @@ namespace CapstoneProject.Infrastructure.Services
 {
     public class TopicSearchService : ITopicSearchService
     {
-        private readonly ApplicationDbContext _context; // Đổi 'CapstoneDbContext' thành tên DbContext thật của team bạn
+        private readonly ApplicationDbContext _context;
 
         public TopicSearchService(ApplicationDbContext context)
         {
@@ -17,54 +16,73 @@ namespace CapstoneProject.Infrastructure.Services
 
         public async Task<object> SearchGlobalAsync(TopicSearchRequest request)
         {
-            // 1. Khởi tạo Query kết nối các bảng: Topics -> Groups -> Users (để lấy Leader)
+            // 1. Khởi tạo Query và Join các bảng liên quan
             var query = _context.Topics
                 .Include(t => t.Group)
                     .ThenInclude(g => g.Leader)
+                .Include(t => t.Group)
+                    .ThenInclude(g => g.MentorAssignment)
+                        .ThenInclude(ma => ma.Mentor)
                 .AsNoTracking()
                 .AsQueryable();
 
-            // 2. Xử lý logic TÌM KIẾM QUÉT QUA NHIỀU CỘT
+            // ================= 2. NGHIỆP VỤ LỌC (FILTER) =================
+
+            // Chỉ lọc những cột chắc chắn có trong DB
+            if (!string.IsNullOrWhiteSpace(request.Status))
+            {
+                query = query.Where(t => t.Status == request.Status.Trim());
+            }
+
+            if (request.MentorId.HasValue)
+            {
+                query = query.Where(t => t.Group != null
+                    && t.Group.MentorAssignment != null
+                    && t.Group.MentorAssignment.MentorId == request.MentorId.Value);
+            }
+
+            // ĐÃ LƯỢC BỎ: Lọc theo SemesterId và MajorId vì DB chưa có cột này.
+
+            // ================= 3. NGHIỆP VỤ TÌM KIẾM (SEARCH) =================
+
             if (!string.IsNullOrWhiteSpace(request.Keyword))
             {
-                var keyword = request.Keyword.Trim().ToLower();
-                bool isNumeric = int.TryParse(keyword, out int topicIdSearch);
+                var k = request.Keyword.Trim().ToLower();
+                bool isNumeric = int.TryParse(k, out int topicId);
 
+                // ĐÃ LƯỢC BỎ: t.TitleEn. Chỉ tìm trên ID, Title (Tiếng Việt) và Tên Nhóm trưởng
                 query = query.Where(t =>
-                    // Tìm theo Mã đề tài (chỉ chạy nếu keyword là số)
-                    (isNumeric && t.TopicId == topicIdSearch) ||
-
-                    // Tìm theo Tên đề tài (Tiếng Việt/Anh chung 1 cột Title)
-                    (t.Title != null && t.Title.ToLower().Contains(keyword)) ||
-
-                    // Tìm theo Tên nhóm trưởng
-                    (t.Group != null && t.Group.Leader != null && t.Group.Leader.FullName.ToLower().Contains(keyword))
+                    (isNumeric && t.TopicId == topicId) ||
+                    (t.Title != null && t.Title.ToLower().Contains(k)) ||
+                    (t.Group != null && t.Group.Leader != null && t.Group.Leader.FullName.ToLower().Contains(k))
                 );
             }
 
-            // 3. Đếm tổng số lượng để FE làm phân trang
+            // ================= 4. SẮP XẾP & PHÂN TRANG =================
+
             int totalRecords = await query.CountAsync();
 
-            // 4. Sắp xếp, cắt trang và Map ra DTO
-            var topics = await query
-                .OrderByDescending(t => t.CreatedAt)
+            var data = await query
+                .OrderByDescending(t => t.CreatedAt) // Mới nhất lên đầu
                 .Skip((request.PageIndex - 1) * request.PageSize)
                 .Take(request.PageSize)
                 .Select(t => new TopicSearchResponse
                 {
                     TopicId = t.TopicId,
-                    Title = t.Title ?? "Chưa có tên",
-                    Status = t.Status ?? "Draft",
-                    GroupId = t.GroupId ?? 0,
-                    LeaderName = (t.Group != null && t.Group.Leader != null) ? t.Group.Leader.FullName : "Chưa có nhóm trưởng",
+                    Title = t.Title,
+                    TitleEn = "", // Trả về chuỗi rỗng tĩnh để không query xuống DB
+                    Status = t.Status,
+                    GroupId = t.GroupId,
+                    LeaderName = t.Group != null && t.Group.Leader != null ? t.Group.Leader.FullName : "N/A",
+                    MentorName = t.Group != null && t.Group.MentorAssignment != null && t.Group.MentorAssignment.Mentor != null
+                                 ? t.Group.MentorAssignment.Mentor.FullName : "Chưa có Mentor",
                     CreatedAt = t.CreatedAt
                 })
                 .ToListAsync();
 
-            // 5. Trả về kết quả
             return new
             {
-                Data = topics,
+                Data = data,
                 TotalRecords = totalRecords,
                 PageIndex = request.PageIndex,
                 PageSize = request.PageSize,
