@@ -7,7 +7,8 @@ import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.compo
 import { UserDashboardComponent } from './user-dashboard/user-dashboard.component';
 import { MentorDashboardComponent } from './mentor-dashboard/mentor-dashboard.component';
 // Import các functional guards bạn đã fix ở bước trước
-import { authGuard, adminGuard, guestGuard, mentorGuard, roleGuard } from './guards/auth.guard'; 
+import { authGuard, adminGuard, guestGuard, mentorGuard, roleGuard, councilGuard } from './guards/auth.guard'; 
+import { CouncilDashboardComponent } from './council-dashboard/council-dashboard.component';
 
 export const routes: Routes = [
   // Khách (chưa login) mới vào được trang này
@@ -36,6 +37,12 @@ export const routes: Routes = [
     path: 'admin', 
     component: AdminDashboardComponent, 
     canActivate: [adminGuard] 
+  },
+
+  { 
+    path: 'council-dashboard', 
+    component: CouncilDashboardComponent, 
+    canActivate: [councilGuard] // Sử dụng guard riêng biệt cho an toàn
   },
 
   // Mặc định

@@ -10,6 +10,13 @@ import {
   ResetPasswordRequest
 } from '../models/auth.model';
 
+export interface UserInfo {
+  id: number;
+  email: string;
+  fullName: string;
+  role: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })

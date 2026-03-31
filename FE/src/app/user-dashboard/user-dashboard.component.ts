@@ -242,6 +242,7 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
       });
     }
   }
+}
 
   private handleTopicSuccess(message: string) {
     this.isTopicLoading = false;
