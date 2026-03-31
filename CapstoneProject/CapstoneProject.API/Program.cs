@@ -67,6 +67,7 @@ builder.Services.AddScoped<IDefenseService, DefenseService>();
 builder.Services.AddScoped<IGroupMemberRepository,GroupMemberRepository>();
 builder.Services.AddScoped<IMentorAssignmentRepository, MentorAssignmentRepository>();
 builder.Services.AddSingleton<IUserIdProvider, EmailBasedUserIdProvider>();
+builder.Services.AddScoped<IGradeService, GradeService>();
 
 builder.Services.AddCors(options => {
     options.AddPolicy("AllowAll", builder => {
