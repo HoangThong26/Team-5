@@ -1,7 +1,7 @@
-<div class="mentor-shell">
+<div class="mentor-shell" [class.sidebar-collapsed]="sidebarCollapsed">
 
   <!-- ═══════════════════ SIDEBAR ═══════════════════ -->
-  <aside class="mentor-sidebar">
+  <aside class="mentor-sidebar" [class.collapsed]="sidebarCollapsed">
     <div class="sb-brand">
       <div class="sb-logomark">
         <svg width="28" height="28" viewBox="0 0 36 36" fill="none">
@@ -15,7 +15,11 @@
           </defs>
         </svg>
       </div>
-      <span class="sb-appname">ThesisPro</span>
+      <span class="sb-appname">Capstone Project</span>
+      <button class="sb-toggle-btn" (click)="sidebarCollapsed = !sidebarCollapsed">
+        <svg *ngIf="sidebarCollapsed" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        <svg *ngIf="!sidebarCollapsed" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
     </div>
 
     <div class="sb-profile">
@@ -25,14 +29,14 @@
         </svg>
       </div>
       <div class="sb-info">
-        <p class="sb-uname">Mentor</p>
+        <p class="sb-uname">{{ mentorName }}</p>
         <span class="sb-online"><span class="online-dot"></span>Active now</span>
       </div>
     </div>
 
     <nav class="sb-nav">
       <div class="nav-section-label">WORKSPACE</div>
-      <a class="nav-link active">
+      <a class="nav-link" [class.active]="viewMode === 'topics'" (click)="switchView('topics')">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
           <polyline points="14 2 14 8 20 8"/>
@@ -40,6 +44,13 @@
         </svg>
         <span>Review Board</span>
         <span class="nav-badge">{{ allTopics.length }}</span>
+      </a>
+      <a class="nav-link" [class.active]="viewMode === 'reports'" (click)="switchView('reports')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/>
+        </svg>
+        <span>Weekly Reports</span>
+        <span class="nav-badge">{{ weeklyReports.length }}</span>
       </a>
     </nav>
 
@@ -94,69 +105,88 @@
     <header class="mentor-header">
       <div class="mh-left">
         <div class="ah-icon-wrap">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-            <polyline points="9 11 12 14 22 4"/>
-            <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
-          </svg>
+          @if (viewMode === 'topics') {
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <polyline points="9 11 12 14 22 4"/>
+              <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+            </svg>
+          } @else {
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/>
+            </svg>
+          }
         </div>
         <div>
-          <h1 class="ah-title">Proposal Review Board</h1>
-          <p class="ah-sub">ThesisPro Mentor Console · Review capstone proposals</p>
+          <h1 class="ah-title">
+            {{ viewMode === 'topics' ? 'Proposal Review Board' : 'Weekly Report Inbox' }}
+          </h1>
+          <p class="ah-sub">
+            {{ viewMode === 'topics' ? 'ThesisPro Mentor Console · Review capstone proposals' : 'Review and grade group weekly submissions' }}
+          </p>
         </div>
       </div>
-      <div class="ah-stat-pills">
-        <div class="ah-stat-pill">
-          <p class="asp-n">{{ allTopics.length }}</p>
-          <p class="asp-l">Total</p>
+      @if (viewMode === 'topics') {
+        <div class="ah-stat-pills">
+          <div class="ah-stat-pill">
+            <p class="asp-n">{{ allTopics.length }}</p>
+            <p class="asp-l">Total</p>
+          </div>
+          <div class="ah-stat-pill">
+            <p class="asp-n pending-col">{{ countByStatus('Pending') }}</p>
+            <p class="asp-l">Pending</p>
+          </div>
+          <div class="ah-stat-pill">
+            <p class="asp-n green-col">{{ countByStatus('Approved') }}</p>
+            <p class="asp-l">Approved</p>
+          </div>
+          <div class="ah-stat-pill">
+            <p class="asp-n red-col">{{ countByStatus('Rejected') }}</p>
+            <p class="asp-l">Rejected</p>
+          </div>
         </div>
-        <div class="ah-stat-pill">
-          <p class="asp-n pending-col">{{ countByStatus('Pending') }}</p>
-          <p class="asp-l">Pending</p>
+      } @else {
+        <div class="ah-stat-pills">
+          <div class="ah-stat-pill">
+            <p class="asp-n">{{ weeklyReports.length }}</p>
+            <p class="asp-l">Received</p>
+          </div>
         </div>
-        <div class="ah-stat-pill">
-          <p class="asp-n green-col">{{ countByStatus('Approved') }}</p>
-          <p class="asp-l">Approved</p>
-        </div>
-        <div class="ah-stat-pill">
-          <p class="asp-n red-col">{{ countByStatus('Rejected') }}</p>
-          <p class="asp-l">Rejected</p>
-        </div>
-    
-      </div>
+      }
     </header>
 
     <!-- BODY: 2 columns — cards + right panel -->
     <div class="mentor-body">
+      @if (viewMode === 'topics') {
 
       <!-- LEFT: CARD AREA -->
       <div class="cards-area">
 
         <!-- Filter Tabs -->
         <div class="filter-tabs">
-          <div class="tab-item active-tab">
+          <div class="tab-item" [class.active-tab]="selectedTab === 'All'" (click)="selectTab('All')">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             All
             <span class="tab-count">{{ allTopics.length }}</span>
           </div>
-          <div class="tab-item">
+          <div class="tab-item" [class.active-tab]="selectedTab === 'Pending'" (click)="selectTab('Pending')">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             Pending
-            <span class="tab-count pending-chip">{{ countByStatus('Pending') }}</span>
+            <span class="tab-count pending-chip">{{ topicBoardData.Pending.length }}</span>
           </div>
-          <div class="tab-item">
+          <div class="tab-item" [class.active-tab]="selectedTab === 'Approved'" (click)="selectTab('Approved')">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>
             Approved
-            <span class="tab-count approved-chip">{{ countByStatus('Approved') }}</span>
+            <span class="tab-count approved-chip">{{ topicBoardData.Approved.length }}</span>
           </div>
-          <div class="tab-item">
+          <div class="tab-item" [class.active-tab]="selectedTab === 'Rejected'" (click)="selectTab('Rejected')">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
             Rejected
-            <span class="tab-count rejected-chip">{{ countByStatus('Rejected') }}</span>
+            <span class="tab-count rejected-chip">{{ topicBoardData.Rejected.length }}</span>
           </div>
         </div>
 
         <!-- Empty State -->
-        @if (allTopics.length === 0) {
+        @if (displayedTopics.length === 0) {
           <div class="empty-board">
             <div class="eb-graphic">
               <svg width="90" height="90" viewBox="0 0 100 100" fill="none">
@@ -166,14 +196,14 @@
                 <path d="M67 68l3 3 5-5" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </div>
-            <h3>All Clear!</h3>
-            <p>No proposals are waiting for your review.</p>
+            <h3>Nothing Here!</h3>
+            <p>No proposals match the current filter.</p>
           </div>
         }
 
         <!-- Proposal Grid -->
         <div class="proposal-grid">
-          @for (topic of allTopics; track topic.topicId || topic.TopicId) {
+          @for (topic of displayedTopics; track topic.VersionId || topic.versionId || topic.topicId || topic) {
             <div class="p-card" (click)="selectTopic(topic)">
               <div class="p-strip" [ngClass]="getStatusClass(topic.Status || topic.status)"></div>
               <div class="p-body">
@@ -183,13 +213,13 @@
                       <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/>
                       <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
                     </svg>
-                    {{ topic.GroupName || topic.groupName || 'Unknown' }}
+                    {{ topic.TeamName || topic.teamName || topic.GroupName || topic.groupName || 'Unknown Team' }}
                   </div>
                   <span class="p-status-badge" [ngClass]="getStatusClass(topic.Status || topic.status)">
                     {{ topic.Status || topic.status }}
                   </span>
                 </div>
-                <h3 class="p-title">{{ topic.Title || topic.title }}</h3>
+                <h3 class="p-title">{{ topic.TopicName || topic.topicName || topic.Title || topic.title }}</h3>
                 <p class="p-desc">{{ (topic.Description || topic.description) || 'No description provided.' }}</p>
                 <div class="p-foot">
                   <div class="p-doc-icon">
@@ -339,6 +369,65 @@
         </button>
 
       </aside>
+      }
+
+      @if (viewMode === 'reports') {
+        <div class="reports-container animate-fade-in w-full">
+          <div class="table-card">
+            <div class="tc-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <div>
+                <h3 class="tc-title">Weekly Report Submissions</h3>
+                <p class="tc-sub">Monitor and grade submissions from your assigned groups</p>
+              </div>
+              <button class="tbtn secondary sm" (click)="loadMentorInbox()" [disabled]="isLoadingReports" style="display: flex; gap: 6px; align-items: center;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" [class.spin-sm]="isLoadingReports">
+                  <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                </svg>
+                Refresh
+              </button>
+            </div>
+            <div class="table-scroll">
+              <table class="dt">
+                <thead>
+                  <tr>
+                    <th>Group</th>
+                    <th>Week</th>
+                    <th>Submitted</th>
+                    <th>Status</th>
+                    <th style="text-align:center">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (report of weeklyReports; track report.reportId) {
+                    <tr class="dt-row">
+                      <td>
+                        <div class="group-cell">
+                          <div class="gc-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+                          <strong>{{ report.groupName || report.GroupName || report.group?.name || report.group?.groupName || report.name || ('Group #' + report.groupId) }}</strong>
+                        </div>
+                      </td>
+                      <td><span class="week-tag">Week {{ report.weekId }}</span></td>
+                      <td>{{ report.submittedAt | date:'medium' }}</td>
+                      <td>
+                        <span class="status-badge" [ngClass]="(report.status || report.Status || '').toLowerCase()">
+                          {{ report.status || report.Status }}
+                        </span>
+                      </td>
+                      <td style="text-align:center">
+                        <button class="tbtn primary sm" (click)='selectReport(report)' [class.secondary]="(report.status || report.Status || '').toLowerCase() === 'reviewed'">
+                          {{ (report.status || report.Status || '').toLowerCase() === 'reviewed' ? 'View Evaluation' : 'Review & Grade' }}
+                        </button>
+                      </td>
+                    </tr>
+                  } @empty {
+                    <tr><td colspan="5" class="empty-cell" style="text-align:center; padding: 3rem; color: #64748b;">No weekly reports found.</td></tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      }
 
     </div>
   </main>
@@ -359,7 +448,7 @@
             </div>
             <div>
               <span class="rm-eyebrow">Proposal Review</span>
-              <h2 class="rm-modal-title">{{ selectedTopic.Title || selectedTopic.title }}</h2>
+              <h2 class="rm-modal-title">{{ selectedTopic.TopicName || selectedTopic.topicName || selectedTopic.Title || selectedTopic.title }}</h2>
             </div>
           </div>
 
@@ -369,7 +458,7 @@
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
                 Group
               </span>
-              <span class="rim-val">{{ selectedTopic.GroupName || selectedTopic.groupName }}</span>
+              <span class="rim-val">{{ selectedTopic.TeamName || selectedTopic.teamName || selectedTopic.GroupName || selectedTopic.groupName || 'Unknown Group' }}</span>
             </div>
             <div class="rm-info-item">
               <span class="rim-label">
@@ -454,7 +543,61 @@
             </div>
           }
         </div>
+      </div>
+    </div>
+  }
 
+  <!-- ═══════════════════ WEEKLY EVALUATION MODAL ═══════════════════ -->
+  @if (selectedReport) {
+    <div class="modal-scrim" (click)="selectedReport = null">
+      <div class="review-modal" (click)="$event.stopPropagation()">
+        <div class="rm-left">
+          <div class="rm-left-header">
+            <div class="rm-title-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></div>
+            <div><span class="rm-eyebrow">Weekly Progress Review</span><h2 class="rm-modal-title">Group {{ selectedReport.groupName || selectedReport.GroupName || selectedReport.group?.name || selectedReport.group?.groupName || selectedReport.name || ('#' + selectedReport.groupId) }} - Week {{ selectedReport.weekId || selectedReport.weekNumber }}</h2></div>
+          </div>
+          <div class="rm-desc-section">
+            <p class="rmd-label">Submission Content</p>
+            <div class="rm-desc-box" style="white-space: pre-wrap; font-size: .95rem; line-height: 1.6;">{{ selectedReport.content }}</div>
+          </div>
+          
+          @if (selectedReport.githubLink || selectedReport.GithubLink || selectedReport.fileUrl || selectedReport.FileUrl) {
+            <div class="rm-desc-section mt-4">
+              <p class="rmd-label">Deliverables</p>
+              <div class="deliverables-list" style="display: flex; flex-direction: column; gap: 10px; margin-top: 8px;">
+                @if (selectedReport.githubLink || selectedReport.GithubLink) {
+                  <a [href]="ensureExternalLink(selectedReport.githubLink || selectedReport.GithubLink)" target="_blank" class="deliverable-item" style="display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: rgba(255,255,255,0.05); border-radius: 8px; color: #fff; text-decoration: none; border: 1px solid rgba(255,255,255,0.1); transition: all 0.2s;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                    <span>View GitHub Repository</span>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: auto;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                  </a>
+                }
+                @if (selectedReport.fileUrl || selectedReport.FileUrl) {
+                  <a href="javascript:void(0)" (click)="downloadReportFile(selectedReport.fileUrl || selectedReport.FileUrl)" class="deliverable-item" style="display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: rgba(255,255,255,0.05); border-radius: 8px; color: #fff; text-decoration: none; border: 1px solid rgba(255,255,255,0.1); transition: all 0.2s;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                    <span>Download Attached File</span>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: auto;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                  </a>
+                }
+              </div>
+            </div>
+          }
+        </div>
+        <div class="rm-right">
+          <div class="rm-right-top"><h3 class="rm-right-h">Grade Submission</h3><button class="rm-close" (click)="selectedReport = null">&times;</button></div>
+          <div class="evaluation-form">
+            <div class="f-group"><label>Grade</label><input class="f-input" type="number" [(ngModel)]="evaluationScore" min="0" max="10" [disabled]="isReadOnly"></div>
+            <div class="f-group mt-4"><label>Feedback</label><textarea class="f-input" [(ngModel)]="evaluationComment" rows="5" placeholder="Feedback..." [disabled]="isReadOnly"></textarea></div>
+            <div class="rm-actions mt-6">
+              <button class="rm-btn-cancel" (click)="selectedReport = null">{{ isReadOnly ? 'Close' : 'Cancel' }}</button>
+              @if (!isReadOnly) {
+                <button class="rm-btn-approve" (click)="submitEvaluation()" [disabled]="isEvaluating">
+                  @if (isEvaluating) { <span class="spin-sm"></span> } @else { Save Grade }
+                </button>
+              }
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   }
