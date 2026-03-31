@@ -15,6 +15,10 @@ public partial class DefenseScore
 
     public int? CouncilMemberId { get; set; }
 
+    public decimal PresentationScore { get; set; }
+    public decimal DemoScore { get; set; }
+    public decimal QAScore { get; set; }
+
     [Column(TypeName = "decimal(5, 2)")]
     public decimal? Score { get; set; }
 

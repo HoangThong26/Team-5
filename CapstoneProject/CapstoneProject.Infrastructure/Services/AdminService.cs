@@ -137,19 +137,26 @@ namespace CapstoneProject.Infrastructure.Services
         }
         public async Task<byte[]> ExportStudentsToExcelAsync()
         {
-
+            // Lấy danh sách student (Repository của bạn đã có Include như trên)
             var students = await _userRepository.GetStudentsAsync();
 
             using (var workbook = new XLWorkbook())
             {
                 var worksheet = workbook.Worksheets.Add("Student List");
 
+                // 1. Header
                 worksheet.Cell(1, 1).Value = "ID";
                 worksheet.Cell(1, 2).Value = "FullName";
                 worksheet.Cell(1, 3).Value = "Email";
                 worksheet.Cell(1, 4).Value = "Phone Number";
-                worksheet.Range("A1:D1").Style.Font.Bold = true;
-                worksheet.Range("A1:D1").Style.Fill.BackgroundColor = XLColor.LightGray;
+                worksheet.Cell(1, 5).Value = "Group Name";
+                worksheet.Cell(1, 6).Value = "Final Grade";
+
+                // Định dạng Header cho đẹp
+                var headerRow = worksheet.Range("A1:F1");
+                headerRow.Style.Font.Bold = true;
+                headerRow.Style.Fill.BackgroundColor = XLColor.LightGray;
+
                 int currentRow = 2;
                 foreach (var student in students)
                 {
@@ -157,6 +164,28 @@ namespace CapstoneProject.Infrastructure.Services
                     worksheet.Cell(currentRow, 2).Value = student.FullName;
                     worksheet.Cell(currentRow, 3).Value = student.Email;
                     worksheet.Cell(currentRow, 4).Value = $"'{student.Phone}";
+
+                    var groupMember = student.GroupMember;
+
+                    if (groupMember != null && groupMember.Group != null)
+                    {
+                        worksheet.Cell(currentRow, 5).Value = groupMember.Group.GroupName;
+
+                        var finalGrade = groupMember.Group.FinalGrade;
+                        if (finalGrade != null)
+                        {
+                            worksheet.Cell(currentRow, 6).Value = finalGrade.AverageScore;
+                        }
+                        else
+                        {
+                            worksheet.Cell(currentRow, 6).Value = "N/A";
+                        }
+                    }
+                    else
+                    {
+                        worksheet.Cell(currentRow, 5).Value = "N/A";
+                        worksheet.Cell(currentRow, 6).Value = "N/A";
+                    }
 
                     currentRow++;
                 }
