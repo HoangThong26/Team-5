@@ -26,7 +26,6 @@ namespace CapstoneProject.Application.Service
                 throw new Exception("Configuration Error: Groq API Key is missing.");
             }
 
-            // 1. Phân loại ý định: Người dùng muốn hỏi đề tài hay đang chat?
             string[] topicKeywords = { "topic", "suggest", "project", "idea", "thesis", "capstone", "đề tài", "gợi ý" };
             bool isAskingForTopic = topicKeywords.Any(k => message.ToLower().Contains(k));
 
@@ -34,7 +33,6 @@ namespace CapstoneProject.Application.Service
                 ? "You are an IT Advisor. Suggest 3 projects. Return ONLY a JSON Array [{\"title\":\"...\",\"description\":\"...\",\"tags\":[\"...\"]}] in English. No prose, no explanation, no markdown."
                 : "You are ThesisPro AI, a helpful assistant. Respond friendly and concisely in English.";
 
-            // 2. Build Request Body theo chuẩn Groq/OpenAI
             var requestBody = new
             {
                 model = _model,
@@ -43,7 +41,7 @@ namespace CapstoneProject.Application.Service
                     new { role = "system", content = systemPrompt },
                     new { role = "user", content = message }
                 },
-                temperature = 0.7 // Độ sáng tạo vừa phải
+                temperature = 0.7
             };
 
             var request = new HttpRequestMessage(HttpMethod.Post, "https://api.groq.com/openai/v1/chat/completions");
