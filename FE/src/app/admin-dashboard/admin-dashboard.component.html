@@ -273,6 +273,8 @@
                     <th>User</th>
                     <th>Email</th>
                     <th>Phone</th>
+                    <th>Group</th>
+                    <th>Grade</th>
                     <th>Role</th>
                     <th>Status</th>
                   </tr>
@@ -290,6 +292,33 @@
                       </td>
                       <td class="td-email">{{ user.email }}</td>
                       <td class="td-phone">{{ user.phone || '—' }}</td>
+                      <td>
+                        @if (user.groupMember?.group || user.GroupMember?.Group) {
+                          <div class="group-cell">
+                            <div class="gc-icon">
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                            </div>
+                            <span style="font-weight: 500;">
+                                {{ user.groupMember?.group?.groupName || user.groupMember?.group?.name 
+                                || user.GroupMember?.Group?.GroupName || user.GroupMember?.Group?.Name 
+                                || 'Inherited Group' }}
+                            </span>
+                          </div>
+                        } @else {
+                          <span class="td-muted">—</span>
+                        }
+                      </td>
+                      <td>
+                        @if (user.groupMember?.group?.finalGrade || user.GroupMember?.Group?.FinalGrade) {
+                          <span class="grade-tag">
+                            {{ user.groupMember?.group?.finalGrade?.score || user.groupMember?.group?.finalGrade?.value 
+                            || user.GroupMember?.Group?.FinalGrade?.Score || user.GroupMember?.Group?.FinalGrade?.Value 
+                            || '—' }}
+                          </span>
+                        } @else {
+                          <span class="td-muted">—</span>
+                        }
+                      </td>
                       <td><span class="role-tag {{ user.role }}">{{ user.role }}</span></td>
                       <td>
                         <div class="status-dot-label" [class.active]="user.status !== 'Inactive'">
@@ -300,7 +329,7 @@
                     </tr>
                   } @empty {
                     <tr>
-                      <td colspan="5" class="empty-cell">
+                      <td colspan="7" class="empty-cell">
                         <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
                         <p>No users found.</p>
                       </td>
