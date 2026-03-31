@@ -1,11 +1,14 @@
 ﻿using CapstoneProject.Application.DTO;
 using CapstoneProject.Application.Interface.IService;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CapstoneProject.WebAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class DefenseController : ControllerBase
     {
         private readonly IDefenseService _defenseService;
@@ -20,8 +23,15 @@ namespace CapstoneProject.WebAPI.Controllers
         {
             try
             {
+                if (request.PresentationScore == null || request.DemoScore == null || request.QAScore == null)
+                {
+                    return BadRequest(new { message = "Required evaluation fields missing." });
+                }
+                bool isInvalid = request.PresentationScore < 0 || request.PresentationScore > 10 ||
+                         request.DemoScore < 0 || request.DemoScore > 10 ||
+                         request.QAScore < 0 || request.QAScore > 10;
                 // Kiểm tra AC3: Required fields
-                if (request.PresentationScore < 0 || request.DemoScore < 0 || request.QAScore < 0)
+                if (isInvalid)
                 {
                     return BadRequest(new { message = "Required evaluation fields missing or invalid." });
                 }
@@ -41,6 +51,28 @@ namespace CapstoneProject.WebAPI.Controllers
             var result = await _defenseService.GetMemberEvaluationAsync(defenseId, userId);
             if (result == null) return NotFound(new { message = "No evaluation found." });
             return Ok(result);
+        }
+
+        [HttpGet("assigned-defenses")]
+        public async Task<IActionResult> GetAssignedDefenses()
+        {
+            // Lấy UserId từ Token (hỗ trợ cả NameIdentifier và claim "id")
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                              ?? User.FindFirst("id")?.Value;
+
+            if (string.IsNullOrEmpty(userIdClaim))
+            {
+                return Unauthorized(new { message = "User session invalid." });
+            }
+
+            if (!int.TryParse(userIdClaim, out int userId))
+            {
+                return BadRequest(new { message = "Invalid User ID format." });
+            }
+
+            // Gọi qua Service thay vì gọi trực tiếp DB Context
+            var assignedGroups = await _defenseService.GetAssignedDefensesAsync(userId);
+            return Ok(assignedGroups);
         }
     }
 }

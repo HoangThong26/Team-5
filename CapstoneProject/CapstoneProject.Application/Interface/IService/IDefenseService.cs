@@ -6,5 +6,6 @@ namespace CapstoneProject.Application.Interface.IService
     {
         Task<bool> SubmitEvaluationAsync(DefenseEvaluationRequest request);
         Task<DefenseScoreDto?> GetMemberEvaluationAsync(int defenseId, int userId);
+        Task<IEnumerable<object>> GetAssignedDefensesAsync(int userId);
     }
 }
