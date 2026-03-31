@@ -746,6 +746,12 @@ namespace CapstoneProject.Infrastructure.Migrations
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("FileUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GithubLink")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("GroupId")
                         .HasColumnType("int");
 

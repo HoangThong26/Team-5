@@ -23,6 +23,10 @@ public partial class WeeklyReport
 
     public DateTime? SubmittedAt { get; set; }
 
+    public string? GithubLink { get; set; } // Thêm link GitHub
+
+    public string? FileUrl { get; set; }
+
     [ForeignKey("GroupId")]
     [InverseProperty("WeeklyReports")]
     public virtual Group? Group { get; set; }
