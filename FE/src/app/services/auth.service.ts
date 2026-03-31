@@ -76,36 +76,26 @@ export class AuthService {
 
   // ===== Token management =====
 
-  saveToken(response: any): void {
-  if (!this.isBrowser) return;
+  saveToken(response: TokenResponse): void {
+    if (!this.isBrowser) return;
 
-  localStorage.setItem('accessToken', response.accessToken);
-  localStorage.setItem('refreshToken', response.refreshToken);
+    localStorage.setItem('accessToken', response.accessToken);
+    localStorage.setItem('refreshToken', response.refreshToken);
 
-  // Giải mã token để lấy ID và các thông tin khác
-  try {
-    const payload = JSON.parse(atob(response.accessToken.split('.')[1]));
-    
-    // Tạo object user hoàn chỉnh từ thông tin trong Token và thông tin từ API
-    const fullUser = {
-      id: payload.id || payload.nameid, // Lấy ID từ token (3010)
-      email: response.user?.email || payload.email,
-      fullName: response.user?.fullName || "",
-      role: response.user?.role || payload.role
-    };
-
-    localStorage.setItem('user', JSON.stringify(fullUser));
-
-    const exp = payload.exp * 1000;
-    localStorage.setItem('accessTokenExpiry', exp.toString());
-  } catch (e) {
-    console.error("Error decoding token:", e);
-    // Backup nếu decode lỗi thì lưu user mặc định
-    if (response.user) {
+    if (response.user && typeof response.user === 'object') {
       localStorage.setItem('user', JSON.stringify(response.user));
+    } else {
+      localStorage.removeItem('user');
+    }
+
+    try {
+      const payload = JSON.parse(atob(response.accessToken.split('.')[1]));
+      const exp = payload.exp * 1000;
+      localStorage.setItem('accessTokenExpiry', exp.toString());
+    } catch {
+      localStorage.setItem('accessTokenExpiry', '0');
     }
   }
-}
 
   getAccessToken(): string | null {
     if (!this.isBrowser) return null;
@@ -117,10 +107,14 @@ export class AuthService {
     return localStorage.getItem('refreshToken');
   }
 
-  getCurrentUser(): UserInfo | null {
+  getCurrentUser(): { email: string; fullName: string; role: string } | null {
     if (!this.isBrowser) return null;
+
     const user = localStorage.getItem('user');
-    if (!user || user === 'undefined' || user === 'null') return null;
+
+    if (!user || user === 'undefined' || user === 'null') {
+      return null;
+    }
 
     try {
       return JSON.parse(user);
@@ -128,12 +122,6 @@ export class AuthService {
       localStorage.removeItem('user');
       return null;
     }
-  }
-
-  // Thêm hàm này để sửa lỗi ts(2339) trong Council Dashboard
-  getUserId(): number | null {
-    const user = this.getCurrentUser();
-    return user ? Number(user.id) : null;
   }
 
   isLoggedIn(): boolean {
