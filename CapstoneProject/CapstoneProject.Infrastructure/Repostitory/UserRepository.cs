@@ -2,9 +2,6 @@
 using CapstoneProject.Domain.Entities;
 using CapstoneProject.Infrastructure.Database.AppDbContext;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CapstoneProject.Infrastructure.Repostitory
 {
@@ -41,7 +38,11 @@ namespace CapstoneProject.Infrastructure.Repostitory
 
         public async Task<List<User>> GetAllUsersAsync()
         {
-            return await _context.Users.ToListAsync();
+            return await _context.Users
+                .Include(u => u.GroupMember)            // Lấy thông tin bản ghi thành viên
+                    .ThenInclude(gm => gm.Group)        // Từ thành viên lấy thông tin Nhóm
+                        .ThenInclude(g => g.FinalGrade) // Từ Nhóm lấy điểm số cuối cùng
+                .ToListAsync();
         }
 
         public async Task UpdateUserStatusAsync(int userId, string newStatus)
@@ -161,8 +162,12 @@ namespace CapstoneProject.Infrastructure.Repostitory
         public async Task<List<User>> GetStudentsAsync()
         {
             return await _context.Users
+                .Include(u => u.GroupMember)            // 1. Kết nối bảng trung gian GroupMember
+                    .ThenInclude(gm => gm.Group)        // 2. Từ GroupMember lấy thông tin Groups
+                        .ThenInclude(g => g.FinalGrade) // 3. Từ Groups lấy điểm FinalGrades
                 .Where(u => u.Role == "Student")
                 .ToListAsync();
         }
     }
 }
+
