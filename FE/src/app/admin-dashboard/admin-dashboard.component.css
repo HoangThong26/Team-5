@@ -258,6 +258,18 @@
 .role-tag.student { background: #ecfdf5; color: #065f46; }
 .role-tag.council { background: #fef3c7; color: #92400e; }
 
+/* Grade Tag */
+.grade-tag {
+  display: inline-block;
+  background: #f1f5f9;
+  color: #0f172a;
+  font-weight: 700;
+  font-size: .82rem;
+  padding: .2rem .6rem;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+}
+
 /* Status dot */
 .status-dot-label {
   display: inline-flex; align-items: center; gap: 6px;
