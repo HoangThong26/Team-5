@@ -46,21 +46,29 @@ export const guestGuard: CanActivateFn = () => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
- if (authService.isLoggedIn()) {
+  if (authService.isLoggedIn()) {
     const user = authService.getCurrentUser();
     const role = user?.role?.toLowerCase();
 
     if (role === 'admin') {
       router.navigate(['/admin']);
+      return false;
     } else if (role === 'mentor') {
       router.navigate(['/mentor-dashboard']);
+      return false;
     } else if (role === 'council') {
       router.navigate(['/council-dashboard']);
-    } else {
+      return false;
+    } else if (role === 'student' || role === 'user') {
       router.navigate(['/dashboard']);
+      return false;
+    } else {
+      console.warn('Logged in but no valid role found. Clearing auth state.');
+      authService.clearToken();
+      return true;
     }
   }
-  return true; 
+  return true;
 };
 export const mentorGuard: CanActivateFn = () => {
   const platformId = inject(PLATFORM_ID);
@@ -133,8 +141,12 @@ export const roleGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
     router.navigate(['/mentor-dashboard']);
   } else if (userRole === 'council') {
     router.navigate(['/council-dashboard']);
-  } else {
+  } else if (userRole === 'student' || userRole === 'user') {
     router.navigate(['/dashboard']);
+  } else {
+    alert("Access Denied: You don't have permission to access this page!");
+    authService.clearToken();
+    router.navigate(['/login']);
   }
   return false;
 };

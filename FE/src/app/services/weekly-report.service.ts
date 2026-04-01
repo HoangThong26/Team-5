@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { WeeklyReportRequest, WeeklyReportDto ,WeeklyReportHistoryDto} from '../models/weekly-report.model';
+import { WeeklyReportRequest, WeeklyReportDto, WeeklyReportHistoryDto, CouncilEligibilityDto } from '../models/weekly-report.model';
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +25,14 @@ submitReport(request: any): Observable<any> {
   // Thêm vào WeeklyReportService
   getHistoryByGroupId(groupId: number): Observable<WeeklyReportHistoryDto[]> {
     return this.http.get<WeeklyReportHistoryDto[]>(`${this.apiUrl}/history/${groupId}`);
+  }
+
+  getCouncilEligibility(groupId: number): Observable<CouncilEligibilityDto> {
+    return this.http.get<CouncilEligibilityDto>(`${this.apiUrl}/group/${groupId}/council-eligibility`);
+  }
+
+  getMyCouncilEligibility(): Observable<CouncilEligibilityDto> {
+    return this.http.get<CouncilEligibilityDto>(`${this.apiUrl}/my-council-eligibility`);
   }
 
   updateReport(reportId: number, request: any): Observable<any> {

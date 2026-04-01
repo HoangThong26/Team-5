@@ -39,6 +39,13 @@ export const routes: Routes = [
     canActivate: [adminGuard] 
   },
 
+  {
+    path: 'admin/defense-schedule',
+    component: AdminDashboardComponent,
+    canActivate: [adminGuard],
+    data: { viewMode: 'defense' }
+  },
+
   { 
     path: 'council-dashboard', 
     component: CouncilDashboardComponent, 

@@ -12,8 +12,10 @@ import { GroupService, GroupDetailResponse } from '../services/group.service';
 import { WebsocketService } from '../services/websocket.service';
 import { TopicService } from '../services/topic.service';
 import { WeeklyReportService } from '../services/weekly-report.service';
-import { WeeklyReportHistoryDto } from '../models/weekly-report.model'
+import { CouncilEligibilityDto, WeeklyReportHistoryDto } from '../models/weekly-report.model'
 import { WeeklyEvaluationService } from '../services/weekly-evaluation.service';
+import { DefenseService } from '../services/defense.service';
+import { DefenseRegistrationItemDto, DefenseRegistrationStatusDto } from '../models/defense-registration.model';
 
 @Component({
   selector: 'app-user-dashboard',
@@ -37,6 +39,13 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
   isGroupLoading = false;
   submissionHistory: any[] = [];
   selectedReport: any = null;
+  councilEligibility: CouncilEligibilityDto | null = null;
+  isLoadingCouncilEligibility = false;
+  defenseRegistrationStatus: DefenseRegistrationStatusDto | null = null;
+  defenseRegistrations: DefenseRegistrationItemDto[] = [];
+  isLoadingDefenseStatus = false;
+  isLoadingDefenseRegistrations = false;
+  isRegisteringDefense = false;
 
   // Sidebar
   activeTab: 'overview' | 'profile' | 'password' = 'overview';
@@ -98,6 +107,7 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
   // BIẾN QUẢN LÝ WEBSOCKET
   // ==========================================
   private wsSubscription?: Subscription;
+  private defenseRefreshTimer?: ReturnType<typeof setInterval>;
 
   constructor(
     private userService: UserService,
@@ -107,6 +117,8 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
     private topicService: TopicService,
     private weeklyReportService: WeeklyReportService,
     private weeklyEvaluationService: WeeklyEvaluationService,
+    private defenseService: DefenseService,
+    private datePipe: DatePipe,
     private router: Router,
     @Inject(PLATFORM_ID) platformId: Object
   ) {
@@ -122,11 +134,17 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
           this.topicDescription = res.topic.description;
         }
         this.loadWeeklyReports();
+        this.loadCouncilEligibility();
+        this.loadDefenseRegistrationStatus();
+        this.loadDefenseRegistrations();
         this.isGroupLoading = false;
       },
       error: (err) => {
         this.isGroupLoading = false;
         this.myGroup = null;
+        this.councilEligibility = null;
+        this.defenseRegistrationStatus = null;
+        this.loadDefenseRegistrations();
       }
     });
   }
@@ -135,6 +153,9 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
     this.groupService.getMyGroup().subscribe({
       next: (res) => {
         this.myGroup = res;
+        this.loadCouncilEligibility();
+        this.loadDefenseRegistrationStatus();
+        this.loadDefenseRegistrations();
 
         if (this.myGroup?.groupId) {
           this.topicService.getTopicByGroupId(this.myGroup.groupId).subscribe({
@@ -193,7 +214,9 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
     if (!status) return '#475569';
     switch (status) {
       case 'Approved':
-      case 'Reviewed': return '#166534';
+      case 'Reviewed':
+      case 'Pass': return '#166534';
+      case 'Fail': return '#991b1b';
       case 'Pending':
       case 'Submitted': return '#1e40af';
       case 'Rejected': return '#991b1b';
@@ -343,6 +366,7 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
     this.successMessage = message;
     this.loadHistory();
     this.loadWeeklyReports();
+    this.loadCouncilEligibility();
     this.reportContent = '';
     this.reportGithubLink = '';
     this.reportFileUrl = '';
@@ -402,13 +426,123 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  loadCouncilEligibility() {
+    this.isLoadingCouncilEligibility = true;
+    this.weeklyReportService.getMyCouncilEligibility().subscribe({
+      next: (res: CouncilEligibilityDto) => {
+        this.councilEligibility = res;
+        this.isLoadingCouncilEligibility = false;
+      },
+      error: (err) => {
+        console.error('Failed to load council eligibility:', err);
+        this.councilEligibility = null;
+        this.isLoadingCouncilEligibility = false;
+      }
+    });
+  }
+
+  loadDefenseRegistrationStatus() {
+    if (!this.myGroup?.groupId) {
+      this.defenseRegistrationStatus = null;
+      return;
+    }
+
+    this.isLoadingDefenseStatus = true;
+    this.defenseService.getMyRegistrationStatus().subscribe({
+      next: (res: DefenseRegistrationStatusDto) => {
+        this.defenseRegistrationStatus = res;
+        this.isLoadingDefenseStatus = false;
+      },
+      error: () => {
+        this.defenseRegistrationStatus = null;
+        this.isLoadingDefenseStatus = false;
+      }
+    });
+  }
+
+  loadDefenseRegistrations() {
+    this.isLoadingDefenseRegistrations = true;
+    this.defenseService.getRegistrations().subscribe({
+      next: (res: DefenseRegistrationItemDto[]) => {
+        this.defenseRegistrations = res || [];
+        this.isLoadingDefenseRegistrations = false;
+      },
+      error: () => {
+        this.defenseRegistrations = [];
+        this.isLoadingDefenseRegistrations = false;
+      }
+    });
+  }
+
+  get myDefenseRegistration(): DefenseRegistrationItemDto | null {
+    const myGroupId = this.defenseRegistrationStatus?.groupId;
+    if (!myGroupId) {
+      return null;
+    }
+
+    return this.defenseRegistrations.find(item => item.groupId === myGroupId) || null;
+  }
+
+  formatDefenseDateTime(value?: string): string {
+    if (!value) {
+      return 'TBD';
+    }
+
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+      return value;
+    }
+
+    return this.datePipe.transform(date, 'dd/MM/yyyy HH:mm') || value;
+  }
+
+  hasScheduledDefense(): boolean {
+    return !!this.myDefenseRegistration?.startTime;
+  }
+
+  registerForDefense() {
+    if (!this.defenseRegistrationStatus || this.isRegisteringDefense) {
+      return;
+    }
+
+    if (!this.defenseRegistrationStatus.isEligibleForDefense) {
+      this.errorMessage = 'Not eligible for defense';
+      setTimeout(() => this.errorMessage = '', 3000);
+      return;
+    }
+
+    if (this.defenseRegistrationStatus.isRegistered) {
+      return;
+    }
+
+    if (this.isBrowser && !window.confirm('Confirm Register for Defense?')) {
+      return;
+    }
+
+    this.isRegisteringDefense = true;
+    this.defenseService.registerForDefense().subscribe({
+      next: (res) => {
+        this.successMessage = res?.message || 'Defense registration saved successfully.';
+        this.isRegisteringDefense = false;
+        this.loadDefenseRegistrationStatus();
+        this.loadDefenseRegistrations();
+        setTimeout(() => this.successMessage = '', 3000);
+      },
+      error: (err) => {
+        this.errorMessage = this.extractError(err, 'Failed to register for defense.');
+        this.isRegisteringDefense = false;
+        setTimeout(() => this.errorMessage = '', 3000);
+      }
+    });
+  }
   selectHistoryItem(report: any) {
     this.selectedReport = report;
     this.isReportAdding = false; // Tắt form nộp bài nếu đang mở để xem chi tiết
 
     // Focus or scroll to detail view if needed
     const status = (report.status || report.Status || '').toLowerCase();
-    if (status === 'reviewed') {
+    if (this.isEvaluationCompletedStatus(status)) {
       const reportId = report.reportId || report.ReportId;
       if (reportId) {
         this.weeklyEvaluationService.getEvaluation(reportId).subscribe({
@@ -429,7 +563,8 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
   }
   getStatusColor(status: string): string {
     const s = (status || '').toLowerCase();
-    if (s === 'reviewed') return '#10b981'; // Xanh lá
+    if (s === 'reviewed' || s === 'pass') return '#10b981'; // Xanh lá
+    if (s === 'fail') return '#ef4444'; // Đỏ
     if (s === 'submitted') return '#3b82f6'; // Xanh dương
     return '#94a3b8'; // Xám
   }
@@ -463,13 +598,18 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
   isReportReviewed(report: any): boolean {
     if (!report) return false;
     const status = (report.status || report.Status || '').toLowerCase();
-    return status === 'reviewed';
+    return this.isEvaluationCompletedStatus(status);
   }
 
   canEditReport(report: any): boolean {
     if (!report) return false;
     const status = (report.status || report.Status || '').toLowerCase();
-    return status !== 'reviewed';
+    return !this.isEvaluationCompletedStatus(status);
+  }
+
+  private isEvaluationCompletedStatus(status?: string): boolean {
+    const normalizedStatus = (status || '').toLowerCase();
+    return normalizedStatus === 'reviewed' || normalizedStatus === 'pass' || normalizedStatus === 'fail';
   }
 
   openReportModal() {
@@ -477,6 +617,9 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
     this.activeModal = 'report';
     this.loadHistory();
     this.loadWeeklyReports();
+    this.loadCouncilEligibility();
+    this.loadDefenseRegistrationStatus();
+    this.loadDefenseRegistrations();
   }
 
   startNewReport() {
@@ -499,6 +642,12 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
       this.loadProfile();
       this.loadMyGroup();
       this.loadMyGroupSilently();
+
+      // Refresh defense status/schedule periodically so students see admin updates quickly.
+      this.defenseRefreshTimer = setInterval(() => {
+        this.loadDefenseRegistrationStatus();
+        this.loadDefenseRegistrations();
+      }, 30000);
 
       // Load AI Chat History
       const savedChat = localStorage.getItem('ai_chat_history');
@@ -549,6 +698,10 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.wsSubscription) {
       this.wsSubscription.unsubscribe();
+    }
+
+    if (this.defenseRefreshTimer) {
+      clearInterval(this.defenseRefreshTimer);
     }
   }
 
