@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { AdminService } from '../services/admin.service';
+import { CouncilService, Staff } from '../services/council.service';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -83,7 +84,22 @@ export class AdminDashboardComponent implements OnInit {
   // Group Management
   groups: any[] = [];
   isLoadingGroups = false;
-  viewMode: 'users' | 'groups' | 'timeline' = 'users';
+  viewMode: 'users' | 'groups' | 'timeline' | 'councils' = 'users';
+
+  // Council Management
+  availableStaffs: Staff[] = [];
+  isLoadingStaffs = false;
+  isCreatingCouncil = false;
+  
+  // Council Form
+  newCouncilName = '';
+  selectedStaffIds: number[] = [];
+  selectedGroupIds: number[] = [];
+  
+  // Council Staff Search & Pagination
+  staffSearchKeyword = '';
+  staffCurrentPage = 1;
+  staffPageSize = 5;
 
   // Timeline Setup
   projectStartDate: string = '';
@@ -95,7 +111,8 @@ export class AdminDashboardComponent implements OnInit {
   constructor(
     private adminService: AdminService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private councilService: CouncilService
   ) {}
 
   ngOnInit() {
@@ -315,7 +332,7 @@ export class AdminDashboardComponent implements OnInit {
     });
   }
 
-  switchView(mode: 'users' | 'groups' | 'timeline') {
+  switchView(mode: 'users' | 'groups' | 'timeline' | 'councils') {
     this.viewMode = mode;
     this.successMessage = '';
     this.errorMessage = '';
@@ -328,7 +345,11 @@ export class AdminDashboardComponent implements OnInit {
       this.loadGroups();
       this.loadMentors(); 
     } else if (mode === 'timeline') {
-      // Có thể load ngày hiện tại từ API nếu cần
+      // Timeline setup
+    } else if (mode === 'councils') {
+      this.staffCurrentPage = 1;
+      this.staffSearchKeyword = '';
+      this.loadAvailableStaffs();
     }
   }
 
@@ -442,6 +463,120 @@ export class AdminDashboardComponent implements OnInit {
   getExtraNames(members: any[]): string {
     if (!members || members.length <= 4) return '';
     return members.slice(4).map((m: any) => m.fullName || 'Unknown').join(', ');
+  }
+
+  // --- COUNCIL METHODS ---
+
+  loadAvailableStaffs() {
+    this.isLoadingStaffs = true;
+    this.councilService.getAvailableStaffs().subscribe({
+      next: (res) => {
+        this.availableStaffs = res.data || [];
+        this.isLoadingStaffs = false;
+      },
+      error: (err) => {
+        this.isLoadingStaffs = false;
+        this.errorMessage = 'Could not load available staff.';
+      }
+    });
+  }
+
+  toggleStaffSelection(staffId: number) {
+    const index = this.selectedStaffIds.indexOf(staffId);
+    if (index > -1) {
+      this.selectedStaffIds.splice(index, 1);
+    } else {
+      this.selectedStaffIds.push(staffId);
+    }
+  }
+
+  toggleGroupSelection(groupId: number) {
+    const index = this.selectedGroupIds.indexOf(groupId);
+    if (index > -1) {
+      this.selectedGroupIds.splice(index, 1);
+    } else {
+      this.selectedGroupIds.push(groupId);
+    }
+  }
+
+  createCouncil() {
+    if (!this.newCouncilName) {
+      this.errorMessage = 'Please fill in required fields (Name).';
+      return;
+    }
+
+    if (this.selectedStaffIds.length === 0) {
+      this.errorMessage = 'Please select at least one staff member.';
+      return;
+    }
+
+    this.isCreatingCouncil = true;
+    this.successMessage = '';
+    this.errorMessage = '';
+
+    const payload = {
+      name: this.newCouncilName,
+      memberIds: this.selectedStaffIds
+    };
+
+    this.councilService.createFullCouncil(payload).subscribe({
+      next: (res: any) => {
+        this.isCreatingCouncil = false;
+        if (res.success) {
+          this.successMessage = res.message || 'Council created successfully!';
+          this.resetCouncilForm();
+        } else {
+          this.errorMessage = res.message || 'Failed to create council.';
+        }
+      },
+      error: (err) => {
+        this.isCreatingCouncil = false;
+        this.errorMessage = this.extractError(err, 'Failed to create council.');
+      }
+    });
+  }
+
+  resetCouncilForm() {
+    this.newCouncilName = '';
+    this.selectedStaffIds = [];
+    this.staffSearchKeyword = '';
+    this.staffCurrentPage = 1;
+  }
+
+  get pagedStaffs(): Staff[] {
+    const start = (this.staffCurrentPage - 1) * this.staffPageSize;
+    return this.availableStaffs.slice(start, start + this.staffPageSize);
+  }
+
+  get totalStaffPages(): number {
+    return Math.ceil(this.availableStaffs.length / this.staffPageSize) || 1;
+  }
+
+  get staffPageNumbers(): number[] {
+    return Array.from({ length: this.totalStaffPages }, (_, i) => i + 1);
+  }
+
+  goToStaffPage(p: number) {
+    if (p >= 1 && p <= this.totalStaffPages) this.staffCurrentPage = p;
+  }
+
+  searchStaffs() {
+    if (!this.staffSearchKeyword.trim()) {
+      this.loadAvailableStaffs();
+      return;
+    }
+    this.isLoadingStaffs = true;
+    this.councilService.searchStaff(this.staffSearchKeyword).subscribe({
+      next: (res) => {
+        this.availableStaffs = res.data || [];
+        this.isLoadingStaffs = false;
+        this.staffCurrentPage = 1;
+      },
+      error: (err) => {
+        this.isLoadingStaffs = false;
+        this.errorMessage = 'Staff search failed.';
+      }
+    });
   }
 
 }
