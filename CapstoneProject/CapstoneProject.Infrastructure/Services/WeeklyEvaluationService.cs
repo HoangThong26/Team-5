@@ -64,5 +64,13 @@ namespace CapstoneProject.Infrastructure.Services
                 MentorName = evaluation.Mentor?.FullName ?? "Unknown Mentor"
             };
         }
+
+
+        public async Task<double> CaculateGoToCoulcing(int reportId)
+        {
+           var passCount = await _evaluationRepo.GetPassCountByReportId(reportId);
+           double percent = passCount/15.0 * 100;
+            return percent;
+        }
     }
 }

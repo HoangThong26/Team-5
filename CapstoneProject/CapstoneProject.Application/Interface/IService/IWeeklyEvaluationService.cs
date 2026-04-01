@@ -9,5 +9,6 @@ namespace CapstoneProject.Application.Interface.IService
     {
         Task EvaluateAsync(int mentorId, EvaluationRequest request);
         Task<EvaluationResponseDTO?> GetEvaluationByReportIdAsync(int reportId);
+        Task<double> CaculateGoToCoulcing(int reportId);
     }
 }
