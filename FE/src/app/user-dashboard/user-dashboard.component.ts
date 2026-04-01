@@ -242,7 +242,6 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
       });
     }
   }
-}
 
   private handleTopicSuccess(message: string) {
     this.isTopicLoading = false;
@@ -284,7 +283,6 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
     }
 
     this.isReportLoading = true;
-
     const formData = new FormData();
     formData.append('GroupId', this.myGroup.groupId.toString());
     formData.append('Content', this.reportContent);
@@ -375,7 +373,6 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
       this.selectedReportFile = file;
     }
   }
-
   enableReportEdit() {
     if (!this.selectedReport) return;
     this.isReportAdding = true;
@@ -454,7 +451,6 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
         // Đảm bảo res là mảng, sắp xếp tuần mới nhất lên đầu
         const data = Array.isArray(res) ? res : (res.data || []);
         this.weeklyReports = data.sort((a: any, b: any) => (b.weekId || 0) - (a.weekId || 0));
-
         // Lấy số tuần của bài mới nhất để hiển thị
         if (this.weeklyReports.length > 0) {
           this.reportWeek = this.weeklyReports[0].weekId;
@@ -970,7 +966,6 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
       content: query,
       timestamp: new Date()
     }];
-
     this.saveChatHistory();
     this.isSuggestingTopics = true;
     this.showAISuggestions = true;
@@ -1040,4 +1035,3 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
     }, 100);
   }
 }
-
