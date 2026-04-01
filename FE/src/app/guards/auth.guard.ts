@@ -81,42 +81,6 @@ export const mentorGuard: CanActivateFn = () => {
   return false;
 };
 
-/**
- * Fix hàm cuối cùng: Chuyển thành Functional Guard để dùng trong App Routing
- * Hàm này dùng cho trường hợp bạn muốn check động role từ data của Route
- */
-export const roleGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
-  const platformId = inject(PLATFORM_ID);
-  if (!isPlatformBrowser(platformId)) return true;
-
-  const authService = inject(AuthService);
-  const router = inject(Router);
-
-  if (!authService.isLoggedIn()) {
-    router.navigate(['/login']);
-    return false;
-  }
-  return true; 
-};
-export const mentorGuard: CanActivateFn = () => {
-  const platformId = inject(PLATFORM_ID);
-  if (!isPlatformBrowser(platformId)) return true;
-
-  const authService = inject(AuthService);
-  const router = inject(Router);
-
-  const user = authService.getCurrentUser();
-  const role = user?.role?.toLowerCase();
-
-  if (authService.isLoggedIn() && role === 'mentor') {
-    return true;
-  }
-
-  // Nếu không phải mentor, đẩy về trang login hoặc trang phù hợp
-  router.navigate(['/login']);
-  return false;
-};
-
 // Thêm mới Council Guard
 export const councilGuard: CanActivateFn = () => {
   const platformId = inject(PLATFORM_ID);
