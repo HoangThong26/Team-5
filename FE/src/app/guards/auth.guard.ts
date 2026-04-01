@@ -46,24 +46,18 @@ export const guestGuard: CanActivateFn = () => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  if (authService.isLoggedIn()) {
+ if (authService.isLoggedIn()) {
     const user = authService.getCurrentUser();
     const role = user?.role?.toLowerCase();
 
     if (role === 'admin') {
       router.navigate(['/admin']);
-      return false;
     } else if (role === 'mentor') {
       router.navigate(['/mentor-dashboard']);
-      return false;
-    } else if (role === 'student' || role === 'user') {
-      router.navigate(['/dashboard']);
-      return false;
+    } else if (role === 'council') {
+      router.navigate(['/council-dashboard']);
     } else {
-      // Nếu có token nhưng ko tìm thấy role hợp lệ, xóa token để user login lại
-      console.warn('Logged in but no valid role found. Clearing auth state.');
-      authService.clearToken();
-      return true; 
+      router.navigate(['/dashboard']);
     }
   }
   return true; 
@@ -83,6 +77,26 @@ export const mentorGuard: CanActivateFn = () => {
   }
 
   // Nếu không phải mentor, đẩy về trang login hoặc trang phù hợp
+  router.navigate(['/login']);
+  return false;
+};
+
+// Thêm mới Council Guard
+export const councilGuard: CanActivateFn = () => {
+  const platformId = inject(PLATFORM_ID);
+  if (!isPlatformBrowser(platformId)) return true;
+
+  const authService = inject(AuthService);
+  const router = inject(Router);
+
+  const user = authService.getCurrentUser();
+  const role = user?.role?.toLowerCase();
+
+  // Kiểm tra đăng nhập và đúng role council
+  if (authService.isLoggedIn() && role === 'council') {
+    return true;
+  }
+
   router.navigate(['/login']);
   return false;
 };
@@ -117,13 +131,10 @@ export const roleGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
     router.navigate(['/admin']);
   } else if (userRole === 'mentor') {
     router.navigate(['/mentor-dashboard']);
-  } else if (userRole === 'student' || userRole === 'user') {
-    router.navigate(['/dashboard']);
+  } else if (userRole === 'council') {
+    router.navigate(['/council-dashboard']);
   } else {
-    alert("Access Denied: You don't have permission to access this page!");
-    authService.clearToken();
-    router.navigate(['/login']);
+    router.navigate(['/dashboard']);
   }
-
   return false;
 };

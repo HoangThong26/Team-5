@@ -67,6 +67,7 @@ export class LoginComponent {
 
         // Verify token was saved
         const savedUser = this.authService.getCurrentUser();
+        console.log('[Login] Success. User context:', savedUser);
         if (!savedUser) {
           this.errorMessage = 'Failed to save session. Please try again.';
           return;
@@ -77,7 +78,10 @@ export class LoginComponent {
           this.router.navigate(['/admin']);
         } else if (role === 'mentor') {
           this.router.navigate(['/mentor-dashboard']);
-        } else {
+        } else if (role === 'council') {
+          this.router.navigate(['/council-dashboard']);
+        }
+        else {
           this.router.navigate(['/dashboard']);
         }
       },
