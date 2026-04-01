@@ -1,8 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { AdminService } from '../services/admin.service';
+import { CouncilService, Staff } from '../services/council.service';
+import { DefenseService } from '../services/defense.service';
+import {
+  CreateDefenseScheduleRequest,
+  DefenseCommitteeDto,
+  DefenseRegistrationItemDto,
+  UpdateDefenseScheduleRequest
+} from '../models/defense-registration.model';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -29,6 +38,10 @@ export class AdminDashboardComponent implements OnInit {
 
   get totalPages() {
     return Math.ceil(this.users.length / this.pageSize) || 1;
+  }
+
+  get scheduledDefenseCount(): number {
+    return (this.defenseRegistrations || []).filter(r => !!r.startTime).length;
   }
 
   get pageNumbers(): number[] {
@@ -80,14 +93,83 @@ export class AdminDashboardComponent implements OnInit {
   successMessage = '';
   errorMessage = '';
 
+  // Group Management
+  groups: any[] = [];
+  isLoadingGroups = false;
+  viewMode: 'users' | 'groups' | 'timeline' | 'councils' | 'defense' = 'users';
+
+  // Defense schedule management
+  defenseRegistrations: DefenseRegistrationItemDto[] = [];
+  defenseCommittees: DefenseCommitteeDto[] = [];
+  isLoadingDefense = false;
+  isSavingDefense = false;
+  defenseScheduleDraft: Record<number, {
+    date: string;
+    startTime: string;
+    endTime: string;
+    room: string;
+    councilId: number;
+  }> = {};
+
+  // Council Management
+  availableStaffs: Staff[] = [];
+  createdCouncils: DefenseCommitteeDto[] = [];
+  isLoadingStaffs = false;
+  isLoadingCouncils = false;
+  isCreatingCouncil = false;
+  
+  // Council Form
+  newCouncilName = '';
+  selectedStaffIds: number[] = [];
+  
+  // Council Staff Search & Pagination
+  staffSearchKeyword = '';
+  staffCurrentPage = 1;
+  staffPageSize = 5;
+
+  // Timeline Setup
+  projectStartDate: string = '';
+  isSettingTimeline = false;
+
+  // --- THÊM BIẾN LƯU DANH SÁCH MENTOR ---
+  mentors: any[] = []; 
+
   constructor(
     private adminService: AdminService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private councilService: CouncilService,
+    private defenseService: DefenseService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
+    this.setInitialViewFromRoute();
     this.loadUsers();
+    this.loadAllStatsOnInit();
+  }
+
+  private setInitialViewFromRoute() {
+    const requestedView = this.route.snapshot.data['viewMode'];
+    if (requestedView === 'defense') {
+      this.viewMode = 'defense';
+      this.loadDefenseScheduleData();
+    }
+  }
+
+  /** Load groups & mentors silently on startup so stat cards have correct data */
+  private loadAllStatsOnInit() {
+    this.adminService.getAllGroups().subscribe({
+      next: (res) => { this.groups = res; },
+      error: () => {}
+    });
+    this.adminService.getAllUsers().subscribe({
+      next: (res: any[]) => {
+        if (this.users.length === 0) this.users = res;
+        this.mentors = res.filter(u => (u?.role || '').toLowerCase() === 'mentor');
+      },
+      error: () => {}
+    });
   }
 
   private extractError(err: any, fallback: string): string {
@@ -252,9 +334,10 @@ export class AdminDashboardComponent implements OnInit {
       }
     });
   }
+
   downloadStudentList() {
     this.isExporting = true;
-    this.errorMessage = ''; // Xóa thông báo lỗi cũ (nếu có) trước khi chạy
+    this.errorMessage = ''; 
     this.successMessage = ''; 
 
     this.adminService.exportStudents().subscribe({
@@ -269,7 +352,6 @@ export class AdminDashboardComponent implements OnInit {
         const mm = String(today.getMonth() + 1).padStart(2, '0'); 
         const yyyy = today.getFullYear();
         
-        // Đổi tên file sang tiếng Anh
         a.download = `StudentList_${dd}${mm}${yyyy}.xlsx`; 
       
         document.body.appendChild(a);
@@ -278,37 +360,230 @@ export class AdminDashboardComponent implements OnInit {
         window.URL.revokeObjectURL(url); 
         
         this.isExporting = false;
-        
-        // (Tùy chọn) Bạn có thể bật dòng dưới nếu muốn hiện thông báo thành công màu xanh
-        // this.successMessage = 'Student list exported successfully!'; 
       },
       error: (error) => {
         console.error('Error exporting Excel file:', error);
-        
-        // Sử dụng biến errorMessage thay cho alert() để đồng bộ UI
         this.errorMessage = 'An error occurred while exporting the student list!';
         this.isExporting = false;
       }
     });
   }
 
-
-  groups: any[] = [];
-  isLoadingGroups = false;
-  viewMode: 'users' | 'groups' = 'users'; // Để chuyển đổi giữa quản lý User và Group
-
-  // ... (ngOnInit) ...
-switchView(mode: 'users' | 'groups') {
-  this.viewMode = mode;
-  if (mode === 'users') {
-    // Đảm bảo users không bị rỗng, nếu rỗng thì load lại
-    if (this.users.length === 0) {
-      this.loadUsers();
+  switchView(mode: 'users' | 'groups' | 'timeline' | 'councils' | 'defense') {
+    this.viewMode = mode;
+    this.successMessage = '';
+    this.errorMessage = '';
+    
+    if (mode === 'users') {
+      if (this.users.length === 0) {
+        this.loadUsers();
+      }
+    } else if (mode === 'groups') {
+      this.loadGroups();
+      this.loadMentors(); 
+    } else if (mode === 'timeline') {
+      // Timeline setup
+    } else if (mode === 'councils') {
+      this.staffCurrentPage = 1;
+      this.staffSearchKeyword = '';
+      this.loadAvailableStaffs();
+      this.loadCreatedCouncils();
+    } else if (mode === 'defense') {
+      this.loadDefenseScheduleData();
     }
-  } else if (mode === 'groups') {
-    this.loadGroups();
   }
-}
+
+  loadDefenseScheduleData() {
+    this.isLoadingDefense = true;
+    this.errorMessage = '';
+    this.successMessage = '';
+
+    const ensureUsers = this.users.length > 0
+      ? Promise.resolve()
+      : new Promise<void>((resolve) => {
+          this.adminService.getAllUsers().subscribe({
+            next: (res: any[]) => {
+              this.users = res || [];
+              resolve();
+            },
+            error: () => resolve()
+          });
+        });
+
+    ensureUsers.then(() => {
+      forkJoin({
+        registrations: this.defenseService.getRegistrations(),
+        committees: this.defenseService.getCommittees()
+      }).subscribe({
+        next: (data) => {
+          this.defenseRegistrations = data.registrations || [];
+          this.defenseCommittees = (data.committees || []).filter(c => (c.members || []).length >= 3);
+          this.prepareScheduleDrafts();
+          this.isLoadingDefense = false;
+        },
+        error: (err) => {
+          this.isLoadingDefense = false;
+          this.errorMessage = this.extractError(err, 'Could not load defense data.');
+        }
+      });
+    });
+  }
+
+  prepareScheduleDrafts() {
+    for (const registration of this.defenseRegistrations) {
+      if (this.defenseScheduleDraft[registration.defenseId]) {
+        continue;
+      }
+
+      const start = registration.startTime ? new Date(registration.startTime) : null;
+      const end = registration.endTime ? new Date(registration.endTime) : null;
+
+      this.defenseScheduleDraft[registration.defenseId] = {
+        date: this.toDateInputValue(start),
+        startTime: this.toTimeInputValue(start),
+        endTime: this.toTimeInputValue(end),
+        room: registration.room || '',
+        councilId: registration.councilId || 0
+      };
+    }
+  }
+
+  hasExistingSchedule(item: DefenseRegistrationItemDto): boolean {
+    return !!(item.startTime || item.room || item.councilId);
+  }
+
+  getCommitteeLabel(councilId?: number): string {
+    if (!councilId) {
+      return 'Not assigned';
+    }
+
+    const committee = this.defenseCommittees.find(c => c.councilId === councilId);
+    return committee ? committee.councilName : `Council #${councilId}`;
+  }
+
+  getCommitteeOptionLabel(committee: DefenseCommitteeDto): string {
+    const memberCount = committee.members?.length || 0;
+    const memberText = memberCount === 1 ? 'member' : 'members';
+    return `${committee.councilName} (${memberCount} ${memberText})`;
+  }
+
+  saveDefenseSchedule(item: DefenseRegistrationItemDto) {
+    const draft = this.defenseScheduleDraft[item.defenseId];
+    if (!draft) {
+      this.errorMessage = 'Schedule draft not found.';
+      return;
+    }
+
+    if (!draft.date || !draft.startTime || !draft.room.trim() || !draft.councilId) {
+      this.errorMessage = 'Please provide Date, Time, Room and a valid Council.';
+      return;
+    }
+
+    const startTime = this.toIsoDateTime(draft.date, draft.startTime);
+    const endTime = draft.endTime ? this.toIsoDateTime(draft.date, draft.endTime) : null;
+
+    this.isSavingDefense = true;
+    this.successMessage = '';
+    this.errorMessage = '';
+
+    if (this.hasExistingSchedule(item)) {
+      const payload: UpdateDefenseScheduleRequest = {
+        councilId: draft.councilId,
+        room: draft.room.trim(),
+        startTime,
+        endTime
+      };
+
+      this.defenseService.updateSchedule(item.defenseId, payload).subscribe({
+        next: (res) => {
+          this.isSavingDefense = false;
+          this.successMessage = res?.message || 'Defense schedule updated successfully.';
+          this.refreshDefenseRegistrations();
+        },
+        error: (err) => {
+          this.isSavingDefense = false;
+          this.errorMessage = this.extractError(err, 'Failed to update defense schedule.');
+        }
+      });
+      return;
+    }
+
+    const payload: CreateDefenseScheduleRequest = {
+      defenseId: item.defenseId,
+      councilId: draft.councilId,
+      room: draft.room.trim(),
+      startTime,
+      endTime
+    };
+
+    this.defenseService.createSchedule(payload).subscribe({
+      next: (res) => {
+        this.isSavingDefense = false;
+        this.successMessage = res?.message || 'Defense schedule saved successfully.';
+        this.refreshDefenseRegistrations();
+      },
+      error: (err) => {
+        this.isSavingDefense = false;
+        this.errorMessage = this.extractError(err, 'Failed to save defense schedule.');
+      }
+    });
+  }
+
+  private refreshDefenseRegistrations() {
+    this.defenseService.getRegistrations().subscribe({
+      next: (res) => {
+        this.defenseRegistrations = res || [];
+        this.defenseScheduleDraft = {};
+        this.prepareScheduleDrafts();
+      },
+      error: (err) => {
+        this.errorMessage = this.extractError(err, 'Could not refresh defense registrations.');
+      }
+    });
+  }
+
+  private toDateInputValue(value: Date | null): string {
+    if (!value) {
+      return '';
+    }
+
+    const year = value.getFullYear();
+    const month = String(value.getMonth() + 1).padStart(2, '0');
+    const day = String(value.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  private toTimeInputValue(value: Date | null): string {
+    if (!value) {
+      return '';
+    }
+
+    const hours = String(value.getHours()).padStart(2, '0');
+    const minutes = String(value.getMinutes()).padStart(2, '0');
+    return `${hours}:${minutes}`;
+  }
+
+  private toIsoDateTime(dateValue: string, timeValue: string): string {
+    return `${dateValue}T${timeValue}`;
+  }
+
+  formatDateTime(value?: string): string {
+    if (!value) {
+      return '';
+    }
+
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+      return value;
+    }
+
+    const dd = String(date.getDate()).padStart(2, '0');
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const yyyy = date.getFullYear();
+    const hh = String(date.getHours()).padStart(2, '0');
+    const min = String(date.getMinutes()).padStart(2, '0');
+    return `${dd}/${mm}/${yyyy} ${hh}:${min}`;
+  }
 
   loadGroups() {
     this.isLoadingGroups = true;
@@ -324,18 +599,55 @@ switchView(mode: 'users' | 'groups') {
     });
   }
 
+  loadMentors() {
+    if (this.users.length > 0) {
+      this.mentors = this.users.filter(u => u.role === 'Mentor');
+    } else {
+      this.adminService.getAllUsers().subscribe({
+        next: (res: any[]) => {
+          this.users = res;
+          this.mentors = res.filter(u => u.role === 'Mentor');
+        },
+        error: (err) => console.error('Could not load mentor list', err)
+      });
+    }
+  }
+
+  handleAssignMentor(groupId: number, mentorId: number) {
+  if (!mentorId) {
+    this.errorMessage = 'Please select a mentor first.';
+    return; 
+  }
+
+  this.isLoadingGroups = true;
+  this.successMessage = '';
+  this.errorMessage = '';
+
+  this.adminService.assignMentor(groupId, mentorId).subscribe({
+    next: (res: any) => {
+      this.isLoadingGroups = false; 
+      this.successMessage = res?.message || 'Mentor assigned successfully!';
+      this.loadGroups(); 
+    },
+    error: (err) => {
+      this.isLoadingGroups = false;
+      this.errorMessage = this.extractError(err, 'Failed to assign mentor.');
+      console.error('Lỗi từ API:', err);
+    }
+  });
+}
+
   handleKickMentor(groupId: number) {
     if (confirm('Are you sure you want to remove the mentor from this group?')) {
       this.adminService.kickMentor(groupId).subscribe({
         next: (res: any) => {
           this.successMessage = res.message;
-          this.loadGroups(); // Refresh lại danh sách
+          this.loadGroups();
         },
         error: (err) => this.errorMessage = this.extractError(err, 'Failed to kick mentor.')
       });
     }
   }
-
   handleDeleteGroup(groupId: number) {
     if (confirm('WARNING: This will delete the group and all its assignments. Proceed?')) {
       this.adminService.deleteGroup(groupId).subscribe({
@@ -347,4 +659,162 @@ switchView(mode: 'users' | 'groups') {
       });
     }
   }
+
+  handleSetupTimeline() {
+    if (!this.projectStartDate) {
+      this.errorMessage = 'Please select a start date.';
+      return;
+    }
+
+    this.isSettingTimeline = true;
+    this.successMessage = '';
+    this.errorMessage = '';
+
+    this.adminService.setupTimeline(this.projectStartDate).subscribe({
+      next: (res: any) => {
+        this.isSettingTimeline = false;
+        this.successMessage = res?.message || 'Project timeline has been set successfully!';
+      },
+      error: (err) => {
+        this.isSettingTimeline = false;
+        this.errorMessage = this.extractError(err, 'Failed to setup timeline.');
+      }
+    });
+  }
+
+  getRoleGradient(role: string): string {
+    switch ((role || '').toLowerCase()) {
+      case 'admin':   return 'linear-gradient(135deg,#ef4444,#b91c1c)';
+      case 'mentor':  return 'linear-gradient(135deg,#7c3aed,#a855f7)';
+      case 'council': return 'linear-gradient(135deg,#d97706,#f59e0b)';
+      default:        return 'linear-gradient(135deg,#2563eb,#3b82f6)';
+    }
+  }
+
+  /** Returns full names of members beyond index 3, for the +N bubble tooltip */
+  getExtraNames(members: any[]): string {
+    if (!members || members.length <= 4) return '';
+    return members.slice(4).map((m: any) => m.fullName || 'Unknown').join(', ');
+  }
+
+  // --- COUNCIL METHODS ---
+
+  loadAvailableStaffs() {
+    this.isLoadingStaffs = true;
+    this.councilService.getAvailableStaffs().subscribe({
+      next: (res) => {
+        this.availableStaffs = res.data || [];
+        this.isLoadingStaffs = false;
+      },
+      error: (err) => {
+        this.isLoadingStaffs = false;
+        this.errorMessage = 'Could not load available staff.';
+      }
+    });
+  }
+
+  loadCreatedCouncils() {
+    this.isLoadingCouncils = true;
+    this.defenseService.getCommittees().subscribe({
+      next: (res) => {
+        this.createdCouncils = res || [];
+        this.isLoadingCouncils = false;
+      },
+      error: () => {
+        this.isLoadingCouncils = false;
+        this.errorMessage = 'Could not load created councils.';
+      }
+    });
+  }
+
+  toggleStaffSelection(staffId: number) {
+    const index = this.selectedStaffIds.indexOf(staffId);
+    if (index > -1) {
+      this.selectedStaffIds.splice(index, 1);
+    } else {
+      this.selectedStaffIds.push(staffId);
+    }
+  }
+
+  createCouncil() {
+    if (!this.newCouncilName) {
+      this.errorMessage = 'Please fill in required fields (Name).';
+      return;
+    }
+
+    if (this.selectedStaffIds.length === 0) {
+      this.errorMessage = 'Please select at least one staff member.';
+      return;
+    }
+
+    this.isCreatingCouncil = true;
+    this.successMessage = '';
+    this.errorMessage = '';
+
+    const payload = {
+      name: this.newCouncilName,
+      memberIds: this.selectedStaffIds
+    };
+
+    this.councilService.createFullCouncil(payload).subscribe({
+      next: (res: any) => {
+        this.isCreatingCouncil = false;
+        if (res.success) {
+          this.successMessage = res.message || 'Council created successfully!';
+          this.resetCouncilForm();
+          this.loadCreatedCouncils();
+        } else {
+          this.errorMessage = res.message || 'Failed to create council.';
+        }
+      },
+      error: (err) => {
+        this.isCreatingCouncil = false;
+        this.errorMessage = this.extractError(err, 'Failed to create council.');
+      }
+    });
+  }
+
+  resetCouncilForm() {
+    this.newCouncilName = '';
+    this.selectedStaffIds = [];
+    this.staffSearchKeyword = '';
+    this.staffCurrentPage = 1;
+  }
+
+  get pagedStaffs(): Staff[] {
+    const start = (this.staffCurrentPage - 1) * this.staffPageSize;
+    return this.availableStaffs.slice(start, start + this.staffPageSize);
+  }
+
+  get totalStaffPages(): number {
+    return Math.ceil(this.availableStaffs.length / this.staffPageSize) || 1;
+  }
+
+  get staffPageNumbers(): number[] {
+    return Array.from({ length: this.totalStaffPages }, (_, i) => i + 1);
+  }
+
+  goToStaffPage(p: number) {
+    if (p >= 1 && p <= this.totalStaffPages) this.staffCurrentPage = p;
+  }
+
+  searchStaffs() {
+    if (!this.staffSearchKeyword.trim()) {
+      this.loadAvailableStaffs();
+      return;
+    }
+    this.isLoadingStaffs = true;
+    this.councilService.searchStaff(this.staffSearchKeyword).subscribe({
+      next: (res) => {
+        this.availableStaffs = res.data || [];
+        this.isLoadingStaffs = false;
+        this.staffCurrentPage = 1;
+      },
+      error: (err) => {
+        this.isLoadingStaffs = false;
+        this.errorMessage = 'Staff search failed.';
+      }
+    });
+  }
+
 }

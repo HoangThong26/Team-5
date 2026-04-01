@@ -9,9 +9,10 @@ import { AdminCreateUserRequest } from '../models/user.model';
 export class AdminService {
 
   private apiUrl = 'https://localhost:7084/api/Admin';
- private apiUrlGroup = 'https://localhost:7084/api/Groups';
+  private apiUrlGroup = 'https://localhost:7084/api/Groups';
+  private apiUrlAdminTimeline = 'https://localhost:7084/api/Admin/setup-timeline';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   createUser(request: AdminCreateUserRequest): Observable<any> {
     return this.http.post(`${this.apiUrl}/create-user`, request);
@@ -35,19 +36,31 @@ export class AdminService {
 
   exportStudents(): Observable<Blob> {
     return this.http.get(`${this.apiUrl}/export-students`, {
-      responseType: 'blob' 
+      responseType: 'blob'
     });
   }
 
   getAllGroups(): Observable<any[]> {
-  return this.http.get<any[]>(`${this.apiUrlGroup}/admin/all-groups`);
-}
+    return this.http.get<any[]>(`${this.apiUrlGroup}/admin/all-groups`);
+  }
 
-deleteGroup(groupId: number): Observable<any> {
+  deleteGroup(groupId: number): Observable<any> {
     return this.http.delete(`${this.apiUrlGroup}/admin/${groupId}`);
-}
+  }
 
-kickMentor(groupId: number): Observable<any> {
-  return this.http.delete(`${this.apiUrlGroup}/admin/${groupId}/kick-mentor`);
-}
+  kickMentor(groupId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrlGroup}/admin/${groupId}/kick-mentor`);
+  }
+
+  assignMentor(groupId: number, mentorId: number): Observable<any> {
+    return this.http.post(`${this.apiUrlGroup}/admin/assign-mentor`, {
+      groupId: groupId,
+      mentorId: mentorId
+    });
+  }
+
+  setupTimeline(startDate: string): Observable<any> {
+    const body = { startDate: startDate };
+    return this.http.post(this.apiUrlAdminTimeline, body);
+  }
 }
