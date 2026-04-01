@@ -46,3 +46,13 @@ export interface WeeklyReportHistoryDto {
   reviewedAt?: Date;
   mentorName?: string;
 }
+
+export interface CouncilEligibilityDto {
+  groupId: number;
+  totalWeeks: number;
+  totalScore: number;
+  maxScore: number;
+  percentage: number;
+  isEligibleForCouncil: boolean;
+  evaluatedWeeks: number;
+}
