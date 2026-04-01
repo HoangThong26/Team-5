@@ -15,6 +15,8 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,7 +25,13 @@ builder.Services.AddValidatorsFromAssemblyContaining<LoginRequestValidator>();
 // Đăng ký các dịch vụ cho Topic
 builder.Services.AddScoped<ITopicRepository, TopicRepository>();
 builder.Services.AddScoped<ITopicService, TopicService>();
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString;
+    });
 builder.Services.AddSignalR(); // Đã có sẵn, rất tốt!
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -62,27 +70,29 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IPasswordResetTokenRepository, PasswordResetTokenRepository>();
 builder.Services.AddScoped<IGroupRepository, GroupRepository>();
 builder.Services.AddScoped<IGroupService, GroupService>();
-
+builder.Services.AddScoped<IDefenseRepository, DefenseRepository>();
+builder.Services.AddScoped<IDefenseService, DefenseService>();
+builder.Services.AddScoped<IGroupMemberRepository, GroupMemberRepository>();
 builder.Services.AddScoped<IGroupMemberRepository, GroupMemberRepository>();
 builder.Services.AddScoped<IMentorAssignmentRepository, MentorAssignmentRepository>();
-builder.Services.AddSingleton<IUserIdProvider, EmailBasedUserIdProvider>();
 builder.Services.AddScoped<IWeeklyReportRepository, WeeklyReportRepository>();
 builder.Services.AddScoped<IWeeklyReportService, WeeklyReportService>();
 builder.Services.AddScoped<IWeeklyEvaluationRepository, WeeklyEvaluationRepository>();
 builder.Services.AddScoped<IWeeklyEvaluationService, WeeklyEvaluationService>();
-builder.Services.AddScoped<IDefenseRepository, DefenseRepository>();
-builder.Services.AddScoped<IDefenseService, DefenseService>();
-
-builder.Services.AddScoped<IGroupMemberRepository, GroupMemberRepository>();
-builder.Services.AddScoped<IMentorAssignmentRepository, MentorAssignmentRepository>();
 builder.Services.AddSingleton<IUserIdProvider, EmailBasedUserIdProvider>();
+builder.Services.AddHttpClient<ITopicAiService, TopicAiService>();
+builder.Services.AddScoped<IGradeService, GradeService>();
+builder.Services.AddScoped<ICouncilRepository, CouncilRepository>();
+builder.Services.AddScoped<ICouncilService, CouncilService>();
 
-builder.Services.AddCors(options => {
-    options.AddPolicy("AllowAll", builder => {
-        builder.WithOrigins("http://localhost:4200") 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", builder =>
+    {
+        builder.WithOrigins("http://localhost:4200")
                .AllowAnyMethod()
                .AllowAnyHeader()
-               .AllowCredentials(); 
+               .AllowCredentials();
     });
 });
 
