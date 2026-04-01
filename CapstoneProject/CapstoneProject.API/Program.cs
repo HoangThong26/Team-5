@@ -63,6 +63,11 @@ builder.Services.AddAuthentication(options =>
 });
 
 builder.Services.AddAuthorization();
+// Đảm bảo bạn có using này ở trên cùng Program.cs
+// using CapstoneProject.Infrastructure.Services;
+// using CapstoneProject.Application.Interface.IService;
+
+builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
