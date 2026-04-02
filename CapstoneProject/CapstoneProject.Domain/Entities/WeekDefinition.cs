@@ -12,7 +12,10 @@ public partial class WeekDefinition
     public int WeekId { get; set; }
 
     public int? WeekNumber { get; set; }
-
+    // Thêm 2 dòng này vào class WeekDefinition
+    public int? SemesterId { get; set; }
+    [ForeignKey("SemesterId")]
+    public virtual Semester? Semester { get; set; }
     public DateOnly? StartDate { get; set; }
 
     public DateOnly? EndDate { get; set; }

@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using CapstoneProject.Application.Interfaces;
 using  CapstoneProject.Domain.Entities;
-
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 
 namespace CapstoneProject.Infrastructure.Database.AppDbContext;
 
-public partial class ApplicationDbContext : DbContext
+public partial class ApplicationDbContext : DbContext, IApplicationDbContext
+
 {
     public ApplicationDbContext()
     {
@@ -38,7 +39,9 @@ public partial class ApplicationDbContext : DbContext
     public virtual DbSet<LoginHistory> LoginHistories { get; set; }
 
     public virtual DbSet<MentorAssignment> MentorAssignments { get; set; }
-
+    // Thêm 2 dòng này
+    public DbSet<Semester> Semesters { get; set; }
+    public DbSet<Major> Majors { get; set; }
     public virtual DbSet<MentorRequest> MentorRequests { get; set; }
 
     public virtual DbSet<PasswordResetToken> PasswordResetTokens { get; set; }

@@ -38,6 +38,11 @@ public partial class User
 
     public int? FailedLoginCount { get; set; }
 
+    // Thêm 2 dòng này vào class User của bạn
+    public int? MajorId { get; set; }
+    [ForeignKey("MajorId")]
+    public virtual Major? Major { get; set; }
+
     public DateTime? LockUntil { get; set; }
 
     public DateTime? CreatedAt { get; set; }

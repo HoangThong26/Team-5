@@ -11,7 +11,8 @@ public partial class FinalGrade
 {
     [Key]
     public int Id { get; set; }
-
+    // Thêm dòng này vào class FinalGrade
+    public bool? IsPass { get; set; }
     public int? GroupId { get; set; }
 
     [Column(TypeName = "decimal(5, 2)")]

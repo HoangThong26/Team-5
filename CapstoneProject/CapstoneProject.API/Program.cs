@@ -1,10 +1,11 @@
 
-using CapstoneProject.Application.Interface;
 using CapstoneProject.API.Hubs;
-
+using CapstoneProject.Application.Interface;
 using CapstoneProject.Application.Interface.IRepository;
 using CapstoneProject.Application.Interface.IService;
+using CapstoneProject.Application.Interfaces;
 using CapstoneProject.Application.Service;
+using CapstoneProject.Application.Services;
 using CapstoneProject.Infrastructure.Database.AppDbContext;
 using CapstoneProject.Infrastructure.Repository;
 using CapstoneProject.Infrastructure.Repostitory;
@@ -79,7 +80,7 @@ builder.Services.AddScoped<IGroupRepository, GroupRepository>();
 builder.Services.AddScoped<IGroupService, GroupService>();
 builder.Services.AddScoped<IDefenseRepository, DefenseRepository>();
 builder.Services.AddScoped<IDefenseService, DefenseService>();
-
+builder.Services.AddScoped<IStatisticService, StatisticService>();
 builder.Services.AddScoped<IGroupMemberRepository,GroupMemberRepository>();
 builder.Services.AddScoped<IMentorAssignmentRepository, MentorAssignmentRepository>();
 builder.Services.AddSingleton<IUserIdProvider, EmailBasedUserIdProvider>();
