@@ -48,6 +48,20 @@
           <path d="M6 12v5c0 1.1.9 2 2 2h8a2 2 0 002-2v-5"/>
         </svg>
         <span>Final Grades</span>
+      <button class="sb-item" [class.active]="viewMode === 'councils'" (click)="switchView('councils')">
+        <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+          <path d="M12 11V6a2 2 0 014 0v5"/>
+        </svg>
+        <span>Councils</span>
+      </button>
+      <button class="sb-item" [class.active]="viewMode === 'defense'" (click)="switchView('defense')">
+        <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 3l8 4v5c0 5-3.4 8.6-8 10-4.6-1.4-8-5-8-10V7l8-4z"/>
+          <path d="M9 12l2 2 4-4"/>
+        </svg>
+        <span>Defense Schedule</span>
+        <span class="sb-count">{{ defenseRegistrations.length }}</span>
       </button>
     </nav>
 
@@ -98,6 +112,15 @@
           @if (viewMode === 'grades') {
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
               <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+          @if (viewMode === 'councils') {
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+          }
+          @if (viewMode === 'defense') {
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <path d="M12 3l8 4v5c0 5-3.4 8.6-8 10-4.6-1.4-8-5-8-10V7l8-4z"/>
+              <path d="M9 12l2 2 4-4"/>
             </svg>
           }
         </div>
@@ -107,6 +130,8 @@
             @if (viewMode === 'groups') { Group Management }
             @if (viewMode === 'timeline') { Project Timeline }
             @if (viewMode === 'grades') { Final Grade Management }
+            @if (viewMode === 'councils') { Council Management }
+            @if (viewMode === 'defense') { Defense Schedule Management }
           </h1>
           <p class="ah-sub">ThesisPro Admin Console · Manage your academic system</p>
         </div>
@@ -487,6 +512,106 @@
         </div>
       }
 
+      <!-- ═══ DEFENSE VIEW ═══ -->
+      @if (viewMode === 'defense') {
+        <div class="defense-overview">
+          <div class="defense-kpi">
+            <p class="dk-label">Registrations</p>
+            <p class="dk-value">{{ defenseRegistrations.length }}</p>
+          </div>
+          <div class="defense-kpi">
+            <p class="dk-label">Scheduled</p>
+            <p class="dk-value">{{ scheduledDefenseCount }}</p>
+          </div>
+          <div class="defense-kpi">
+            <p class="dk-label">Councils</p>
+            <p class="dk-value">{{ defenseCommittees.length }}</p>
+          </div>
+        </div>
+
+        <div class="table-card defense-table-card">
+          <div class="tc-header">
+            <h3 class="tc-title">Defense Registrations</h3>
+            <p class="tc-sub">Assign committee, room and time for each defense</p>
+          </div>
+
+          @if (isLoadingDefense) {
+            <div class="shimmer-wrap">
+              @for (i of [1,2,3,4]; track i) {
+                <div class="shimmer-row"><div class="sh sh-120"></div><div class="sh sh-grow"></div><div class="sh sh-grow"></div></div>
+              }
+            </div>
+          } @else {
+            <div class="table-scroll">
+              <table class="dt">
+                <thead>
+                  <tr>
+                    <th>Group</th>
+                    <th>Current Schedule</th>
+                    <th>Assign / Update</th>
+                    <th style="text-align:center">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (item of defenseRegistrations; track item.defenseId) {
+                    <tr class="dt-row defense-row">
+                      <td>
+                        <div class="group-cell">
+                          <div class="gc-icon">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                          </div>
+                          <div>
+                            <strong>{{ item.groupName }}</strong>
+                            <p class="uc-id">Defense #{{ item.defenseId }}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        @if (item.startTime) {
+                          <div class="schedule-chip">
+                            <span class="sch-time">{{ formatDateTime(item.startTime) }}</span>
+                            <span class="sch-room">Room: {{ item.room || 'TBD' }}</span>
+                            <span class="sch-room">{{ getCommitteeLabel(item.councilId) }}</span>
+                          </div>
+                        } @else {
+                          <span class="td-muted">Not scheduled yet</span>
+                        }
+                      </td>
+                      <td>
+                        <div class="schedule-grid">
+                          <input class="f-input" type="date" [(ngModel)]="defenseScheduleDraft[item.defenseId].date" />
+                          <input class="f-input" type="time" [(ngModel)]="defenseScheduleDraft[item.defenseId].startTime" />
+                          <input class="f-input" type="time" [(ngModel)]="defenseScheduleDraft[item.defenseId].endTime" />
+                          <input class="f-input" type="text" placeholder="Room" [(ngModel)]="defenseScheduleDraft[item.defenseId].room" />
+                          <select class="f-input defense-sel" [(ngModel)]="defenseScheduleDraft[item.defenseId].councilId">
+                            <option [ngValue]="0">Select council</option>
+                            @for (c of defenseCommittees; track c.councilId) {
+                              <option [ngValue]="c.councilId">{{ getCommitteeOptionLabel(c) }}</option>
+                            }
+                          </select>
+                          <input class="f-input" type="text" [value]="getCommitteeLabel(defenseScheduleDraft[item.defenseId].councilId)" readonly />
+                        </div>
+                      </td>
+                      <td style="text-align:center">
+                        <button class="tbtn primary" (click)="saveDefenseSchedule(item)" [disabled]="isSavingDefense">
+                          {{ hasExistingSchedule(item) ? 'Update' : 'Save' }}
+                        </button>
+                      </td>
+                    </tr>
+                  } @empty {
+                    <tr>
+                      <td colspan="4" class="empty-cell">
+                        <p>No defense registrations found.</p>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        </div>
+      }
+
       <!-- ═══ TIMELINE VIEW ═══ -->
       @if (viewMode === 'timeline') {
         <div class="panel-card blue-accent animate-drop" style="max-width: 600px; margin: 0 auto;">
@@ -617,6 +742,122 @@
           </div>
         </div>
       }
+      <!-- ═══ COUNCILS VIEW ═══ -->
+      @if (viewMode === 'councils') {
+        <div class="council-layout animate-drop">
+          
+          <!-- LEFT: COUNCIL FORM -->
+          <div class="panel-card blue-accent flex-3">
+            <div class="panel-hd">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              Create New Defense Council
+            </div>
+            <div class="panel-body">
+              <div class="f-group">
+                <label>Council Name <span class="req">*</span></label>
+                <input class="f-input" type="text" [(ngModel)]="newCouncilName" placeholder="e.g. Graduation Thesis Council - Board A">
+              </div>
+
+              <!-- STAFF SELECTION WITH SEARCH -->
+              <div class="section-divider">SELECT MEMBERS ({{ availableStaffs.length }} FOUND)</div>
+              
+              <div class="search-wrap mb-3" style="margin-bottom: 0.75rem;">
+                <svg class="search-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input class="search-input" type="text" [(ngModel)]="staffSearchKeyword" placeholder="Search staff by name..." (keyup.enter)="searchStaffs()">
+                <button class="tbtn primary" style="padding: 0.3rem 0.75rem; font-size: 0.75rem;" (click)="searchStaffs()">Search</button>
+              </div>
+
+              <div class="staff-grid scroll-y">
+                @if (isLoadingStaffs) {
+                  <div class="shimmer-row"><div class="sh sh-grow"></div></div>
+                } @else {
+                  @for (staff of pagedStaffs; track staff.userId) {
+                    <div class="selection-item" [class.selected]="selectedStaffIds.includes(staff.userId)" (click)="toggleStaffSelection(staff.userId)">
+                      <div class="sel-check">
+                        @if (selectedStaffIds.includes(staff.userId)) {
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                        }
+                      </div>
+                      <div class="sel-info">
+                        <p class="sel-name">{{ staff.fullName }}</p>
+                        <p class="sel-sub">{{ staff.email }}</p>
+                      </div>
+                    </div>
+                  } @empty {
+                    <p class="td-muted">No available staff found.</p>
+                  }
+                }
+              </div>
+
+              <!-- STAFF PAGINATION -->
+              @if (totalStaffPages > 1) {
+                <div class="pager" style="padding: 0.75rem 0; border: none;">
+                  <div class="pager-controls" style="margin: 0 auto;">
+                    <button class="pg-btn" [disabled]="staffCurrentPage === 1" (click)="goToStaffPage(staffCurrentPage - 1)">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+                    </button>
+                    @for (p of staffPageNumbers; track p) {
+                      <button class="pg-btn" [class.active]="staffCurrentPage === p" (click)="goToStaffPage(p)">{{ p }}</button>
+                    }
+                    <button class="pg-btn" [disabled]="staffCurrentPage === totalStaffPages" (click)="goToStaffPage(staffCurrentPage + 1)">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+                  </div>
+                </div>
+              }
+
+              <div style="margin-top: 1.5rem">
+                <button class="tbtn primary lg w-full" (click)="createCouncil()" [disabled]="isCreatingCouncil || !newCouncilName || selectedStaffIds.length === 0">
+                  @if (isCreatingCouncil) {
+                    <span class="spin-sm"></span> Creating Council...
+                  } @else {
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+                    Create Council &amp; Save Members
+                  }
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: CREATED COUNCILS -->
+          <div class="panel-card slate-accent flex-2">
+            <div class="panel-hd">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+              Created Councils and Members
+            </div>
+            <div class="panel-body">
+              <p class="modal-desc">Danh sach cac council da tao va thanh vien trong tung council.</p>
+              <div class="staff-grid scroll-y" style="max-height: 480px;">
+                @if (isLoadingCouncils) {
+                  <div class="shimmer-row"><div class="sh sh-grow"></div></div>
+                } @else {
+                  @for (council of createdCouncils; track council.councilId) {
+                  <div class="selection-item council-item">
+                    <div class="sel-info">
+                      <p class="sel-name">{{ council.councilName }}</p>
+                      <p class="sel-sub">{{ council.members?.length || 0 }} members</p>
+                      <div class="council-members">
+                        @if ((council.members?.length || 0) > 0) {
+                          @for (member of council.members; track member.userId) {
+                            <span class="member-chip">{{ member.fullName }}</span>
+                          }
+                        } @else {
+                          <span class="td-muted">No members.</span>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                  } @empty {
+                    <p class="td-muted">No councils created yet.</p>
+                  }
+                }
+              </div>
+            </div>
+          </div>
+
+        </div>
+      }
+
     </div>
   </main>
 </div>

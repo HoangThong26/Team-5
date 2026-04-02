@@ -375,6 +375,89 @@
   max-width: 140px;
 }
 
+.defense-sel {
+  max-width: 220px;
+  width: 100%;
+}
+
+.defense-overview {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(140px, 1fr));
+  gap: .75rem;
+  margin-bottom: 1rem;
+}
+
+.defense-kpi {
+  background: linear-gradient(150deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: .85rem 1rem;
+  box-shadow: 0 3px 10px rgba(15,23,42,.04);
+}
+
+.dk-label {
+  margin: 0;
+  font-size: .74rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  font-weight: 700;
+}
+
+.dk-value {
+  margin: .25rem 0 0;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.defense-table-card {
+  border: 1px solid #dbeafe;
+}
+
+.defense-row {
+  background: linear-gradient(180deg, #ffffff 0%, #fdfdff 100%);
+}
+
+.schedule-chip {
+  display: inline-flex;
+  flex-direction: column;
+  gap: .18rem;
+  padding: .45rem .6rem;
+  border-radius: 10px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+}
+
+.sch-time {
+  font-size: .78rem;
+  font-weight: 700;
+  color: #1d4ed8;
+}
+
+.sch-room {
+  font-size: .74rem;
+  color: #475569;
+}
+
+.schedule-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(110px, 1fr));
+  gap: .4rem;
+  min-width: 360px;
+}
+
+@media (max-width: 1100px) {
+  .defense-overview {
+    grid-template-columns: 1fr;
+  }
+
+  .schedule-grid {
+    min-width: 280px;
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Empty cell */
 .empty-cell { text-align: center; padding: 3.5rem; color: #94a3b8; }
 .empty-cell p { margin: .75rem 0 0; font-size: .9rem; }
@@ -432,3 +515,89 @@
 .notice-box svg { flex-shrink: 0; color: #2563eb; }
 .w-full { width: 100%; }
 .mt-4 { margin-top: 1rem; }
+
+/* ══════════════════════════
+   COUNCIL MANAGEMENT
+   ══════════════════════════ */
+.council-layout {
+  display: flex; gap: 1.5rem; flex-wrap: wrap; align-items: flex-start;
+}
+.flex-3 { flex: 3 1 500px; }
+.flex-2 { flex: 2 1 350px; }
+
+.form-grid-2 {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;
+}
+.full-width { grid-column: span 2; }
+
+.section-divider {
+  font-size: .68rem; font-weight: 800; color: #94a3b8;
+  letter-spacing: 1px; margin: 1.75rem 0 .75rem;
+  display: flex; align-items: center; gap: .75rem;
+}
+.section-divider::after { content: ''; flex: 1; height: 1px; background: #f1f5f9; }
+
+.staff-grid {
+  display: flex; flex-direction: column; gap: .5rem;
+  max-height: 300px; border: 1.5px solid #f1f5f9;
+  border-radius: 12px; padding: .65rem; background: #fafbfc;
+}
+.scroll-y { overflow-y: auto; }
+
+.selection-item {
+  display: flex; align-items: center; gap: .85rem;
+  padding: .7rem .85rem; border-radius: 10px;
+  background: #fff; border: 1.5px solid #f1f5f9;
+  cursor: pointer; transition: all .18s;
+}
+.selection-item:hover { border-color: #cbd5e1; transform: translateX(2px); }
+.selection-item.selected {
+  background: #f0f7ff; border-color: #2563eb;
+  box-shadow: 0 4px 12px rgba(37,99,235,.1);
+}
+
+.sel-check {
+  width: 20px; height: 20px; border-radius: 5px;
+  border: 2px solid #e2e8f0; display: flex; align-items: center; justify-content: center;
+  transition: all .18s;
+}
+.selection-item.selected .sel-check { background: #2563eb; border-color: #2563eb; }
+
+.sel-info { flex: 1; }
+.sel-name { margin: 0; font-size: .875rem; font-weight: 600; color: #0f172a; }
+.sel-sub { margin: 1px 0 0; font-size: .75rem; color: #94a3b8; }
+
+.council-item {
+  align-items: flex-start;
+  cursor: default;
+}
+
+.council-item:hover {
+  transform: none;
+  border-color: #f1f5f9;
+}
+
+.council-members {
+  margin-top: .55rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem;
+}
+
+.member-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: .22rem .55rem;
+  border-radius: 999px;
+  font-size: .72rem;
+  font-weight: 600;
+  color: #334155;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+}
+
+/* Custom scrollbar for staff grid */
+.scroll-y::-webkit-scrollbar { width: 6px; }
+.scroll-y::-webkit-scrollbar-track { background: transparent; }
+.scroll-y::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+.scroll-y::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }

@@ -414,8 +414,8 @@
                         </span>
                       </td>
                       <td style="text-align:center">
-                        <button class="tbtn primary sm" (click)='selectReport(report)' [class.secondary]="(report.status || report.Status || '').toLowerCase() === 'reviewed'">
-                          {{ (report.status || report.Status || '').toLowerCase() === 'reviewed' ? 'View Evaluation' : 'Review & Grade' }}
+                        <button class="tbtn primary sm" (click)='selectReport(report)' [class.secondary]="['reviewed', 'pass', 'fail'].includes((report.status || report.Status || '').toLowerCase())">
+                          {{ ['reviewed', 'pass', 'fail'].includes((report.status || report.Status || '').toLowerCase()) ? 'View Evaluation' : 'Review & Grade' }}
                         </button>
                       </td>
                     </tr>

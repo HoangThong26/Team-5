@@ -181,6 +181,60 @@
           </div>
         </div>
 
+        <div class="readiness-grid">
+          <div class="readiness-card" [class.pass]="councilEligibility?.isEligibleForCouncil" [class.fail]="councilEligibility && !councilEligibility.isEligibleForCouncil">
+            <p class="rd-eyebrow">Council Readiness</p>
+            <h4>15-Week Eligibility Status</h4>
+            @if (isLoadingCouncilEligibility) {
+              <p class="rd-muted">Loading council eligibility...</p>
+            } @else if (councilEligibility) {
+              <div class="rd-row">
+                <span class="rd-pill" [class.fail]="!councilEligibility.isEligibleForCouncil">
+                  {{ councilEligibility.isEligibleForCouncil ? 'ELIGIBLE' : 'NOT ELIGIBLE' }}
+                </span>
+                <span class="rd-score">{{ councilEligibility.totalScore }}/{{ councilEligibility.maxScore }}</span>
+              </div>
+              <p class="rd-muted">{{ councilEligibility.percentage }}% · {{ councilEligibility.evaluatedWeeks }}/{{ councilEligibility.totalWeeks }} weeks evaluated</p>
+            } @else {
+              <p class="rd-muted">No council eligibility data yet.</p>
+            }
+          </div>
+
+          <div class="readiness-card defense">
+            <p class="rd-eyebrow">Defense Registration</p>
+            <h4>Group Defense Status</h4>
+            @if (isLoadingDefenseStatus) {
+              <p class="rd-muted">Loading defense registration...</p>
+            } @else if (defenseRegistrationStatus) {
+              <div class="rd-row">
+                <span class="rd-pill" [class.fail]="!defenseRegistrationStatus.isEligibleForDefense">
+                  {{ defenseRegistrationStatus.isEligibleForDefense ? 'CAN REGISTER' : 'NOT ELIGIBLE' }}
+                </span>
+                <span class="rd-score">{{ defenseRegistrationStatus.passRate }}%</span>
+              </div>
+              <p class="rd-muted">Evaluated: {{ defenseRegistrationStatus.evaluatedWeeks }} · Passed: {{ defenseRegistrationStatus.passedWeeks }}</p>
+              @if (isLoadingDefenseRegistrations) {
+                <p class="rd-muted">Loading scheduled defense...</p>
+              } @else if (hasScheduledDefense()) {
+                <p class="rd-muted">Time: {{ formatDefenseDateTime(myDefenseRegistration?.startTime) }}</p>
+                <p class="rd-muted">Room: {{ myDefenseRegistration?.room || 'TBD' }}</p>
+                <p class="rd-muted">Council: {{ myDefenseRegistration?.councilName || 'Not assigned' }}</p>
+              } @else if (defenseRegistrationStatus.isRegistered) {
+                <p class="rd-muted">Your group is registered. Waiting for admin to schedule council, room and time.</p>
+              }
+              <button class="rd-btn" (click)="registerForDefense()" [disabled]="isRegisteringDefense || defenseRegistrationStatus.isRegistered || !defenseRegistrationStatus.isEligibleForDefense">
+                @if (isRegisteringDefense) {
+                  Registering...
+                } @else {
+                  {{ defenseRegistrationStatus.isRegistered ? 'Already Registered' : 'Register for Defense' }}
+                }
+              </button>
+            } @else {
+              <p class="rd-muted">Join a group to view registration status.</p>
+            }
+          </div>
+        </div>
+
         <!-- QUICK ACTIONS GRID -->
         <h3 class="section-title">Quick Access</h3>
         <div class="action-grid">
@@ -809,7 +863,7 @@
                     </div>
                     }
 
-                    @if ((selectedReport.status || selectedReport.Status)?.toLowerCase() === 'reviewed') {
+                    @if (isReportReviewed(selectedReport)) {
                     <div class="mentor-feedback-box" [class.pass-box]="selectedReport.isPass"
                       [class.fail-box]="!selectedReport.isPass">
                       <div class="mf-header">
