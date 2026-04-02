@@ -14,6 +14,7 @@ import { TopicService } from '../services/topic.service';
 import { WeeklyReportService } from '../services/weekly-report.service';
 import { WeeklyReportHistoryDto } from '../models/weekly-report.model'
 import { WeeklyEvaluationService } from '../services/weekly-evaluation.service';
+import { GradeService } from '../services/grade.service';
 
 @Component({
   selector: 'app-user-dashboard',
@@ -37,6 +38,7 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
   isGroupLoading = false;
   submissionHistory: any[] = [];
   selectedReport: any = null;
+  finalGrade: any = null;
 
   // Sidebar
   activeTab: 'overview' | 'profile' | 'password' = 'overview';
@@ -107,6 +109,7 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
     private topicService: TopicService,
     private weeklyReportService: WeeklyReportService,
     private weeklyEvaluationService: WeeklyEvaluationService,
+    private gradeService: GradeService,
     private router: Router,
     @Inject(PLATFORM_ID) platformId: Object
   ) {
@@ -121,6 +124,10 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
           this.topicTitle = res.topic.title;
           this.topicDescription = res.topic.description;
         }
+        if (res.groupId) {
+          this.loadFinalGrade(res.groupId);
+        }
+        
         this.loadWeeklyReports();
         this.isGroupLoading = false;
       },
@@ -167,6 +174,20 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
         }
       },
       error: (err) => console.error('Silently load group failed', err)
+    });
+  }
+
+  // Hàm mới để lấy điểm từ bảng dbo.FinalGrades
+  loadFinalGrade(groupId: number) {
+    this.gradeService.getMyGrade(groupId).subscribe({
+      next: (grade) => {
+        this.finalGrade = grade;
+        console.log('--- Final Grade Loaded ---', grade);
+      },
+      error: (err) => {
+        console.warn('Chưa có điểm cuối kỳ hoặc lỗi:', err);
+        this.finalGrade = null;
+      }
     });
   }
 
@@ -533,7 +554,8 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
               msgType === 'GROUP_UPDATED' ||
               msgType === 'MEMBER_ACCEPTED' ||
               msgType === 'TOPIC_STATUS_UPDATED' ||
-              msgType === 'TOPIC_SUBMITTED'
+              msgType === 'TOPIC_SUBMITTED' ||
+              msgType === 'FINAL_GRADE_PUBLISHED'
             ) {
               this.loadMyGroupSilently();
               this.successMessage = message.message || 'Data has been updated automatically!';

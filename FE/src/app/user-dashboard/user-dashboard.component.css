@@ -2453,3 +2453,27 @@
   font-weight: 600;
   color: #0f172a;
 }
+
+.grade-display {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.grade-score {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #059669;
+}
+
+.grade-letter {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #10B981;
+}
+
+.disabled-card {
+  cursor: not-allowed !important;
+  opacity: 0.7;
+}

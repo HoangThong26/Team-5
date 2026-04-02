@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { AdminService } from '../services/admin.service';
+import { GradeService, FinalGrade } from '../services/grade.service';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -83,7 +84,11 @@ export class AdminDashboardComponent implements OnInit {
   // Group Management
   groups: any[] = [];
   isLoadingGroups = false;
-  viewMode: 'users' | 'groups' | 'timeline' = 'users';
+  viewMode: 'users' | 'groups' | 'timeline' | 'grades' = 'users';
+
+  // Thêm các biến quản lý điểm
+  grades: FinalGrade[] = [];
+  isLoadingGrades = false;
 
   // Timeline Setup
   projectStartDate: string = '';
@@ -95,7 +100,8 @@ export class AdminDashboardComponent implements OnInit {
   constructor(
     private adminService: AdminService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private gradeService: GradeService
   ) {}
 
   ngOnInit() {
@@ -315,7 +321,7 @@ export class AdminDashboardComponent implements OnInit {
     });
   }
 
-  switchView(mode: 'users' | 'groups' | 'timeline') {
+  switchView(mode: 'users' | 'groups' | 'timeline' | 'grades') {
     this.viewMode = mode;
     this.successMessage = '';
     this.errorMessage = '';
@@ -329,6 +335,49 @@ export class AdminDashboardComponent implements OnInit {
       this.loadMentors(); 
     } else if (mode === 'timeline') {
       // Có thể load ngày hiện tại từ API nếu cần
+    } else if (mode === 'grades') {
+    this.loadAllGrades();
+    }
+  }
+
+  // Các hàm xử lý nghiệp vụ điểm
+  loadAllGrades() {
+    this.isLoadingGrades = true;
+    this.gradeService.getAllGrades().subscribe({
+      next: (res) => {
+        this.grades = res;
+        this.isLoadingGrades = false;
+      },
+      error: (err) => {
+        this.isLoadingGrades = false;
+        this.errorMessage = 'Could not load grade list.';
+      }
+    });
+  }
+
+  handleCalculateGrade(groupId: number) {
+    this.isLoadingGrades = true;
+    this.gradeService.calculateGrade(groupId).subscribe({
+      next: (res) => {
+        this.successMessage = `Calculated score: ${res.score}`;
+        this.loadAllGrades(); // Refresh danh sách
+      },
+      error: (err) => {
+        this.isLoadingGrades = false;
+        this.errorMessage = this.extractError(err, 'Failed to calculate grade. Ensure all scores are submitted.');
+      }
+    });
+  }
+
+  handlePublishGrade(groupId: number) {
+    if (confirm('Are you sure you want to publish this grade? Students will be able to see it.')) {
+      this.gradeService.publishGrade(groupId).subscribe({
+        next: () => {
+          this.successMessage = 'Grade published successfully!';
+          this.loadAllGrades();
+        },
+        error: (err) => this.errorMessage = this.extractError(err, 'Failed to publish grade.')
+      });
     }
   }
 
