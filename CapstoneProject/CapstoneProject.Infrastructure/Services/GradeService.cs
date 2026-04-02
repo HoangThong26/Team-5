@@ -1,73 +1,107 @@
-﻿using CapstoneProject.Application.Interface.IService;
+﻿using CapstoneProject.Application.Interface.IRepository;
+using CapstoneProject.Application.Interface.IService;
 using CapstoneProject.Domain.Entities;
-using CapstoneProject.Infrastructure.Database.AppDbContext;
 using Microsoft.EntityFrameworkCore;
+using CapstoneProject.Infrastructure.Database.AppDbContext;
 
 namespace CapstoneProject.Infrastructure.Services
 {
     public class GradeService : IGradeService
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IFinalGradeRepository _gradeRepository;
+        private readonly ApplicationDbContext _context; // Giữ lại context nếu cần truy vấn bảng khác chưa có Repo
 
-        public GradeService(ApplicationDbContext context)
+        public GradeService(IFinalGradeRepository gradeRepository, ApplicationDbContext context)
         {
+            _gradeRepository = gradeRepository;
             _context = context;
         }
 
         public async Task<decimal> CalculateAndSaveFinalGrade(int groupId)
         {
-            // 1. Lấy điểm trung bình Weekly Progress (Trọng số 40%)
+            // 1. Lấy điểm Weekly (Vẫn dùng context cho các bảng chưa có Repo)
             var weeklyScores = await _context.WeeklyEvaluations
                 .Include(e => e.Report)
                 .Where(e => e.Report.GroupId == groupId)
                 .Select(e => e.Score)
                 .ToListAsync();
 
-            // 2. Lấy điểm trung bình Defense từ hội đồng (Trọng số 60%)
+            // 2. Lấy điểm Defense
             var defenseScores = await _context.DefenseScores
                 .Include(s => s.Defense)
                 .Where(s => s.Defense.GroupId == groupId)
                 .Select(s => s.Score)
                 .ToListAsync();
 
-            // AC3: Kiểm tra thiếu dữ liệu
             if (!weeklyScores.Any() || !defenseScores.Any())
             {
                 throw new Exception("Insufficient data: Missing weekly evaluations or defense scores.");
             }
 
-            // 3. Áp dụng công thức tính Final Grade
             decimal avgWeekly = (decimal)weeklyScores.Average();
             decimal avgDefense = (decimal)defenseScores.Average();
             decimal finalScore = Math.Round((avgWeekly * 0.4m) + (avgDefense * 0.6m), 2);
 
-            // 4. Xác định GradeLetter (Quy tắc mẫu)
             string gradeLetter = finalScore >= 5.0m ? "PASSED" : "FAILED";
 
-            // 5. Lưu vào bảng FinalGrades
-            var finalGradeEntry = await _context.FinalGrades
-                .FirstOrDefaultAsync(g => g.GroupId == groupId);
+            // 3. Sử dụng Repository để lưu
+            var finalGradeEntry = await _gradeRepository.GetByGroupIdAsync(groupId);
 
             if (finalGradeEntry == null)
             {
-                _context.FinalGrades.Add(new FinalGrade
+                await _gradeRepository.AddAsync(new FinalGrade
                 {
                     GroupId = groupId,
                     AverageScore = finalScore,
                     GradeLetter = gradeLetter,
                     IsPublished = false,
-                    PublishedAt = DateTime.Now
                 });
             }
             else
             {
                 finalGradeEntry.AverageScore = finalScore;
                 finalGradeEntry.GradeLetter = gradeLetter;
-                finalGradeEntry.PublishedAt = DateTime.Now;
+                _gradeRepository.Update(finalGradeEntry);
             }
 
-            await _context.SaveChangesAsync();
+            await _gradeRepository.SaveChangesAsync();
             return finalScore;
+        }
+
+        public async Task PublishGrade(int groupId)
+        {
+            var grade = await _gradeRepository.GetByGroupIdAsync(groupId);
+            if (grade != null)
+            {
+                grade.IsPublished = true;
+                grade.PublishedAt = DateTime.Now;
+                _gradeRepository.Update(grade);
+                await _gradeRepository.SaveChangesAsync();
+            }
+        }
+
+        public async Task<FinalGrade?> GetGradeForStudent(int groupId)
+        {
+            var grade = await _gradeRepository.GetByGroupIdAsync(groupId);
+
+            if (grade == null) return null;
+
+            // Logic AC3: Nếu chưa công bố, không trả về điểm
+            if (!grade.IsPublished.GetValueOrDefault())
+            {
+                return new FinalGrade
+                {
+                    GroupId = groupId,
+                    IsPublished = false
+                };
+            }
+
+            return grade;
+        }
+
+        public async Task<List<FinalGrade>> GetAllFinalGrades()
+        {
+            return await _gradeRepository.GetAllWithGroupsAsync();
         }
     }
 }
