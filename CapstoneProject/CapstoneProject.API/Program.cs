@@ -72,7 +72,7 @@ builder.Services.AddScoped<IGroupRepository, GroupRepository>();
 builder.Services.AddScoped<IGroupService, GroupService>();
 builder.Services.AddScoped<IDefenseRepository, DefenseRepository>();
 builder.Services.AddScoped<IDefenseService, DefenseService>();
-builder.Services.AddScoped<IGroupMemberRepository,GroupMemberRepository>();
+builder.Services.AddScoped<IGroupMemberRepository, GroupMemberRepository>();
 builder.Services.AddScoped<IGroupMemberRepository, GroupMemberRepository>();
 builder.Services.AddScoped<IMentorAssignmentRepository, MentorAssignmentRepository>();
 builder.Services.AddScoped<IWeeklyReportRepository, WeeklyReportRepository>();
@@ -81,7 +81,10 @@ builder.Services.AddScoped<IWeeklyEvaluationRepository, WeeklyEvaluationReposito
 builder.Services.AddScoped<IWeeklyEvaluationService, WeeklyEvaluationService>();
 builder.Services.AddSingleton<IUserIdProvider, EmailBasedUserIdProvider>();
 builder.Services.AddScoped<IFinalGradeRepository, FinalGradeRepository>();
+builder.Services.AddHttpClient<ITopicAiService, TopicAiService>();
 builder.Services.AddScoped<IGradeService, GradeService>();
+builder.Services.AddScoped<ICouncilRepository, CouncilRepository>();
+builder.Services.AddScoped<ICouncilService, CouncilService>();
 
 builder.Services.AddCors(options =>
 {
