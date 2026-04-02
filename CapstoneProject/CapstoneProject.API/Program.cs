@@ -105,7 +105,11 @@ builder.Services.AddCors(options =>
                .AllowCredentials();
     });
 });
+// 1. Dạy cho hệ thống biết: Khi ai đó cần IApplicationDbContext, hãy lấy ApplicationDbContext đã có sẵn đưa cho họ
+builder.Services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
 
+// 2. Đăng ký StatisticService bạn vừa tạo
+builder.Services.AddScoped<IStatisticService, StatisticService>();
 var app = builder.Build();
 app.UseCors("AllowAll");
 if (app.Environment.IsDevelopment())
