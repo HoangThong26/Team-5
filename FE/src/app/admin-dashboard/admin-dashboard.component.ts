@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { AdminService } from '../services/admin.service';
 import { GradeService, FinalGrade } from '../services/grade.service';
@@ -19,7 +18,7 @@ import {
   selector: 'app-admin-dashboard',
   standalone: true,
   imports: [FormsModule],
-  templateUrl: './admin-dashboard.component.html',
+  templateUrl:  './admin-dashboard.component.html',
   styleUrls: ['./admin-dashboard.component.css']
 })
 export class AdminDashboardComponent implements OnInit {
