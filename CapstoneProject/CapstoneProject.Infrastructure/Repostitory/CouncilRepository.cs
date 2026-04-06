@@ -59,7 +59,7 @@ namespace CapstoneProject.Infrastructure.Repostitory
         public async Task<List<User>> GetAvailableStaffsAsync()
         {
             return await _context.Users
-                .Where(u => (u.Role == "Mentor" || u.Role == "Council") && u.Status == "Active")
+                .Where(u => (u.Role == "Council"))
                 .ToListAsync();
         }
 
