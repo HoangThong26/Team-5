@@ -26,7 +26,6 @@ export class MentorDashboardComponent implements OnInit, OnDestroy {
   pendingTopics: any[] = [];
   approvedTopics: any[] = [];
   rejectedTopics: any[] = [];
-  displayedTopics: any[] = [];
 
   get topicBoardData() {
     return {
@@ -114,13 +113,25 @@ export class MentorDashboardComponent implements OnInit, OnDestroy {
   loadTopics() {
     this.topicService.getMentorBoardTopicVersions().subscribe({
       next: (res: any) => {
-        if (res.success && res.data) {
-          this.allTopics = res.data.all || [];
-          this.pendingTopics = res.data.pending || [];
-          this.approvedTopics = res.data.approved || [];
-          this.rejectedTopics = res.data.rejected || [];
+        const success = res.success || res.Success;
+        const data = res.data || res.Data;
 
-          this.selectTab(this.selectedTab);
+        if (success && data) {
+          this.allTopics = data.All || data.all || [];
+          this.pendingTopics = data.Pending || data.pending || [];
+          this.approvedTopics = data.Approved || data.approved || [];
+          this.rejectedTopics = data.Rejected || data.rejected || [];
+        } else if (Array.isArray(res)) {
+          this.allTopics = res;
+          this.pendingTopics = res.filter((t: any) => {
+            const s = (t.Status || t.status || '').toLowerCase();
+            return s === 'pending' || s === 'submitted';
+          });
+          this.approvedTopics = res.filter((t: any) => {
+            const s = (t.Status || t.status || '').toLowerCase();
+            return s === 'approved' || s === 'active';
+          });
+          this.rejectedTopics = res.filter((t: any) => (t.Status || t.status || '').toLowerCase() === 'rejected');
         }
       },
       error: (err) => console.error('Lỗi khi gọi API Mentor Board:', err)
@@ -129,20 +140,13 @@ export class MentorDashboardComponent implements OnInit, OnDestroy {
 
   selectTab(tab: string) {
     this.selectedTab = tab;
-    switch (tab) {
-      case 'Pending':
-        this.displayedTopics = this.pendingTopics;
-        break;
-      case 'Approved':
-        this.displayedTopics = this.approvedTopics;
-        break;
-      case 'Rejected':
-        this.displayedTopics = this.rejectedTopics;
-        break;
-      default:
-        this.displayedTopics = this.allTopics;
-        break;
-    }
+  }
+
+  get displayedTopics(): any[] {
+    if (this.selectedTab === 'Pending') return this.pendingTopics;
+    if (this.selectedTab === 'Approved') return this.approvedTopics;
+    if (this.selectedTab === 'Rejected') return this.rejectedTopics;
+    return this.allTopics;
   }
 
   toggleSidebar() {
@@ -172,23 +176,7 @@ export class MentorDashboardComponent implements OnInit, OnDestroy {
     this.topicService.approveTopic(request).subscribe({
       next: (res) => {
         alert('Successful!');
-
-        const newStatus = (status === 'Approved') ? 'Active' : 'Rejected';
-        this.allTopics = this.allTopics.map((t: any) => {
-          if ((t.TopicId || t.topicId) === request.topicId) {
-            return {
-              ...t,
-              Status: newStatus,
-              status: newStatus,
-              ReviewComment: this.reviewComment
-            };
-          }
-          return t;
-        });
-        if (this.selectedTopic) {
-          this.selectedTopic.Status = newStatus;
-          this.selectedTopic.status = newStatus;
-        }
+        this.loadTopics();
       },
       error: (err) => alert('Error: ' + err.error?.message)
     });
@@ -261,7 +249,7 @@ export class MentorDashboardComponent implements OnInit, OnDestroy {
     this.evaluationComment = '';
 
     const status = (report.status || report.Status || '').toLowerCase();
-    this.isReadOnly = (status === 'reviewed');
+    this.isReadOnly = this.isEvaluationCompletedStatus(status);
 
     if (this.isReadOnly) {
       this.evaluationService.getEvaluation(report.reportId).subscribe({
@@ -278,6 +266,10 @@ export class MentorDashboardComponent implements OnInit, OnDestroy {
       this.evaluationScore = report.score ?? report.Score ?? 0;
       this.evaluationComment = report.comment ?? report.Comment ?? '';
     }
+  }
+
+  private isEvaluationCompletedStatus(status: string): boolean {
+    return status === 'reviewed' || status === 'pass' || status === 'fail';
   }
 
   submitEvaluation() {
@@ -306,14 +298,24 @@ export class MentorDashboardComponent implements OnInit, OnDestroy {
   }
 
   downloadReportFile(report: any) {
-    const fileName = report.fileName || report.FileName || report.fileUrl; 
-
-    if (!fileName) {
-      this.errorMessage = "File name not found!";
+    const fileUrl = report.fileUrl || report.FileUrl;
+    
+    if (!fileUrl) {
+      this.errorMessage = "File URL not found!";
       return;
     }
 
-    this.weeklyReportService.downloadFile(fileName).subscribe({
+    // Extract filename from URL if it contains one, otherwise use a default
+    let fileName = 'report_file';
+    if (fileUrl && typeof fileUrl === 'string') {
+      const urlParts = fileUrl.split('/');
+      const lastPart = urlParts[urlParts.length - 1];
+      if (lastPart && !lastPart.includes('?')) {
+        fileName = lastPart;
+      }
+    }
+
+    this.weeklyReportService.downloadFile(fileUrl).subscribe({
       next: (blob: Blob) => {
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
@@ -321,10 +323,13 @@ export class MentorDashboardComponent implements OnInit, OnDestroy {
         link.download = fileName;
         link.click();
         window.URL.revokeObjectURL(url);
+        this.successMessage = 'File downloaded successfully!';
+        setTimeout(() => this.successMessage = '', 3000);
       },
       error: (err) => {
         console.error('Download error:', err);
         this.errorMessage = "Could not download file. It might have been deleted.";
+        setTimeout(() => this.errorMessage = '', 5000);
       }
     });
   }
