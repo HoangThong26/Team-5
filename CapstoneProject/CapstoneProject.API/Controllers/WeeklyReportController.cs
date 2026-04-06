@@ -1,7 +1,5 @@
 ﻿using CapstoneProject.Application.DTO;
 using CapstoneProject.Application.Interface.IService;
-using CapstoneProject.Domain.Entities;
-using CapstoneProject.Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -73,7 +71,7 @@ public class WeeklyReportController : ControllerBase
 
             if (history == null || history.Count == 0)
             {
-                return Ok(new List<WeeklyReportHistoryDto>()); 
+                return Ok(new List<WeeklyReportHistoryDto>());
             }
 
             return Ok(history);
