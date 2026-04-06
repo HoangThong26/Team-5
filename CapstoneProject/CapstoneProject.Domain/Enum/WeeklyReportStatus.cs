@@ -9,6 +9,8 @@ namespace CapstoneProject.Domain.Enum
         Draft,
         Submitted,
         Reviewed,
+        Pass,
+        Fail,
         Rejected
     }
 }

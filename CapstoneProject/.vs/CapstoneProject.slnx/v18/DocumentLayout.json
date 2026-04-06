@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|solutionrelative:capstoneproject.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.api\\controllers\\weeklyreportcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|solutionrelative:capstoneproject.api\\controllers\\weeklyreportcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -13,10 +17,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.api\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|solutionrelative:capstoneproject.api\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|solutionrelative:capstoneproject.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.api\\controllers\\councilcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -66,7 +66,7 @@
       "DocumentGroups": [
         {
           "DockedHeight": 394,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Bookmark",
@@ -78,13 +78,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "WeeklyReportController.cs",
               "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.API\\Controllers\\WeeklyReportController.cs",
               "RelativeDocumentMoniker": "CapstoneProject.API\\Controllers\\WeeklyReportController.cs",
               "ToolTip": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.API\\Controllers\\WeeklyReportController.cs",
               "RelativeToolTip": "CapstoneProject.API\\Controllers\\WeeklyReportController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAzAAAAAAAAAA==",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAABEAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-01T10:05:47.562Z",
               "EditorCaption": ""
@@ -127,7 +127,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.API\\Program.cs",
               "RelativeDocumentMoniker": "CapstoneProject.API\\Program.cs",
@@ -135,24 +135,24 @@
               "RelativeToolTip": "CapstoneProject.API\\Program.cs",
               "ViewState": "AgIAADUAAAAAAAAAAAAcwGAAAAADAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-01T07:03:21.494Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-01T07:03:21.494Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 0,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.API\\appsettings.json",
               "RelativeDocumentMoniker": "CapstoneProject.API\\appsettings.json",
               "ToolTip": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.API\\appsettings.json",
               "RelativeToolTip": "CapstoneProject.API\\appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAARAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAwAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-04-01T06:06:18.216Z"
+              "WhenOpened": "2026-04-01T06:06:18.216Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "AdminController.cs",
               "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.API\\Controllers\\AdminController.cs",
               "RelativeDocumentMoniker": "CapstoneProject.API\\Controllers\\AdminController.cs",

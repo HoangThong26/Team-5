@@ -80,6 +80,7 @@ builder.Services.AddScoped<IWeeklyReportService, WeeklyReportService>();
 builder.Services.AddScoped<IWeeklyEvaluationRepository, WeeklyEvaluationRepository>();
 builder.Services.AddScoped<IWeeklyEvaluationService, WeeklyEvaluationService>();
 builder.Services.AddSingleton<IUserIdProvider, EmailBasedUserIdProvider>();
+builder.Services.AddScoped<IFinalGradeRepository, FinalGradeRepository>();
 builder.Services.AddHttpClient<ITopicAiService, TopicAiService>();
 builder.Services.AddScoped<IGradeService, GradeService>();
 builder.Services.AddScoped<ICouncilRepository, CouncilRepository>();

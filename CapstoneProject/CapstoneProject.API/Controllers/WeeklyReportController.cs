@@ -10,7 +10,12 @@ using System.Security.Claims;
 public class WeeklyReportController : ControllerBase
 {
     private readonly IWeeklyReportService _service;
-    public WeeklyReportController(IWeeklyReportService service) => _service = service;
+    private readonly IGroupService _groupService;
+    public WeeklyReportController(IWeeklyReportService service, IGroupService groupService)
+    {
+        _service = service;
+        _groupService = groupService;
+    }
 
     [Authorize]
     [HttpPost("submit")]
@@ -81,6 +86,58 @@ public class WeeklyReportController : ControllerBase
             return BadRequest(new { message = "Error history " + ex.Message });
         }
     }
+
+    [Authorize]
+    [HttpGet("group/{groupId}/council-eligibility")]
+    public async Task<IActionResult> GetCouncilEligibility(int groupId)
+    {
+        try
+        {
+            var result = await _service.GetCouncilEligibilityAsync(groupId);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = "Error council eligibility: " + ex.Message });
+        }
+    }
+
+    [Authorize]
+    [HttpGet("my-council-eligibility")]
+    public async Task<IActionResult> GetMyCouncilEligibility()
+    {
+        try
+        {
+            var userIdValue = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? User.FindFirst("id")?.Value;
+            if (string.IsNullOrEmpty(userIdValue) || !int.TryParse(userIdValue, out var userId))
+            {
+                return Unauthorized(new { message = "Unauthorized." });
+            }
+
+            var myGroup = await _groupService.GetMyGroupAsync(userId);
+            if (myGroup == null)
+            {
+                return Ok(new CouncilEligibilityDto
+                {
+                    GroupId = 0,
+                    TotalWeeks = 15,
+                    TotalScore = 0,
+                    MaxScore = 150,
+                    Percentage = 0,
+                    IsEligibleForCouncil = false,
+                    EvaluatedWeeks = 0
+                });
+            }
+
+            var result = await _service.GetCouncilEligibilityAsync(myGroup.GroupId);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = "Error council eligibility: " + ex.Message });
+        }
+    }
+
     [HttpPut("update/{id}")]
     public async Task<IActionResult> UpdateReport(int id, [FromForm] WeeklyReportRequest request)
     {

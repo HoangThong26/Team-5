@@ -21,6 +21,43 @@ namespace CapstoneProject.Infrastructure.Repository
                 .FirstOrDefaultAsync(d => d.DefenseId == defenseId);
         }
 
+        public async Task<DefenseSchedule?> GetDefenseByGroupIdAsync(int groupId)
+        {
+            return await _context.DefenseSchedules
+                .Include(d => d.Group)
+                .FirstOrDefaultAsync(d => d.GroupId == groupId);
+        }
+
+        public async Task<List<DefenseSchedule>> GetDefenseRegistrationsAsync()
+        {
+            return await _context.DefenseSchedules
+                .Include(d => d.Group)
+                .Include(d => d.Council)
+                .Where(d => d.GroupId.HasValue)
+                .OrderByDescending(d => d.DefenseId)
+                .ToListAsync();
+        }
+
+        public async Task<List<Council>> GetAllCouncilsWithMembersAsync()
+        {
+            return await _context.Councils
+                .Include(c => c.CouncilMembers)
+                    .ThenInclude(cm => cm.User)
+                .OrderBy(c => c.CouncilId)
+                .ToListAsync();
+        }
+
+        public async Task<Council?> GetCouncilByIdAsync(int councilId)
+        {
+            return await _context.Councils.FirstOrDefaultAsync(c => c.CouncilId == councilId);
+        }
+
+        public async Task<int> GetCouncilMemberCountAsync(int councilId)
+        {
+            return await _context.CouncilMembers
+                .CountAsync(cm => cm.CouncilId == councilId && cm.UserId.HasValue);
+        }
+
         // Kiểm tra xem User (Giảng viên) có thuộc Hội đồng của lịch bảo vệ này không
         public async Task<CouncilMember?> GetCouncilMemberByUserAndDefenseAsync(int userId, int defenseId)
         {
@@ -40,6 +77,17 @@ namespace CapstoneProject.Infrastructure.Repository
         public async Task AddScoreAsync(DefenseScore score)
         {
             await _context.DefenseScores.AddAsync(score);
+        }
+
+        public async Task AddDefenseScheduleAsync(DefenseSchedule schedule)
+        {
+            await _context.DefenseSchedules.AddAsync(schedule);
+        }
+
+        public async Task UpdateDefenseScheduleAsync(DefenseSchedule schedule)
+        {
+            _context.DefenseSchedules.Update(schedule);
+            await Task.CompletedTask;
         }
 
         public async Task UpdateScoreAsync(DefenseScore score)

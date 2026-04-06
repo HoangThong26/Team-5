@@ -25,5 +25,14 @@ namespace CapstoneProject.Infrastructure.Repostitory
                 .OrderByDescending(e => e.ReviewedAt) // Lấy bản mới nhất nếu có nhiều lần chấm
                 .FirstOrDefaultAsync();
         }
+
+
+        public async Task<double> GetPassCountByReportId(int reportId)
+        {
+          var passCount = await _context.WeeklyEvaluations
+                .Where(e => e.ReportId == reportId && e.IsPass == true)
+                .CountAsync();
+            return passCount;
+        }
     }
 }
