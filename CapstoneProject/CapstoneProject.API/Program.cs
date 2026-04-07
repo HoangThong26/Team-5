@@ -85,6 +85,8 @@ builder.Services.AddHttpClient<ITopicAiService, TopicAiService>();
 builder.Services.AddScoped<IGradeService, GradeService>();
 builder.Services.AddScoped<ICouncilRepository, CouncilRepository>();
 builder.Services.AddScoped<ICouncilService, CouncilService>();
+builder.Services.AddScoped<ISystemRepository, SystemRepository>();
+builder.Services.AddScoped<IDateTimeService, DateTimeService>();
 
 builder.Services.AddCors(options =>
 {
