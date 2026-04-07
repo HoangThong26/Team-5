@@ -15,7 +15,7 @@ public class GradesController : ControllerBase
     }
 
     [HttpGet("all")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Mentor")]
     public async Task<IActionResult> GetAllGrades()
     {
         try
