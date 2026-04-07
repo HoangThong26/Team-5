@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "P1zLW5Duycg=",
+  "dgSpecHash": "abnQowffXEI=",
   "success": true,
-  "projectFilePath": "C:\\Users\\admin\\Desktop\\duan\\Team-5\\CapstoneProject\\CapstoneProject.API\\CapstoneProject.API.csproj",
+  "projectFilePath": "C:\\Users\\admin\\Desktop\\coppy\\CapstoneProject\\CapstoneProject.API\\CapstoneProject.API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\admin\\.nuget\\packages\\azure.core\\1.47.1\\azure.core.1.47.1.nupkg.sha512",
     "C:\\Users\\admin\\.nuget\\packages\\azure.identity\\1.14.2\\azure.identity.1.14.2.nupkg.sha512",

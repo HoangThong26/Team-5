@@ -4647,11 +4647,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\admin\\Desktop\\duan\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj",
+      "projectUniqueName": "C:\\Users\\admin\\Desktop\\coppy\\CapstoneProject\\CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj",
       "projectName": "CapstoneProject.Infrastructure",
-      "projectPath": "C:\\Users\\admin\\Desktop\\duan\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj",
+      "projectPath": "C:\\Users\\admin\\Desktop\\coppy\\CapstoneProject\\CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj",
       "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\admin\\Desktop\\duan\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\obj\\",
+      "outputPath": "C:\\Users\\admin\\Desktop\\coppy\\CapstoneProject\\CapstoneProject.Infrastructure\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -4672,11 +4672,11 @@
         "net10.0": {
           "targetAlias": "net10.0",
           "projectReferences": {
-            "C:\\Users\\admin\\Desktop\\duan\\Team-5\\CapstoneProject\\CapstoneProject.Application\\CapstoneProject.Application.csproj": {
-              "projectPath": "C:\\Users\\admin\\Desktop\\duan\\Team-5\\CapstoneProject\\CapstoneProject.Application\\CapstoneProject.Application.csproj"
+            "C:\\Users\\admin\\Desktop\\coppy\\CapstoneProject\\CapstoneProject.Application\\CapstoneProject.Application.csproj": {
+              "projectPath": "C:\\Users\\admin\\Desktop\\coppy\\CapstoneProject\\CapstoneProject.Application\\CapstoneProject.Application.csproj"
             },
-            "C:\\Users\\admin\\Desktop\\duan\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\CapstoneProject.Domain.csproj": {
-              "projectPath": "C:\\Users\\admin\\Desktop\\duan\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\CapstoneProject.Domain.csproj"
+            "C:\\Users\\admin\\Desktop\\coppy\\CapstoneProject\\CapstoneProject.Domain\\CapstoneProject.Domain.csproj": {
+              "projectPath": "C:\\Users\\admin\\Desktop\\coppy\\CapstoneProject\\CapstoneProject.Domain\\CapstoneProject.Domain.csproj"
             }
           }
         }
