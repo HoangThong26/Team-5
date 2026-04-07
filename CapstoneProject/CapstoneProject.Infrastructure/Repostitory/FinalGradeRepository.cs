@@ -14,7 +14,12 @@ namespace CapstoneProject.Infrastructure.Repostitory
             => await _context.FinalGrades.FirstOrDefaultAsync(g => g.GroupId == groupId);
 
         public async Task<List<FinalGrade>> GetAllWithGroupsAsync()
-            => await _context.FinalGrades.Include(g => g.Group).ToListAsync();
+        {
+            return await _context.FinalGrades
+                .Include(f => f.Group)             // Lấy thông tin Group
+                    .ThenInclude(g => g.Topic)     // Lấy tiếp thông tin Topic từ Group đó
+                .ToListAsync();
+        }
 
         public async Task AddAsync(FinalGrade finalGrade) => await _context.FinalGrades.AddAsync(finalGrade);
 
