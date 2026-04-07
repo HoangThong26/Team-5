@@ -34,4 +34,10 @@ export class WeeklyEvaluationService {
     const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
     return this.http.get(`${this.apiUrl}/report/${reportId}`, { headers });
   }
+
+  getPendingReports(): Observable<any[]> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
+    return this.http.get<any[]>(`${this.apiUrl}/pending-reports`, { headers });
+  }
 }
