@@ -1,208 +1,725 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\testduan\\CapstoneProject\\",
+  "WorkspaceRootPath": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\",
   "Documents": [
     {
-
-      "AbsoluteMoniker": "D:0:0:{8E841551-FF5A-EF1A-E785-C594E46E45CF}|CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj|c:\\users\\pc\\documents\\github\\team-5\\capstoneproject\\capstoneproject.infrastructure\\services\\gradeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8E841551-FF5A-EF1A-E785-C594E46E45CF}|CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj|solutionrelative:capstoneproject.infrastructure\\services\\gradeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.api\\controllers\\weeklyevaluationcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|solutionrelative:capstoneproject.api\\controllers\\weeklyevaluationcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8E841551-FF5A-EF1A-E785-C594E46E45CF}|CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj|c:\\users\\pc\\documents\\github\\team-5\\capstoneproject\\capstoneproject.infrastructure\\repostitory\\finalgraderepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8E841551-FF5A-EF1A-E785-C594E46E45CF}|CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj|solutionrelative:capstoneproject.infrastructure\\repostitory\\finalgraderepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.application\\interface\\irepository\\iweeklyevaluationrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|solutionrelative:capstoneproject.application\\interface\\irepository\\iweeklyevaluationrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|c:\\users\\pc\\documents\\github\\team-5\\capstoneproject\\capstoneproject.application\\interface\\irepository\\ifinalgraderepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|solutionrelative:capstoneproject.application\\interface\\irepository\\ifinalgraderepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{8E841551-FF5A-EF1A-E785-C594E46E45CF}|CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.infrastructure\\services\\weeklyevaluationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8E841551-FF5A-EF1A-E785-C594E46E45CF}|CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj|solutionrelative:capstoneproject.infrastructure\\services\\weeklyevaluationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|c:\\users\\pc\\documents\\github\\team-5\\capstoneproject\\capstoneproject.application\\interface\\iservice\\igradeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|solutionrelative:capstoneproject.application\\interface\\iservice\\igradeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{8E841551-FF5A-EF1A-E785-C594E46E45CF}|CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.infrastructure\\repostitory\\weeklyevaluationrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8E841551-FF5A-EF1A-E785-C594E46E45CF}|CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj|solutionrelative:capstoneproject.infrastructure\\repostitory\\weeklyevaluationrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|c:\\users\\pc\\documents\\github\\team-5\\capstoneproject\\capstoneproject.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.application\\interface\\iservice\\iweeklyevaluationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|solutionrelative:capstoneproject.application\\interface\\iservice\\iweeklyevaluationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.application\\interface\\irepository\\iweeklyreportrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|solutionrelative:capstoneproject.application\\interface\\irepository\\iweeklyreportrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8E841551-FF5A-EF1A-E785-C594E46E45CF}|CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.infrastructure\\repostitory\\weeklyreportrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8E841551-FF5A-EF1A-E785-C594E46E45CF}|CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj|solutionrelative:capstoneproject.infrastructure\\repostitory\\weeklyreportrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8E841551-FF5A-EF1A-E785-C594E46E45CF}|CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.infrastructure\\services\\weeklyreportservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8E841551-FF5A-EF1A-E785-C594E46E45CF}|CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj|solutionrelative:capstoneproject.infrastructure\\services\\weeklyreportservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.application\\dto\\weeklyreportsectiondto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|solutionrelative:capstoneproject.application\\dto\\weeklyreportsectiondto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.application\\interface\\iservice\\iweeklyreportservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|solutionrelative:capstoneproject.application\\interface\\iservice\\iweeklyreportservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8E841551-FF5A-EF1A-E785-C594E46E45CF}|CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.infrastructure\\services\\councilservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8E841551-FF5A-EF1A-E785-C594E46E45CF}|CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj|solutionrelative:capstoneproject.infrastructure\\services\\councilservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8E841551-FF5A-EF1A-E785-C594E46E45CF}|CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.infrastructure\\repostitory\\councilrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8E841551-FF5A-EF1A-E785-C594E46E45CF}|CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj|solutionrelative:capstoneproject.infrastructure\\repostitory\\councilrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.api\\controllers\\weeklyreportcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|solutionrelative:capstoneproject.api\\controllers\\weeklyreportcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8E841551-FF5A-EF1A-E785-C594E46E45CF}|CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.infrastructure\\services\\datetimeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8E841551-FF5A-EF1A-E785-C594E46E45CF}|CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj|solutionrelative:capstoneproject.infrastructure\\services\\datetimeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.application\\interface\\iservice\\idatetimeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|solutionrelative:capstoneproject.application\\interface\\iservice\\idatetimeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|solutionrelative:capstoneproject.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8E841551-FF5A-EF1A-E785-C594E46E45CF}|CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj|c:\\users\\pc\\documents\\github\\team-5\\capstoneproject\\capstoneproject.infrastructure\\repostitory\\defenserepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8E841551-FF5A-EF1A-E785-C594E46E45CF}|CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj|solutionrelative:capstoneproject.infrastructure\\repostitory\\defenserepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.application\\dto\\deadlineresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|solutionrelative:capstoneproject.application\\dto\\deadlineresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|c:\\users\\pc\\documents\\github\\team-5\\capstoneproject\\capstoneproject.api\\controllers\\gradescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|solutionrelative:capstoneproject.api\\controllers\\gradescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-
-      "AbsoluteMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|d:\\testduan\\capstoneproject\\capstoneproject.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "AbsoluteMoniker": "D:0:0:{8E841551-FF5A-EF1A-E785-C594E46E45CF}|CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.infrastructure\\repostitory\\systemrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8E841551-FF5A-EF1A-E785-C594E46E45CF}|CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj|solutionrelative:capstoneproject.infrastructure\\repostitory\\systemrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.application\\interface\\irepository\\isystemrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|solutionrelative:capstoneproject.application\\interface\\irepository\\isystemrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{94F3C53E-94D2-8A0F-2FC6-BC3340F5AAA5}|CapstoneProject.Domain\\CapstoneProject.Domain.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.domain\\entities\\weeklyreport.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{94F3C53E-94D2-8A0F-2FC6-BC3340F5AAA5}|CapstoneProject.Domain\\CapstoneProject.Domain.csproj|solutionrelative:capstoneproject.domain\\entities\\weeklyreport.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|solutionrelative:capstoneproject.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|d:\\testduan\\capstoneproject\\capstoneproject.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|solutionrelative:capstoneproject.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{8E841551-FF5A-EF1A-E785-C594E46E45CF}|CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.infrastructure\\services\\topicaiservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8E841551-FF5A-EF1A-E785-C594E46E45CF}|CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj|solutionrelative:capstoneproject.infrastructure\\services\\topicaiservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|d:\\testduan\\capstoneproject\\capstoneproject.api\\controllers\\defensecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.api\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|solutionrelative:capstoneproject.api\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8E841551-FF5A-EF1A-E785-C594E46E45CF}|CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.infrastructure\\services\\gradeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8E841551-FF5A-EF1A-E785-C594E46E45CF}|CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj|solutionrelative:capstoneproject.infrastructure\\services\\gradeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8E841551-FF5A-EF1A-E785-C594E46E45CF}|CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.infrastructure\\repostitory\\finalgraderepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8E841551-FF5A-EF1A-E785-C594E46E45CF}|CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj|solutionrelative:capstoneproject.infrastructure\\repostitory\\finalgraderepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.application\\interface\\irepository\\ifinalgraderepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|solutionrelative:capstoneproject.application\\interface\\irepository\\ifinalgraderepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.api\\controllers\\gradescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|solutionrelative:capstoneproject.api\\controllers\\gradescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8E841551-FF5A-EF1A-E785-C594E46E45CF}|CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.infrastructure\\repostitory\\defenserepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8E841551-FF5A-EF1A-E785-C594E46E45CF}|CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj|solutionrelative:capstoneproject.infrastructure\\repostitory\\defenserepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.application\\interface\\irepository\\idefenserepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|solutionrelative:capstoneproject.application\\interface\\irepository\\idefenserepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.api\\controllers\\defensecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|solutionrelative:capstoneproject.api\\controllers\\defensecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8E841551-FF5A-EF1A-E785-C594E46E45CF}|CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj|d:\\testduan\\capstoneproject\\capstoneproject.infrastructure\\repostitory\\userrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8E841551-FF5A-EF1A-E785-C594E46E45CF}|CapstoneProject.Infrastructure\\CapstoneProject.Infrastructure.csproj|solutionrelative:capstoneproject.infrastructure\\repostitory\\userrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-
+      "AbsoluteMoniker": "D:0:0:{94F3C53E-94D2-8A0F-2FC6-BC3340F5AAA5}|CapstoneProject.Domain\\CapstoneProject.Domain.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.domain\\entities\\defensescore.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{94F3C53E-94D2-8A0F-2FC6-BC3340F5AAA5}|CapstoneProject.Domain\\CapstoneProject.Domain.csproj|solutionrelative:capstoneproject.domain\\entities\\defensescore.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{94F3C53E-94D2-8A0F-2FC6-BC3340F5AAA5}|CapstoneProject.Domain\\CapstoneProject.Domain.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.domain\\entities\\finalgrade.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{94F3C53E-94D2-8A0F-2FC6-BC3340F5AAA5}|CapstoneProject.Domain\\CapstoneProject.Domain.csproj|solutionrelative:capstoneproject.domain\\entities\\finalgrade.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{94F3C53E-94D2-8A0F-2FC6-BC3340F5AAA5}|CapstoneProject.Domain\\CapstoneProject.Domain.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.domain\\entities\\defenseschedule.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{94F3C53E-94D2-8A0F-2FC6-BC3340F5AAA5}|CapstoneProject.Domain\\CapstoneProject.Domain.csproj|solutionrelative:capstoneproject.domain\\entities\\defenseschedule.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.api\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|solutionrelative:capstoneproject.api\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.api\\controllers\\councilcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|solutionrelative:capstoneproject.api\\controllers\\councilcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.application\\interface\\irepository\\icouncilrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|solutionrelative:capstoneproject.application\\interface\\irepository\\icouncilrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.application\\interface\\iservice\\icouncilservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|solutionrelative:capstoneproject.application\\interface\\iservice\\icouncilservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.application\\dto\\baseresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|solutionrelative:capstoneproject.application\\dto\\baseresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.application\\dto\\staffsearchdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|solutionrelative:capstoneproject.application\\dto\\staffsearchdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.application\\dto\\councilcreaterequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|solutionrelative:capstoneproject.application\\dto\\councilcreaterequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.application\\dto\\staffdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{77FC864F-E466-7482-25BE-72BCE239C00F}|CapstoneProject.Application\\CapstoneProject.Application.csproj|solutionrelative:capstoneproject.application\\dto\\staffdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|c:\\users\\hbt2k\\onedrive\\desktop\\team-5\\capstoneproject\\capstoneproject.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E775D95B-BA25-3231-1497-12FAEA27DC5A}|CapstoneProject.API\\CapstoneProject.API.csproj|solutionrelative:capstoneproject.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
     {
-      "Orientation": 0,
+      "Orientation": 1,
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
-          "DockedWidth": 200,
-
-          "SelectedChildIndex": 9,
+          "DockedHeight": 539,
+          "SelectedChildIndex": 5,
           "Children": [
-            {
-              "$type": "Bookmark",
-              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
-            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
             },
             {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "FinalGradeRepository.cs",
-              "DocumentMoniker": "C:\\Users\\PC\\Documents\\GitHub\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Repostitory\\FinalGradeRepository.cs",
-              "RelativeDocumentMoniker": "CapstoneProject.Infrastructure\\Repostitory\\FinalGradeRepository.cs",
-              "ToolTip": "C:\\Users\\PC\\Documents\\GitHub\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Repostitory\\FinalGradeRepository.cs",
-              "RelativeToolTip": "CapstoneProject.Infrastructure\\Repostitory\\FinalGradeRepository.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-01T08:50:19.727Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "IFinalGradeRepository.cs",
-              "DocumentMoniker": "C:\\Users\\PC\\Documents\\GitHub\\Team-5\\CapstoneProject\\CapstoneProject.Application\\Interface\\IRepository\\IFinalGradeRepository.cs",
-              "RelativeDocumentMoniker": "CapstoneProject.Application\\Interface\\IRepository\\IFinalGradeRepository.cs",
-              "ToolTip": "C:\\Users\\PC\\Documents\\GitHub\\Team-5\\CapstoneProject\\CapstoneProject.Application\\Interface\\IRepository\\IFinalGradeRepository.cs",
-              "RelativeToolTip": "CapstoneProject.Application\\Interface\\IRepository\\IFinalGradeRepository.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAArAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-01T08:49:53.798Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "DefenseRepository.cs",
-              "DocumentMoniker": "C:\\Users\\PC\\Documents\\GitHub\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Repostitory\\DefenseRepository.cs",
-              "RelativeDocumentMoniker": "CapstoneProject.Infrastructure\\Repostitory\\DefenseRepository.cs",
-              "ToolTip": "C:\\Users\\PC\\Documents\\GitHub\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Repostitory\\DefenseRepository.cs",
-              "RelativeToolTip": "CapstoneProject.Infrastructure\\Repostitory\\DefenseRepository.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-01T08:47:28.674Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\PC\\Documents\\GitHub\\Team-5\\CapstoneProject\\CapstoneProject.API\\Program.cs",
-              "RelativeDocumentMoniker": "CapstoneProject.API\\Program.cs",
-              "ToolTip": "C:\\Users\\PC\\Documents\\GitHub\\Team-5\\CapstoneProject\\CapstoneProject.API\\Program.cs",
-              "RelativeToolTip": "CapstoneProject.API\\Program.cs",
-              "ViewState": "AgIAAD8AAAAAAAAAAAAAAFIAAABKAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-01T08:41:11.317Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "GradesController.cs",
-              "DocumentMoniker": "C:\\Users\\PC\\Documents\\GitHub\\Team-5\\CapstoneProject\\CapstoneProject.API\\Controllers\\GradesController.cs",
-              "RelativeDocumentMoniker": "CapstoneProject.API\\Controllers\\GradesController.cs",
-              "ToolTip": "C:\\Users\\PC\\Documents\\GitHub\\Team-5\\CapstoneProject\\CapstoneProject.API\\Controllers\\GradesController.cs",
-              "RelativeToolTip": "CapstoneProject.API\\Controllers\\GradesController.cs",
-              "ViewState": "AgIAABgAAAAAAAAAAAAowDcAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-01T08:33:05.986Z",
-
-          "SelectedChildIndex": 3,
-          "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "DefenseController.cs",
-              "DocumentMoniker": "D:\\testduan\\CapstoneProject\\CapstoneProject.API\\Controllers\\DefenseController.cs",
-              "RelativeDocumentMoniker": "CapstoneProject.API\\Controllers\\DefenseController.cs",
-              "ToolTip": "D:\\testduan\\CapstoneProject\\CapstoneProject.API\\Controllers\\DefenseController.cs",
-              "RelativeToolTip": "CapstoneProject.API\\Controllers\\DefenseController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-31T07:24:11.804Z"
-
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-
-              "Title": "IGradeService.cs",
-              "DocumentMoniker": "C:\\Users\\PC\\Documents\\GitHub\\Team-5\\CapstoneProject\\CapstoneProject.Application\\Interface\\IService\\IGradeService.cs",
-              "RelativeDocumentMoniker": "CapstoneProject.Application\\Interface\\IService\\IGradeService.cs",
-              "ToolTip": "C:\\Users\\PC\\Documents\\GitHub\\Team-5\\CapstoneProject\\CapstoneProject.Application\\Interface\\IService\\IGradeService.cs",
-              "RelativeToolTip": "CapstoneProject.Application\\Interface\\IService\\IGradeService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
+              "Title": "WeeklyEvaluationRepository.cs",
+              "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Repostitory\\WeeklyEvaluationRepository.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.Infrastructure\\Repostitory\\WeeklyEvaluationRepository.cs",
+              "ToolTip": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Repostitory\\WeeklyEvaluationRepository.cs",
+              "RelativeToolTip": "CapstoneProject.Infrastructure\\Repostitory\\WeeklyEvaluationRepository.cs",
+              "ViewState": "AgIAABQAAAAAAAAAAAAIwCAAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-01T08:30:16.698Z",
-
-              "Title": "UserRepository.cs",
-              "DocumentMoniker": "D:\\testduan\\CapstoneProject\\CapstoneProject.Infrastructure\\Repostitory\\UserRepository.cs",
-              "RelativeDocumentMoniker": "CapstoneProject.Infrastructure\\Repostitory\\UserRepository.cs",
-              "ToolTip": "D:\\testduan\\CapstoneProject\\CapstoneProject.Infrastructure\\Repostitory\\UserRepository.cs",
-              "RelativeToolTip": "CapstoneProject.Infrastructure\\Repostitory\\UserRepository.cs",
-              "ViewState": "AgIAAHUAAAAAAAAAAAAgwIIAAAAdAAAAAAAAAA==",
+              "WhenOpened": "2026-04-07T02:52:07.763Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "WeeklyEvaluationService.cs",
+              "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Services\\WeeklyEvaluationService.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.Infrastructure\\Services\\WeeklyEvaluationService.cs",
+              "ToolTip": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Services\\WeeklyEvaluationService.cs",
+              "RelativeToolTip": "CapstoneProject.Infrastructure\\Services\\WeeklyEvaluationService.cs",
+              "ViewState": "AgIAAFYAAAAAAAAAAAAiwF4AAABQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-31T07:21:52.069Z"
+              "WhenOpened": "2026-04-06T04:10:28.432Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "Program.cs",
-              "DocumentMoniker": "D:\\testduan\\CapstoneProject\\CapstoneProject.API\\Program.cs",
-              "RelativeDocumentMoniker": "CapstoneProject.API\\Program.cs",
-              "ToolTip": "D:\\testduan\\CapstoneProject\\CapstoneProject.API\\Program.cs",
-              "RelativeToolTip": "CapstoneProject.API\\Program.cs",
-              "ViewState": "AgIAAEgAAAAAAAAAAAAAAFQAAAAhAAAAAAAAAA==",
+              "Title": "IWeeklyEvaluationRepository.cs",
+              "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Application\\Interface\\IRepository\\IWeeklyEvaluationRepository.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.Application\\Interface\\IRepository\\IWeeklyEvaluationRepository.cs",
+              "ToolTip": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Application\\Interface\\IRepository\\IWeeklyEvaluationRepository.cs",
+              "RelativeToolTip": "CapstoneProject.Application\\Interface\\IRepository\\IWeeklyEvaluationRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAA6AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-27T07:59:26.696Z"
-
+              "WhenOpened": "2026-04-07T06:44:44.824Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-
-              "Title": "GradeService.cs",
-              "DocumentMoniker": "C:\\Users\\PC\\Documents\\GitHub\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Services\\GradeService.cs",
-              "RelativeDocumentMoniker": "CapstoneProject.Infrastructure\\Services\\GradeService.cs",
-              "ToolTip": "C:\\Users\\PC\\Documents\\GitHub\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Services\\GradeService.cs",
-              "RelativeToolTip": "CapstoneProject.Infrastructure\\Services\\GradeService.cs",
-              "ViewState": "AgIAACgAAAAAAAAAAAAgwDgAAAAoAAAAAAAAAA==",
+              "Title": "WeeklyEvaluationController.cs",
+              "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.API\\Controllers\\WeeklyEvaluationController.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.API\\Controllers\\WeeklyEvaluationController.cs",
+              "ToolTip": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.API\\Controllers\\WeeklyEvaluationController.cs*",
+              "RelativeToolTip": "CapstoneProject.API\\Controllers\\WeeklyEvaluationController.cs*",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAuwAYAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-01T08:03:02.453Z",
-
-              "Title": "appsettings.json",
-              "DocumentMoniker": "D:\\testduan\\CapstoneProject\\CapstoneProject.API\\appsettings.json",
-              "RelativeDocumentMoniker": "CapstoneProject.API\\appsettings.json",
-              "ToolTip": "D:\\testduan\\CapstoneProject\\CapstoneProject.API\\appsettings.json",
-              "RelativeToolTip": "CapstoneProject.API\\appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAACUAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-03-27T07:58:34.332Z",
-
+              "WhenOpened": "2026-04-06T03:13:13.005Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "IWeeklyEvaluationService.cs",
+              "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Application\\Interface\\IService\\IWeeklyEvaluationService.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.Application\\Interface\\IService\\IWeeklyEvaluationService.cs",
+              "ToolTip": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Application\\Interface\\IService\\IWeeklyEvaluationService.cs",
+              "RelativeToolTip": "CapstoneProject.Application\\Interface\\IService\\IWeeklyEvaluationService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAkAAABEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-07T02:56:51.07Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "IWeeklyReportRepository.cs",
+              "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Application\\Interface\\IRepository\\IWeeklyReportRepository.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.Application\\Interface\\IRepository\\IWeeklyReportRepository.cs",
+              "ToolTip": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Application\\Interface\\IRepository\\IWeeklyReportRepository.cs",
+              "RelativeToolTip": "CapstoneProject.Application\\Interface\\IRepository\\IWeeklyReportRepository.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAAwBYAAAA6AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-07T01:53:32.995Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "WeeklyReportRepository.cs",
+              "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Repostitory\\WeeklyReportRepository.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.Infrastructure\\Repostitory\\WeeklyReportRepository.cs",
+              "ToolTip": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Repostitory\\WeeklyReportRepository.cs",
+              "RelativeToolTip": "CapstoneProject.Infrastructure\\Repostitory\\WeeklyReportRepository.cs",
+              "ViewState": "AgIAAJsAAAAAAAAAAAAUwKMAAABGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-06T08:20:52.361Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "WeeklyReportService.cs",
+              "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Services\\WeeklyReportService.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.Infrastructure\\Services\\WeeklyReportService.cs",
+              "ToolTip": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Services\\WeeklyReportService.cs",
+              "RelativeToolTip": "CapstoneProject.Infrastructure\\Services\\WeeklyReportService.cs",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAYwCAAAAA4AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-06T04:09:16.985Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "WeeklyReportSectionDTO.cs",
+              "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Application\\DTO\\WeeklyReportSectionDTO.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.Application\\DTO\\WeeklyReportSectionDTO.cs",
+              "ToolTip": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Application\\DTO\\WeeklyReportSectionDTO.cs",
+              "RelativeToolTip": "CapstoneProject.Application\\DTO\\WeeklyReportSectionDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-07T06:39:07.592Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "IWeeklyReportService.cs",
+              "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Application\\Interface\\IService\\IWeeklyReportService.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.Application\\Interface\\IService\\IWeeklyReportService.cs",
+              "ToolTip": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Application\\Interface\\IService\\IWeeklyReportService.cs",
+              "RelativeToolTip": "CapstoneProject.Application\\Interface\\IService\\IWeeklyReportService.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAYwA0AAABtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-06T04:11:28.556Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "CouncilService.cs",
+              "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Services\\CouncilService.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.Infrastructure\\Services\\CouncilService.cs",
+              "ToolTip": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Services\\CouncilService.cs",
+              "RelativeToolTip": "CapstoneProject.Infrastructure\\Services\\CouncilService.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAQwB4AAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-01T06:51:35.125Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "CouncilRepository.cs",
+              "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Repostitory\\CouncilRepository.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.Infrastructure\\Repostitory\\CouncilRepository.cs",
+              "ToolTip": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Repostitory\\CouncilRepository.cs",
+              "RelativeToolTip": "CapstoneProject.Infrastructure\\Repostitory\\CouncilRepository.cs",
+              "ViewState": "AgIAACcAAAAAAAAAAAAowD0AAAAyAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-01T06:48:15.203Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "WeeklyReportController.cs",
+              "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.API\\Controllers\\WeeklyReportController.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.API\\Controllers\\WeeklyReportController.cs",
+              "ToolTip": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.API\\Controllers\\WeeklyReportController.cs",
+              "RelativeToolTip": "CapstoneProject.API\\Controllers\\WeeklyReportController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-01T10:05:47.562Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.API\\Program.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.API\\Program.cs",
+              "ToolTip": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.API\\Program.cs",
+              "RelativeToolTip": "CapstoneProject.API\\Program.cs",
+              "ViewState": "AgIAAEUAAAAAAAAAAAAAAFIAAABKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-01T07:03:21.494Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "DeadlineResponse.cs",
+              "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Application\\DTO\\DeadlineResponse.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.Application\\DTO\\DeadlineResponse.cs",
+              "ToolTip": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Application\\DTO\\DeadlineResponse.cs",
+              "RelativeToolTip": "CapstoneProject.Application\\DTO\\DeadlineResponse.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAgAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-07T01:46:21.995Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "DateTimeService.cs",
+              "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Services\\DateTimeService.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.Infrastructure\\Services\\DateTimeService.cs",
+              "ToolTip": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Services\\DateTimeService.cs",
+              "RelativeToolTip": "CapstoneProject.Infrastructure\\Services\\DateTimeService.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAwAAAAlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-07T01:49:49.896Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "IDateTimeService.cs",
+              "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Application\\Interface\\IService\\IDateTimeService.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.Application\\Interface\\IService\\IDateTimeService.cs",
+              "ToolTip": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Application\\Interface\\IService\\IDateTimeService.cs",
+              "RelativeToolTip": "CapstoneProject.Application\\Interface\\IService\\IDateTimeService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAYAAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-07T01:50:08.233Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "SystemRepository.cs",
+              "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Repostitory\\SystemRepository.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.Infrastructure\\Repostitory\\SystemRepository.cs",
+              "ToolTip": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Repostitory\\SystemRepository.cs",
+              "RelativeToolTip": "CapstoneProject.Infrastructure\\Repostitory\\SystemRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-07T01:48:37.87Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "ISystemRepository.cs",
+              "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Application\\Interface\\IRepository\\ISystemRepository.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.Application\\Interface\\IRepository\\ISystemRepository.cs",
+              "ToolTip": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Application\\Interface\\IRepository\\ISystemRepository.cs",
+              "RelativeToolTip": "CapstoneProject.Application\\Interface\\IRepository\\ISystemRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-07T01:48:17.094Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.API\\appsettings.json",
+              "RelativeDocumentMoniker": "CapstoneProject.API\\appsettings.json",
+              "ToolTip": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.API\\appsettings.json",
+              "RelativeToolTip": "CapstoneProject.API\\appsettings.json",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAQwBsAAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-04-01T06:06:18.216Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "WeeklyReport.cs",
+              "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\Entities\\WeeklyReport.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.Domain\\Entities\\WeeklyReport.cs",
+              "ToolTip": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\Entities\\WeeklyReport.cs",
+              "RelativeToolTip": "CapstoneProject.Domain\\Entities\\WeeklyReport.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-06T04:09:10.829Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "UserController.cs",
+              "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.API\\Controllers\\UserController.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.API\\Controllers\\UserController.cs",
+              "ToolTip": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.API\\Controllers\\UserController.cs",
+              "RelativeToolTip": "CapstoneProject.API\\Controllers\\UserController.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-06T08:05:28.397Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "TopicAiService.cs",
+              "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Services\\TopicAiService.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.Infrastructure\\Services\\TopicAiService.cs",
+              "ToolTip": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Services\\TopicAiService.cs",
+              "RelativeToolTip": "CapstoneProject.Infrastructure\\Services\\TopicAiService.cs",
+              "ViewState": "AgIAADMAAAAAAAAAAAAcwEsAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-06T08:05:53.209Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "FinalGradeRepository.cs",
+              "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Repostitory\\FinalGradeRepository.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.Infrastructure\\Repostitory\\FinalGradeRepository.cs",
+              "ToolTip": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Repostitory\\FinalGradeRepository.cs",
+              "RelativeToolTip": "CapstoneProject.Infrastructure\\Repostitory\\FinalGradeRepository.cs",
+              "ViewState": "AgIAABAAAAAAAAAAAAAwwA4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-06T02:28:03.805Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "GradeService.cs",
+              "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Services\\GradeService.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.Infrastructure\\Services\\GradeService.cs",
+              "ToolTip": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Services\\GradeService.cs",
+              "RelativeToolTip": "CapstoneProject.Infrastructure\\Services\\GradeService.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAswBwAAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-06T02:28:15.722Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "IFinalGradeRepository.cs",
+              "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Application\\Interface\\IRepository\\IFinalGradeRepository.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.Application\\Interface\\IRepository\\IFinalGradeRepository.cs",
+              "ToolTip": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Application\\Interface\\IRepository\\IFinalGradeRepository.cs",
+              "RelativeToolTip": "CapstoneProject.Application\\Interface\\IRepository\\IFinalGradeRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwA0AAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-06T02:27:14.655Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "GradesController.cs",
+              "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.API\\Controllers\\GradesController.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.API\\Controllers\\GradesController.cs",
+              "ToolTip": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.API\\Controllers\\GradesController.cs",
+              "RelativeToolTip": "CapstoneProject.API\\Controllers\\GradesController.cs",
+              "ViewState": "AgIAACwAAAAAAAAAAAAvwDcAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-06T03:13:33.566Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "DefenseRepository.cs",
+              "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Repostitory\\DefenseRepository.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.Infrastructure\\Repostitory\\DefenseRepository.cs",
+              "ToolTip": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Infrastructure\\Repostitory\\DefenseRepository.cs",
+              "RelativeToolTip": "CapstoneProject.Infrastructure\\Repostitory\\DefenseRepository.cs",
+              "ViewState": "AgIAAGAAAAAAAAAAAAAswGUAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-06T02:55:13.522Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "IDefenseRepository.cs",
+              "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Application\\Interface\\IRepository\\IDefenseRepository.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.Application\\Interface\\IRepository\\IDefenseRepository.cs",
+              "ToolTip": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Application\\Interface\\IRepository\\IDefenseRepository.cs",
+              "RelativeToolTip": "CapstoneProject.Application\\Interface\\IRepository\\IDefenseRepository.cs",
+              "ViewState": "AgIAAAoAAAAAAAAAAAA0wBMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-06T02:56:18.339Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
+              "Title": "DefenseController.cs",
+              "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.API\\Controllers\\DefenseController.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.API\\Controllers\\DefenseController.cs",
+              "ToolTip": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.API\\Controllers\\DefenseController.cs",
+              "RelativeToolTip": "CapstoneProject.API\\Controllers\\DefenseController.cs",
+              "ViewState": "AgIAAJsAAAAAAAAAAAAswAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-06T03:13:15.345Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 31,
+              "Title": "FinalGrade.cs",
+              "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\Entities\\FinalGrade.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.Domain\\Entities\\FinalGrade.cs",
+              "ToolTip": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\Entities\\FinalGrade.cs",
+              "RelativeToolTip": "CapstoneProject.Domain\\Entities\\FinalGrade.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAA8wBwAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-06T03:00:58.638Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 32,
+              "Title": "DefenseSchedule.cs",
+              "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\Entities\\DefenseSchedule.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.Domain\\Entities\\DefenseSchedule.cs",
+              "ToolTip": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\Entities\\DefenseSchedule.cs",
+              "RelativeToolTip": "CapstoneProject.Domain\\Entities\\DefenseSchedule.cs",
+              "ViewState": "AgIAABQAAAAAAAAAAAAuwCYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-06T03:00:43.01Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 30,
+              "Title": "DefenseScore.cs",
+              "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\Entities\\DefenseScore.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.Domain\\Entities\\DefenseScore.cs",
+              "ToolTip": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Domain\\Entities\\DefenseScore.cs",
+              "RelativeToolTip": "CapstoneProject.Domain\\Entities\\DefenseScore.cs",
+              "ViewState": "AgIAABIAAAAAAAAAAAA8wCQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-06T02:34:39.95Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 34,
+              "Title": "CouncilController.cs",
+              "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.API\\Controllers\\CouncilController.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.API\\Controllers\\CouncilController.cs",
+              "ToolTip": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.API\\Controllers\\CouncilController.cs",
+              "RelativeToolTip": "CapstoneProject.API\\Controllers\\CouncilController.cs",
+              "ViewState": "AgIAABwAAAAAAAAAAAAowDAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-01T06:59:17.128Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 36,
+              "Title": "ICouncilService.cs",
+              "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Application\\Interface\\IService\\ICouncilService.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.Application\\Interface\\IService\\ICouncilService.cs",
+              "ToolTip": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Application\\Interface\\IService\\ICouncilService.cs",
+              "RelativeToolTip": "CapstoneProject.Application\\Interface\\IService\\ICouncilService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAABfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-01T06:49:42.98Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 33,
+              "Title": "AdminController.cs",
+              "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.API\\Controllers\\AdminController.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.API\\Controllers\\AdminController.cs",
+              "ToolTip": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.API\\Controllers\\AdminController.cs",
+              "RelativeToolTip": "CapstoneProject.API\\Controllers\\AdminController.cs",
+              "ViewState": "AgIAAI8AAAAAAAAAAAAAwJsAAAAPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-01T10:04:46.588Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 35,
+              "Title": "ICouncilRepository.cs",
+              "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Application\\Interface\\IRepository\\ICouncilRepository.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.Application\\Interface\\IRepository\\ICouncilRepository.cs",
+              "ToolTip": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Application\\Interface\\IRepository\\ICouncilRepository.cs",
+              "RelativeToolTip": "CapstoneProject.Application\\Interface\\IRepository\\ICouncilRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAABMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-01T06:47:49.004Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 37,
+              "Title": "BaseResponse.cs",
+              "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Application\\DTO\\BaseResponse.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.Application\\DTO\\BaseResponse.cs",
+              "ToolTip": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Application\\DTO\\BaseResponse.cs",
+              "RelativeToolTip": "CapstoneProject.Application\\DTO\\BaseResponse.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-01T07:23:07.244Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 38,
+              "Title": "StaffSearchDto.cs",
+              "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Application\\DTO\\StaffSearchDto.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.Application\\DTO\\StaffSearchDto.cs",
+              "ToolTip": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Application\\DTO\\StaffSearchDto.cs",
+              "RelativeToolTip": "CapstoneProject.Application\\DTO\\StaffSearchDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-01T07:16:31.775Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 40,
+              "Title": "StaffDto.cs",
+              "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Application\\DTO\\StaffDto.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.Application\\DTO\\StaffDto.cs",
+              "ToolTip": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Application\\DTO\\StaffDto.cs",
+              "RelativeToolTip": "CapstoneProject.Application\\DTO\\StaffDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-01T06:51:05.121Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 39,
+              "Title": "CouncilCreateRequest.cs",
+              "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Application\\DTO\\CouncilCreateRequest.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.Application\\DTO\\CouncilCreateRequest.cs",
+              "ToolTip": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.Application\\DTO\\CouncilCreateRequest.cs",
+              "RelativeToolTip": "CapstoneProject.Application\\DTO\\CouncilCreateRequest.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAIAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-01T06:45:05.997Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 41,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.API\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "CapstoneProject.API\\Controllers\\AuthController.cs",
+              "ToolTip": "C:\\Users\\hbt2k\\OneDrive\\Desktop\\Team-5\\CapstoneProject\\CapstoneProject.API\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "CapstoneProject.API\\Controllers\\AuthController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAzAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-01T06:05:21.234Z"
+            }
+          ]
+        },
+        {
+          "DockedHeight": 82,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            }
+          ]
+        },
+        {
+          "DockedHeight": 170,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
             }
           ]
         }
@@ -210,4 +727,3 @@
     }
   ]
 }
-  ]}

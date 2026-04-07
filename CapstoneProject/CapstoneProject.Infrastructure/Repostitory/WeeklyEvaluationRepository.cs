@@ -2,9 +2,6 @@
 using CapstoneProject.Domain.Entities;
 using CapstoneProject.Infrastructure.Database.AppDbContext;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CapstoneProject.Infrastructure.Repostitory
 {
@@ -29,9 +26,9 @@ namespace CapstoneProject.Infrastructure.Repostitory
 
         public async Task<double> GetPassCountByReportId(int reportId)
         {
-          var passCount = await _context.WeeklyEvaluations
-                .Where(e => e.ReportId == reportId && e.IsPass == true)
-                .CountAsync();
+            var passCount = await _context.WeeklyEvaluations
+                  .Where(e => e.ReportId == reportId && e.IsPass == true)
+                  .CountAsync();
             return passCount;
         }
     }

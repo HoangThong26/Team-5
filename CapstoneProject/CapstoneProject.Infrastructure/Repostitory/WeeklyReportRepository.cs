@@ -3,9 +3,6 @@ using CapstoneProject.Application.Interface.IRepository;
 using CapstoneProject.Domain.Entities;
 using CapstoneProject.Infrastructure.Database.AppDbContext;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CapstoneProject.Infrastructure.Repostitory
 {
@@ -70,7 +67,7 @@ namespace CapstoneProject.Infrastructure.Repostitory
         public async Task<IEnumerable<WeeklyReport>> GetReportsForMentorAsync(int mentorId)
         {
             return await _context.WeeklyReports
-         .Include(r => r.Group) 
+         .Include(r => r.Group)
          .Where(r => _context.MentorAssignments
              .Any(ma => ma.MentorId == mentorId && ma.GroupId == r.GroupId))
          .OrderByDescending(r => r.SubmittedAt)
@@ -106,8 +103,8 @@ namespace CapstoneProject.Infrastructure.Repostitory
         {
             return await _context.WeeklyReports
                 .Where(r => r.GroupId == groupId)
-                .Include(r => r.WeeklyEvaluations) 
-                .OrderByDescending(r => r.WeekId)    
+                .Include(r => r.WeeklyEvaluations)
+                .OrderByDescending(r => r.WeekId)
                 .Select(r => new WeeklyReportHistoryDto
                 {
                     ReportId = r.ReportId,
@@ -140,7 +137,7 @@ namespace CapstoneProject.Infrastructure.Repostitory
 
                     MentorName = r.WeeklyEvaluations
                 .OrderByDescending(e => e.Id)
-                .Select(e => e.Mentor != null ? e.Mentor.FullName : "N/A") 
+                .Select(e => e.Mentor != null ? e.Mentor.FullName : "N/A")
                 .FirstOrDefault()
                 })
                 .ToListAsync();
@@ -162,6 +159,14 @@ namespace CapstoneProject.Infrastructure.Repostitory
         {
             return await _context.WeekDefinitions
                 .FirstOrDefaultAsync(w => w.WeekNumber == weekNumber);
+        }
+
+        public async Task<List<WeeklyReport>> GetPendingReportsAsync()
+        {
+            // Lấy các report có status là 'Submitted' (chưa được Mentor chấm)
+            return await _context.WeeklyReports
+                .Where(r => r.Status == "Submitted")
+                .ToListAsync();
         }
 
     }
