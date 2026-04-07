@@ -2,9 +2,6 @@
 using CapstoneProject.Domain.Entities;
 using CapstoneProject.Infrastructure.Database.AppDbContext;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CapstoneProject.Infrastructure.Repostitory
 {
@@ -41,7 +38,11 @@ namespace CapstoneProject.Infrastructure.Repostitory
 
         public async Task<List<User>> GetAllUsersAsync()
         {
-            return await _context.Users.ToListAsync();
+            return await _context.Users
+                .Include(u => u.GroupMember)            // Lấy thông tin bản ghi thành viên
+                    .ThenInclude(gm => gm.Group)        // Từ thành viên lấy thông tin Nhóm
+                        .ThenInclude(g => g.FinalGrade) // Từ Nhóm lấy điểm số cuối cùng
+                .ToListAsync();
         }
 
         public async Task UpdateUserStatusAsync(int userId, string newStatus)
@@ -161,8 +162,34 @@ namespace CapstoneProject.Infrastructure.Repostitory
         public async Task<List<User>> GetStudentsAsync()
         {
             return await _context.Users
+                .Include(u => u.GroupMember)            // 1. Kết nối bảng trung gian GroupMember
+                    .ThenInclude(gm => gm.Group)        // 2. Từ GroupMember lấy thông tin Groups
+                        .ThenInclude(g => g.FinalGrade) // 3. Từ Groups lấy điểm FinalGrades
                 .Where(u => u.Role == "Student")
                 .ToListAsync();
         }
+
+        public async Task<List<User>> SearchUsersAsync(string? keyword, string? role, string? status)
+        {
+            var query = _context.Users.AsQueryable();
+
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                query = query.Where(u => u.FullName.Contains(keyword) || u.Email.Contains(keyword));
+            }
+
+            if (!string.IsNullOrEmpty(role))
+            {
+                query = query.Where(u => u.Role == role);
+            }
+
+            if (!string.IsNullOrEmpty(status))
+            {
+                query = query.Where(u => u.Status == status);
+            }
+
+            return await query.ToListAsync();
+        }
     }
 }
+

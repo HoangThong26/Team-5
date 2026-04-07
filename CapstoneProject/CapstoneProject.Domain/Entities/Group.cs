@@ -22,14 +22,7 @@ public partial class Group
     public bool? IsLocked { get; set; }
 
     public DateTime? CreatedAt { get; set; }
-    // Thêm các dòng này vào class Group của bạn
-    public int? SemesterId { get; set; }
-    [ForeignKey("SemesterId")]
-    public virtual Semester? Semester { get; set; }
 
-    public int? MajorId { get; set; }
-    [ForeignKey("MajorId")]
-    public virtual Major? Major { get; set; }
     [InverseProperty("Group")]
     public virtual ICollection<DefenseSchedule> DefenseSchedules { get; set; } = new List<DefenseSchedule>();
 

@@ -10,9 +10,10 @@ namespace CapstoneProject.Application.Interface.IService
     public interface IWeeklyReportService
     {
         Task<ServiceResponse<WeeklyReport>> SubmitReportAsync(int userId, WeeklyReportRequest request);
-        Task<IEnumerable<WeeklyReport>> GetReportsForMentorAsync(int mentorId);
+        Task<IEnumerable<WeeklyReport>> GetReportsForMentorAsync(int mentorId, int? weekId = null, int? groupId = null, string? status = null);
         Task<IEnumerable<WeeklyReport>> GetReportsByGroupIdAsync(int groupId);
         Task<List<WeeklyReportHistoryDto>> GetGroupHistoryAsync(int groupId);
+        Task<CouncilEligibilityDto> GetCouncilEligibilityAsync(int groupId);
         Task<ServiceResponse<WeeklyReport>> UpdateWeeklyReportAsync(int reportId, WeeklyReportRequest request);
         Task<(byte[] fileContent, string contentType, string fileName)> DownloadReportAsync(string fileName);
     }

@@ -1,11 +1,8 @@
-
+// 1. THÊM USING NÀY ĐỂ PROGRAM NHẬN DIỆN ĐƯỢC HUB CỦA BẠN
 using CapstoneProject.API.Hubs;
-using CapstoneProject.Application.Interface;
 using CapstoneProject.Application.Interface.IRepository;
 using CapstoneProject.Application.Interface.IService;
-using CapstoneProject.Application.Interfaces;
 using CapstoneProject.Application.Service;
-using CapstoneProject.Application.Services;
 using CapstoneProject.Infrastructure.Database.AppDbContext;
 using CapstoneProject.Infrastructure.Repository;
 using CapstoneProject.Infrastructure.Repostitory;
@@ -64,11 +61,6 @@ builder.Services.AddAuthentication(options =>
 });
 
 builder.Services.AddAuthorization();
-// Đảm bảo bạn có using này ở trên cùng Program.cs
-// using CapstoneProject.Infrastructure.Services;
-// using CapstoneProject.Application.Interface.IService;
-
-builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -80,13 +72,7 @@ builder.Services.AddScoped<IGroupRepository, GroupRepository>();
 builder.Services.AddScoped<IGroupService, GroupService>();
 builder.Services.AddScoped<IDefenseRepository, DefenseRepository>();
 builder.Services.AddScoped<IDefenseService, DefenseService>();
-builder.Services.AddScoped<IStatisticService, StatisticService>();
-builder.Services.AddScoped<IGroupMemberRepository,GroupMemberRepository>();
-builder.Services.AddScoped<IMentorAssignmentRepository, MentorAssignmentRepository>();
-builder.Services.AddSingleton<IUserIdProvider, EmailBasedUserIdProvider>();
-builder.Services.AddScoped<ITopicSearchService, TopicSearchService>();
-builder.Services.AddScoped<IDefenseRepository, DefenseRepository>();
-builder.Services.AddScoped<IDefenseService, DefenseService>();
+builder.Services.AddScoped<IGroupMemberRepository, GroupMemberRepository>();
 builder.Services.AddScoped<IGroupMemberRepository, GroupMemberRepository>();
 builder.Services.AddScoped<IMentorAssignmentRepository, MentorAssignmentRepository>();
 builder.Services.AddScoped<IWeeklyReportRepository, WeeklyReportRepository>();
@@ -94,6 +80,10 @@ builder.Services.AddScoped<IWeeklyReportService, WeeklyReportService>();
 builder.Services.AddScoped<IWeeklyEvaluationRepository, WeeklyEvaluationRepository>();
 builder.Services.AddScoped<IWeeklyEvaluationService, WeeklyEvaluationService>();
 builder.Services.AddSingleton<IUserIdProvider, EmailBasedUserIdProvider>();
+builder.Services.AddHttpClient<ITopicAiService, TopicAiService>();
+builder.Services.AddScoped<IGradeService, GradeService>();
+builder.Services.AddScoped<ICouncilRepository, CouncilRepository>();
+builder.Services.AddScoped<ICouncilService, CouncilService>();
 
 builder.Services.AddCors(options =>
 {
@@ -105,11 +95,7 @@ builder.Services.AddCors(options =>
                .AllowCredentials();
     });
 });
-// 1. Dạy cho hệ thống biết: Khi ai đó cần IApplicationDbContext, hãy lấy ApplicationDbContext đã có sẵn đưa cho họ
-builder.Services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
 
-// 2. Đăng ký StatisticService bạn vừa tạo
-builder.Services.AddScoped<IStatisticService, StatisticService>();
 var app = builder.Build();
 app.UseCors("AllowAll");
 if (app.Environment.IsDevelopment())

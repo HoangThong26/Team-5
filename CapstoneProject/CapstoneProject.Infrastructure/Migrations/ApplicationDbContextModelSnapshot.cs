@@ -121,12 +121,25 @@ namespace CapstoneProject.Infrastructure.Migrations
                     b.Property<int?>("DefenseId")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("DemoScore")
+                        .HasPrecision(5, 2)
+                        .HasColumnType("decimal(5,2)");
+
                     b.Property<bool?>("IsPublished")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
+                    b.Property<decimal>("PresentationScore")
+                        .HasPrecision(5, 2)
+                        .HasColumnType("decimal(5,2)");
+
+                    b.Property<decimal>("QAScore")
+                        .HasPrecision(5, 2)
+                        .HasColumnType("decimal(5,2)");
+
                     b.Property<decimal?>("Score")
+                        .HasPrecision(5, 2)
                         .HasColumnType("decimal(5, 2)");
 
                     b.HasKey("Id")
@@ -134,7 +147,10 @@ namespace CapstoneProject.Infrastructure.Migrations
 
                     b.HasIndex("CouncilMemberId");
 
-                    b.HasIndex("DefenseId");
+                    b.HasIndex("DefenseId", "CouncilMemberId")
+                        .IsUnique()
+                        .HasDatabaseName("UQ_Defense_CouncilMember")
+                        .HasFilter("[DefenseId] IS NOT NULL AND [CouncilMemberId] IS NOT NULL");
 
                     b.ToTable("DefenseScores");
                 });
@@ -156,9 +172,6 @@ namespace CapstoneProject.Infrastructure.Migrations
 
                     b.Property<int?>("GroupId")
                         .HasColumnType("int");
-
-                    b.Property<bool?>("IsPass")
-                        .HasColumnType("bit");
 
                     b.Property<bool?>("IsPublished")
                         .ValueGeneratedOnAdd()
@@ -250,12 +263,6 @@ namespace CapstoneProject.Infrastructure.Migrations
                     b.Property<int?>("LeaderId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("MajorId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("SemesterId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Status")
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(50)
@@ -266,10 +273,6 @@ namespace CapstoneProject.Infrastructure.Migrations
                         .HasName("PK__Groups__149AF36ADC67C265");
 
                     b.HasIndex("LeaderId");
-
-                    b.HasIndex("MajorId");
-
-                    b.HasIndex("SemesterId");
 
                     b.ToTable("Groups");
                 });
@@ -380,32 +383,6 @@ namespace CapstoneProject.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("LoginHistories");
-                });
-
-            modelBuilder.Entity("CapstoneProject.Domain.Entities.Major", b =>
-                {
-                    b.Property<int>("MajorId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MajorId"));
-
-                    b.Property<string>("MajorCode")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("MajorName")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.HasKey("MajorId");
-
-                    b.HasIndex("MajorCode")
-                        .IsUnique();
-
-                    b.ToTable("Majors");
                 });
 
             modelBuilder.Entity("CapstoneProject.Domain.Entities.MentorAssignment", b =>
@@ -540,41 +517,6 @@ namespace CapstoneProject.Infrastructure.Migrations
                     b.ToTable("RefreshTokens");
                 });
 
-            modelBuilder.Entity("CapstoneProject.Domain.Entities.Semester", b =>
-                {
-                    b.Property<int>("SemesterId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SemesterId"));
-
-                    b.Property<DateTime?>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsCurrent")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SemesterCode")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("SemesterName")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<DateTime?>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("SemesterId");
-
-                    b.HasIndex("SemesterCode")
-                        .IsUnique();
-
-                    b.ToTable("Semesters");
-                });
-
             modelBuilder.Entity("CapstoneProject.Domain.Entities.Topic", b =>
                 {
                     b.Property<int>("TopicId")
@@ -699,9 +641,6 @@ namespace CapstoneProject.Infrastructure.Migrations
                     b.Property<DateTime?>("LockUntil")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("MajorId")
-                        .HasColumnType("int");
-
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasMaxLength(500)
@@ -729,8 +668,6 @@ namespace CapstoneProject.Infrastructure.Migrations
 
                     b.HasKey("UserId");
 
-                    b.HasIndex("MajorId");
-
                     b.HasIndex(new[] { "Email" }, "UQ__Users__A9D10534693D73B8")
                         .IsUnique();
 
@@ -748,9 +685,6 @@ namespace CapstoneProject.Infrastructure.Migrations
                     b.Property<DateOnly?>("EndDate")
                         .HasColumnType("date");
 
-                    b.Property<int?>("SemesterId")
-                        .HasColumnType("int");
-
                     b.Property<DateOnly?>("StartDate")
                         .HasColumnType("date");
 
@@ -759,8 +693,6 @@ namespace CapstoneProject.Infrastructure.Migrations
 
                     b.HasKey("WeekId")
                         .HasName("PK__WeekDefi__C814A5C1CCD2D069");
-
-                    b.HasIndex("SemesterId");
 
                     b.ToTable("WeekDefinitions");
                 });
@@ -941,19 +873,7 @@ namespace CapstoneProject.Infrastructure.Migrations
                         .HasForeignKey("LeaderId")
                         .HasConstraintName("FK__Groups__LeaderId__66603565");
 
-                    b.HasOne("CapstoneProject.Domain.Entities.Major", "Major")
-                        .WithMany("Groups")
-                        .HasForeignKey("MajorId");
-
-                    b.HasOne("CapstoneProject.Domain.Entities.Semester", "Semester")
-                        .WithMany("Groups")
-                        .HasForeignKey("SemesterId");
-
                     b.Navigation("Leader");
-
-                    b.Navigation("Major");
-
-                    b.Navigation("Semester");
                 });
 
             modelBuilder.Entity("CapstoneProject.Domain.Entities.GroupInvitation", b =>
@@ -1091,24 +1011,6 @@ namespace CapstoneProject.Infrastructure.Migrations
                     b.Navigation("Topic");
                 });
 
-            modelBuilder.Entity("CapstoneProject.Domain.Entities.User", b =>
-                {
-                    b.HasOne("CapstoneProject.Domain.Entities.Major", "Major")
-                        .WithMany("Users")
-                        .HasForeignKey("MajorId");
-
-                    b.Navigation("Major");
-                });
-
-            modelBuilder.Entity("CapstoneProject.Domain.Entities.WeekDefinition", b =>
-                {
-                    b.HasOne("CapstoneProject.Domain.Entities.Semester", "Semester")
-                        .WithMany("WeekDefinitions")
-                        .HasForeignKey("SemesterId");
-
-                    b.Navigation("Semester");
-                });
-
             modelBuilder.Entity("CapstoneProject.Domain.Entities.WeeklyEvaluation", b =>
                 {
                     b.HasOne("CapstoneProject.Domain.Entities.User", "Mentor")
@@ -1179,20 +1081,6 @@ namespace CapstoneProject.Infrastructure.Migrations
                     b.Navigation("Topic");
 
                     b.Navigation("WeeklyReports");
-                });
-
-            modelBuilder.Entity("CapstoneProject.Domain.Entities.Major", b =>
-                {
-                    b.Navigation("Groups");
-
-                    b.Navigation("Users");
-                });
-
-            modelBuilder.Entity("CapstoneProject.Domain.Entities.Semester", b =>
-                {
-                    b.Navigation("Groups");
-
-                    b.Navigation("WeekDefinitions");
                 });
 
             modelBuilder.Entity("CapstoneProject.Domain.Entities.Topic", b =>

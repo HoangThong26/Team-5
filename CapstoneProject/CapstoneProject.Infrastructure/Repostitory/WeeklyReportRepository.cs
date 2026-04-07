@@ -67,14 +67,31 @@ namespace CapstoneProject.Infrastructure.Repostitory
             return await _context.WeeklyReports.FindAsync(reportId);
         }
 
-        public async Task<IEnumerable<WeeklyReport>> GetReportsForMentorAsync(int mentorId)
+        public async Task<IEnumerable<WeeklyReport>> GetReportsForMentorAsync(int mentorId, int? weekId = null, int? groupId = null, string? status = null)
         {
-            return await _context.WeeklyReports
-         .Include(r => r.Group) 
-         .Where(r => _context.MentorAssignments
-             .Any(ma => ma.MentorId == mentorId && ma.GroupId == r.GroupId))
-         .OrderByDescending(r => r.SubmittedAt)
-         .ToListAsync();
+            var query = _context.WeeklyReports
+                .Include(r => r.Group)
+                .Where(r => _context.MentorAssignments
+                    .Any(ma => ma.MentorId == mentorId && ma.GroupId == r.GroupId));
+
+            if (weekId.HasValue)
+            {
+                query = query.Where(r => r.WeekId == weekId.Value);
+            }
+
+            if (groupId.HasValue)
+            {
+                query = query.Where(r => r.GroupId == groupId.Value);
+            }
+
+            if (!string.IsNullOrEmpty(status))
+            {
+                query = query.Where(r => r.Status == status);
+            }
+
+            return await query
+                .OrderByDescending(r => r.SubmittedAt)
+                .ToListAsync();
         }
 
         public async Task<int?> GetMentorIdByGroupIdAsync(int groupId)

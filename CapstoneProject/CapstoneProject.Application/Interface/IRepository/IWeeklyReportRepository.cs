@@ -15,7 +15,7 @@ namespace CapstoneProject.Application.Interface.IRepository
         Task<DateOnly?> GetStartDateOfFirstWeekAsync();
         Task<WeeklyReport?> GetReportByIdAsync(int reportId);
         Task UpdateProjectStartDateAsync(DateOnly startDate);
-        Task<IEnumerable<WeeklyReport>> GetReportsForMentorAsync(int mentorId);
+        Task<IEnumerable<WeeklyReport>> GetReportsForMentorAsync(int mentorId, int? weekId = null, int? groupId = null, string? status = null);
         Task<int?> GetMentorIdByGroupIdAsync(int groupId);
         Task<string> GetGroupNameAsync(int groupId);
         Task<IEnumerable<WeeklyReport>> GetReportsByGroupIdAsync(int groupId);

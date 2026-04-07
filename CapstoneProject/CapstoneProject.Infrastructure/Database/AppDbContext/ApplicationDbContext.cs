@@ -1,13 +1,12 @@
-﻿using CapstoneProject.Application.Interfaces;
-using  CapstoneProject.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using  CapstoneProject.Domain.Entities;
+
+using Microsoft.EntityFrameworkCore;
 
 namespace CapstoneProject.Infrastructure.Database.AppDbContext;
 
-public partial class ApplicationDbContext : DbContext, IApplicationDbContext
-
+public partial class ApplicationDbContext : DbContext
 {
     public ApplicationDbContext()
     {
@@ -39,9 +38,7 @@ public partial class ApplicationDbContext : DbContext, IApplicationDbContext
     public virtual DbSet<LoginHistory> LoginHistories { get; set; }
 
     public virtual DbSet<MentorAssignment> MentorAssignments { get; set; }
-    // Thêm 2 dòng này
-    public DbSet<Semester> Semesters { get; set; }
-    public DbSet<Major> Majors { get; set; }
+
     public virtual DbSet<MentorRequest> MentorRequests { get; set; }
 
     public virtual DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
@@ -95,6 +92,15 @@ public partial class ApplicationDbContext : DbContext, IApplicationDbContext
             entity.HasKey(e => e.Id).HasName("PK__DefenseS__3214EC074DC0D66C");
 
             entity.Property(e => e.IsPublished).HasDefaultValue(false);
+
+            entity.Property(e => e.PresentationScore).HasPrecision(5, 2);
+            entity.Property(e => e.DemoScore).HasPrecision(5, 2);
+            entity.Property(e => e.QAScore).HasPrecision(5, 2);
+            entity.Property(e => e.Score).HasPrecision(5, 2);
+
+            entity.HasIndex(e => new { e.DefenseId, e.CouncilMemberId })
+          .IsUnique()
+          .HasDatabaseName("UQ_Defense_CouncilMember");
 
             entity.HasOne(d => d.CouncilMember).WithMany(p => p.DefenseScores).HasConstraintName("FK__DefenseSc__Counc__2739D489");
 

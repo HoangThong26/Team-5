@@ -41,6 +41,8 @@ namespace CapstoneProject.Infrastructure.Services
                 var targetWeek = await _weeklyReportRepository.GetWeekDefinitionByNumberAsync(request.WeekId);
                 if (targetWeek == null)
                     throw new Exception($"Error: Week {request.WeekId} is not valid.");
+                if (!targetWeek.EndDate.HasValue)
+                    throw new Exception($"System Error: Week {request.WeekId} timeline is missing end date.");
                 if (request.WeekId > currentSystemWeek)
                     throw new Exception($"Forbidden: You cannot submit for Week {request.WeekId} yet. Current progress is Week {currentSystemWeek}.");
                 DateTime deadline = targetWeek.EndDate.Value.ToDateTime(new TimeOnly(23, 59, 59));
@@ -88,7 +90,7 @@ namespace CapstoneProject.Infrastructure.Services
                 }
                 else
                 {
-                    if (existingReport.Status == "Reviewed")
+                    if (IsEvaluatedStatus(existingReport.Status))
                         throw new Exception("Locked: Report is already reviewed and cannot be edited.");
 
                     existingReport.Content = request.Content;
@@ -112,9 +114,9 @@ namespace CapstoneProject.Infrastructure.Services
             return response;
         }
 
-        public async Task<IEnumerable<WeeklyReport>> GetReportsForMentorAsync(int mentorId)
+        public async Task<IEnumerable<WeeklyReport>> GetReportsForMentorAsync(int mentorId, int? weekId = null, int? groupId = null, string? status = null)
         {
-            return await _weeklyReportRepository.GetReportsForMentorAsync(mentorId);
+            return await _weeklyReportRepository.GetReportsForMentorAsync(mentorId, weekId, groupId, status);
         }
         public async Task<IEnumerable<WeeklyReport>> GetReportsByGroupIdAsync(int groupId)
         {
@@ -130,6 +132,47 @@ namespace CapstoneProject.Infrastructure.Services
             var history = await _weeklyReportRepository.GetGroupHistoryAsync(groupId);
 
             return history;
+        }
+
+        public async Task<CouncilEligibilityDto> GetCouncilEligibilityAsync(int groupId)
+        {
+            const int totalWeeks = 15;
+            const decimal maxScorePerWeek = 10m;
+            decimal maxScore = totalWeeks * maxScorePerWeek;
+
+            if (groupId <= 0)
+            {
+                return new CouncilEligibilityDto
+                {
+                    GroupId = groupId,
+                    TotalWeeks = totalWeeks,
+                    MaxScore = maxScore,
+                    TotalScore = 0,
+                    Percentage = 0,
+                    IsEligibleForCouncil = false,
+                    EvaluatedWeeks = 0
+                };
+            }
+
+            var history = await _weeklyReportRepository.GetGroupHistoryAsync(groupId);
+            var historyInRange = history
+                .Where(h => (h.WeekId ?? 0) >= 1 && (h.WeekId ?? 0) <= totalWeeks)
+                .ToList();
+
+            decimal totalScore = historyInRange.Sum(h => h.Score ?? 0m);
+            int evaluatedWeeks = historyInRange.Count(h => h.Score.HasValue);
+            double percentage = maxScore == 0 ? 0 : Math.Round((double)(totalScore / maxScore * 100m), 2);
+
+            return new CouncilEligibilityDto
+            {
+                GroupId = groupId,
+                TotalWeeks = totalWeeks,
+                MaxScore = maxScore,
+                TotalScore = totalScore,
+                Percentage = percentage,
+                IsEligibleForCouncil = percentage > 80,
+                EvaluatedWeeks = evaluatedWeeks
+            };
         }
 
         public async Task<ServiceResponse<WeeklyReport>> UpdateWeeklyReportAsync(int reportId, WeeklyReportRequest request)
@@ -161,7 +204,7 @@ namespace CapstoneProject.Infrastructure.Services
                     return response;
                 }
 
-                if (existingReport.Status?.Equals("Reviewed", StringComparison.OrdinalIgnoreCase) == true)
+                if (IsEvaluatedStatus(existingReport.Status))
                 {
                     response.Success = false;
                     response.Message = "Cannot edit: Mentor has already reviewed this report.";
@@ -223,6 +266,13 @@ namespace CapstoneProject.Infrastructure.Services
             var contentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
 
             return (fileBytes, contentType, fileName);
+        }
+
+        private static bool IsEvaluatedStatus(string? status)
+        {
+            return status?.Equals("Reviewed", StringComparison.OrdinalIgnoreCase) == true
+                || status?.Equals("Pass", StringComparison.OrdinalIgnoreCase) == true
+                || status?.Equals("Fail", StringComparison.OrdinalIgnoreCase) == true;
         }
 
     }
