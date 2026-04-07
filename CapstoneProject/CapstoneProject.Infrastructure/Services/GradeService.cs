@@ -42,7 +42,7 @@ namespace CapstoneProject.Infrastructure.Services
             decimal avgDefense = (decimal)defenseScores.Average();
             decimal finalScore = Math.Round((avgWeekly * 0.4m) + (avgDefense * 0.6m), 2);
 
-            string gradeLetter = finalScore >= 5.0m ? "PASSED" : "FAILED";
+            string gradeLetter = finalScore >= 5.0m ? "PASS" : "FAIL";
 
             // 3. Sử dụng Repository để lưu
             var finalGradeEntry = await _gradeRepository.GetByGroupIdAsync(groupId);
@@ -101,7 +101,31 @@ namespace CapstoneProject.Infrastructure.Services
 
         public async Task<List<FinalGrade>> GetAllFinalGrades()
         {
-            return await _gradeRepository.GetAllWithGroupsAsync();
+            // 1. Lấy danh sách các nhóm đã có lịch Defense (hoặc có thể lọc Status = "Completed" nếu bạn có field đó)
+            var groupsWithDefense = await _context.Groups
+                .Include(g => g.Topic)
+                .Where(g => _context.DefenseSchedules.Any(ds => ds.GroupId == g.GroupId))
+                // Bạn có thể thêm: .Where(g => _context.DefenseSchedules.Any(ds => ds.GroupId == g.GroupId && ds.Status == "Completed"))
+                .ToListAsync();
+
+            // 2. Lấy dữ liệu đã tính toán từ Repository
+            var existingGrades = await _gradeRepository.GetAllWithGroupsAsync();
+
+            // 3. Map dữ liệu
+            var result = groupsWithDefense.Select(group => {
+                var gradeEntry = existingGrades.FirstOrDefault(fg => fg.GroupId == group.GroupId);
+
+                return gradeEntry ?? new FinalGrade
+                {
+                    GroupId = group.GroupId,
+                    Group = group,
+                    AverageScore = null,
+                    GradeLetter = null,
+                    IsPublished = false
+                };
+            }).ToList();
+
+            return result;
         }
     }
 }
