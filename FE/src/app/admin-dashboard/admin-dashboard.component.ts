@@ -14,12 +14,14 @@ import {
   UpdateDefenseScheduleRequest
 } from '../models/defense-registration.model';
 import { PassFailChartData } from '../models/pass-fail-chart-data.model';
+import { GradeDistributionItem } from '../models/grade-distribution-item.model';
 import { PassFailDonutComponent } from '../pass-fail-donut/pass-fail-donut.component';
+import { GradeBarChartComponent } from '../grade-bar-chart/grade-bar-chart.component';
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [FormsModule, PassFailDonutComponent],
+  imports: [FormsModule, PassFailDonutComponent, GradeBarChartComponent],
   templateUrl:  './admin-dashboard.component.html',
   styleUrls: ['./admin-dashboard.component.css']
 })
@@ -101,6 +103,13 @@ export class AdminDashboardComponent implements OnInit {
   isLoadingGroups = false;
   viewMode: 'users' | 'groups' | 'timeline' | 'councils' | 'defense' | 'grades' = 'users';
   passFailStats: PassFailChartData = { pass: 0, fail: 0 };
+  gradeDistribution: GradeDistributionItem[] = [
+    { grade: 'A', count: 0 },
+    { grade: 'B', count: 0 },
+    { grade: 'C', count: 0 },
+    { grade: 'D', count: 0 },
+    { grade: 'F', count: 0 }
+  ];
 
   // Thêm các biến quản lý điểm
   grades: FinalGrade[] = [];
@@ -176,6 +185,7 @@ export class AdminDashboardComponent implements OnInit {
       next: (res) => {
         this.grades = res || [];
         this.updatePassFailStats(this.grades);
+        this.updateGradeDistribution(this.grades);
       },
       error: () => {}
     });
@@ -454,6 +464,7 @@ export class AdminDashboardComponent implements OnInit {
       next: (res) => {
         this.grades = res || [];
         this.updatePassFailStats(this.grades);
+        this.updateGradeDistribution(this.grades);
         this.isLoadingGrades = false;
       },
       error: (err) => {
@@ -727,6 +738,48 @@ export class AdminDashboardComponent implements OnInit {
       pass: gradedItems.filter((grade) => Number(grade.averageScore) >= 5).length,
       fail: gradedItems.filter((grade) => Number(grade.averageScore) < 5).length
     };
+  }
+
+  private updateGradeDistribution(grades: FinalGrade[]) {
+    const distribution: Record<GradeDistributionItem['grade'], number> = {
+      A: 0,
+      B: 0,
+      C: 0,
+      D: 0,
+      F: 0
+    };
+
+    for (const grade of grades || []) {
+      const bucket = this.resolveGradeBucket(grade);
+      if (bucket) {
+        distribution[bucket] += 1;
+      }
+    }
+
+    this.gradeDistribution = (['A', 'B', 'C', 'D', 'F'] as const).map((grade) => ({
+      grade,
+      count: distribution[grade]
+    }));
+  }
+
+  private resolveGradeBucket(grade: FinalGrade): GradeDistributionItem['grade'] | null {
+    const normalizedLetter = `${grade?.gradeLetter || ''}`.trim().toUpperCase();
+
+    if (normalizedLetter === 'A' || normalizedLetter === 'B' || normalizedLetter === 'C' || normalizedLetter === 'D' || normalizedLetter === 'F') {
+      return normalizedLetter;
+    }
+
+    if (!this.hasNumericScore(grade?.averageScore)) {
+      return null;
+    }
+
+    const score = Number(grade.averageScore);
+
+    if (score >= 8.5) return 'A';
+    if (score >= 7) return 'B';
+    if (score >= 5.5) return 'C';
+    if (score >= 4) return 'D';
+    return 'F';
   }
 
   private hasNumericScore(score: number | null | undefined): boolean {

@@ -511,6 +511,10 @@
   align-items: stretch;
 }
 
+.grade-chart-panel {
+  margin-bottom: 1.5rem;
+}
+
 .analytics-copy {
   padding: 1.5rem;
   border-radius: 24px;
