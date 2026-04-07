@@ -1,7 +1,5 @@
 ﻿using CapstoneProject.Application.DTO;
 using CapstoneProject.Application.Interface.IService;
-using CapstoneProject.Domain.Entities;
-using CapstoneProject.Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -13,10 +11,12 @@ public class WeeklyReportController : ControllerBase
 {
     private readonly IWeeklyReportService _service;
     private readonly IGroupService _groupService;
-    public WeeklyReportController(IWeeklyReportService service, IGroupService groupService)
+    private readonly IDateTimeService _dateTimeService;
+    public WeeklyReportController(IWeeklyReportService service, IGroupService groupService, IDateTimeService dateTimeService)
     {
         _service = service;
         _groupService = groupService;
+        _dateTimeService = dateTimeService;
     }
 
     [Authorize]
@@ -78,7 +78,7 @@ public class WeeklyReportController : ControllerBase
 
             if (history == null || history.Count == 0)
             {
-                return Ok(new List<WeeklyReportHistoryDto>()); 
+                return Ok(new List<WeeklyReportHistoryDto>());
             }
 
             return Ok(history);
@@ -170,4 +170,12 @@ public class WeeklyReportController : ControllerBase
             return BadRequest(new { message = "Lỗi khi tải file: " + ex.Message });
         }
     }
+
+    [HttpGet("status")]
+    public async Task<IActionResult> GetStatus()
+    {
+        var result = await _dateTimeService.GetWeeklyDeadlineAsync();
+        return Ok(result);
+    }
+
 }

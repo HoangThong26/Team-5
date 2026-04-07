@@ -1,12 +1,10 @@
 ﻿using CapstoneProject.Application.DTO;
 using CapstoneProject.Application.Interface.IService;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CapstoneProject.API.Controllers
 {
-    [Authorize(Roles = "Mentor")]
+    //[Authorize(Roles = "Mentor")]
     [Route("api/[controller]")]
     [ApiController]
     public class WeeklyEvaluationController : ControllerBase
@@ -19,21 +17,28 @@ namespace CapstoneProject.API.Controllers
         }
 
         [HttpPost("submit-grade")]
-        public async Task<IActionResult> Evaluate([FromBody] EvaluationRequest request)
+        public async Task<IActionResult> EvaluateReport([FromBody] EvaluationRequest request)
         {
             try
             {
-                var mentorIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-                if (string.IsNullOrEmpty(mentorIdClaim)) return Unauthorized();
+                // Assuming you retrieve MentorId from the authenticated User Claims
+                int mentorId = int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value);
+                //int mentorId = 87;
+                string resultMessage = await _evaluationService.EvaluateAsync(mentorId, request);
 
-                await _evaluationService.EvaluateAsync(int.Parse(mentorIdClaim), request);
-
-                return Ok(new { message = "Evaluation submitted successfully!" });
+                return Ok(new
+                {
+                    success = true,
+                    message = resultMessage
+                });
             }
             catch (Exception ex)
             {
-
-                return BadRequest(new { message = ex.Message });
+                return BadRequest(new
+                {
+                    success = false,
+                    message = ex.Message
+                });
             }
         }
 
@@ -48,6 +53,26 @@ namespace CapstoneProject.API.Controllers
             }
 
             return Ok(evaluation);
+        }
+
+        [HttpGet("pending-reports")]
+        public async Task<IActionResult> GetPendingReports()
+        {
+            try
+            {
+                var reports = await _evaluationService.GetPendingReportsAsync();
+
+                if (reports == null || !reports.Any())
+                {
+                    return NotFound(new { message = "No pending reports found." });
+                }
+
+                return Ok(reports);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
     }
 }
