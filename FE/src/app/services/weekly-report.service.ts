@@ -42,4 +42,8 @@ submitReport(request: any): Observable<any> {
   downloadFile(fileName: string): Observable<Blob> {
     return this.http.get(`${this.apiUrl}/download/${fileName}`, { responseType: 'blob' });
   }
+
+  getSubmissionStatus(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/status`);
+  }
 }
