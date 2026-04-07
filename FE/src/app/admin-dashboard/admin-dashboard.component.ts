@@ -12,11 +12,13 @@ import {
   DefenseRegistrationItemDto,
   UpdateDefenseScheduleRequest
 } from '../models/defense-registration.model';
+import { PassFailChartData } from '../models/pass-fail-chart-data.model';
+import { PassFailDonutComponent } from '../pass-fail-donut/pass-fail-donut.component';
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, PassFailDonutComponent],
   templateUrl: './admin-dashboard.component.html',
   styleUrls: ['./admin-dashboard.component.css']
 })
@@ -97,6 +99,9 @@ export class AdminDashboardComponent implements OnInit {
   groups: any[] = [];
   isLoadingGroups = false;
   viewMode: 'users' | 'groups' | 'timeline' | 'councils' | 'defense' = 'users';
+  passFailStats: PassFailChartData = { pass: 0, fail: 0 };
+  gradedGroupsCount = 0;
+  groupScoreDebug: Array<{ groupId: number | string; groupName: string; score: number | null }> = [];
 
   // Defense schedule management
   defenseRegistrations: DefenseRegistrationItemDto[] = [];
@@ -160,7 +165,10 @@ export class AdminDashboardComponent implements OnInit {
   /** Load groups & mentors silently on startup so stat cards have correct data */
   private loadAllStatsOnInit() {
     this.adminService.getAllGroups().subscribe({
-      next: (res) => { this.groups = res; },
+      next: (res) => {
+        this.groups = res;
+        this.updatePassFailStats(res);
+      },
       error: () => {}
     });
     this.adminService.getAllUsers().subscribe({
@@ -590,6 +598,7 @@ export class AdminDashboardComponent implements OnInit {
     this.adminService.getAllGroups().subscribe({
       next: (res) => {
         this.groups = res;
+        this.updatePassFailStats(res);
         this.isLoadingGroups = false;
       },
       error: (err) => {
@@ -815,6 +824,78 @@ export class AdminDashboardComponent implements OnInit {
         this.errorMessage = 'Staff search failed.';
       }
     });
+  }
+
+  private updatePassFailStats(groups: any[]) {
+    const normalizedGroups = (groups || []).map((group) => ({
+      groupId: group?.groupId ?? group?.GroupId ?? 'n/a',
+      groupName: group?.groupName ?? group?.GroupName ?? group?.name ?? group?.Name ?? 'Unknown group',
+      score: this.extractFinalScore(group)
+    }));
+
+    this.groupScoreDebug = normalizedGroups.slice(0, 5);
+
+    const gradedGroups = normalizedGroups
+      .map((group) => group.score)
+      .filter((score): score is number => score !== null);
+
+    this.gradedGroupsCount = gradedGroups.length;
+
+    this.passFailStats = {
+      pass: gradedGroups.filter((score) => score >= 5).length,
+      fail: gradedGroups.filter((score) => score < 5).length
+    };
+
+    console.log('Admin all-groups response sample:', normalizedGroups.slice(0, 5));
+    console.log('Admin pass/fail stats:', this.passFailStats, 'gradedGroupsCount:', this.gradedGroupsCount);
+  }
+
+  getGroupScore(group: any): number | null {
+    return this.extractFinalScore(group);
+  }
+
+  getUserGroupScore(user: any): number | null {
+    const group =
+      user?.groupMember?.group ??
+      user?.GroupMember?.Group ??
+      user?.group ??
+      user?.Group;
+
+    return this.extractFinalScore(group);
+  }
+
+  formatScore(score: number | null): string {
+    if (score === null) {
+      return '—';
+    }
+
+    return Number.isInteger(score) ? `${score}` : score.toFixed(2);
+  }
+
+  private extractFinalScore(group: any): number | null {
+    const rawScore =
+      group?.averageScore ??
+      group?.AverageScore ??
+      group?.finalScore ??
+      group?.FinalScore ??
+      group?.score ??
+      group?.Score ??
+      group?.grade ??
+      group?.Grade ??
+      group?.finalGrade?.averageScore ??
+      group?.finalGrade?.AverageScore ??
+      group?.finalGrade?.score ??
+      group?.finalGrade?.value ??
+      group?.finalGrade?.grade ??
+      group?.finalGrade?.Grade ??
+      group?.FinalGrade?.AverageScore ??
+      group?.FinalGrade?.averageScore ??
+      group?.FinalGrade?.Score ??
+      group?.FinalGrade?.Value ??
+      group?.FinalGrade?.Grade;
+
+    const numericScore = Number(rawScore);
+    return Number.isFinite(numericScore) ? numericScore : null;
   }
 
 }

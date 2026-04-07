@@ -165,6 +165,40 @@
       }
 
       <!-- ═══ USERS VIEW ═══ -->
+      @if (viewMode === 'users' || viewMode === 'groups') {
+        <section class="admin-analytics">
+          <div class="analytics-copy">
+            <p class="analytics-eyebrow">Academic Snapshot</p>
+            <h2>Pass and fail distribution by final group grade</h2>
+            <p>
+              This chart updates from the current group list. A group is counted as pass when its final grade is at least 5.
+            </p>
+            <p class="analytics-debug">
+              Groups loaded: {{ groups.length }} · Groups with detectable score: {{ gradedGroupsCount }}
+            </p>
+            <div class="analytics-kpis">
+              <div class="analytics-kpi success">
+                <span class="analytics-kpi-label">Pass</span>
+                <strong>{{ passFailStats.pass }}</strong>
+              </div>
+              <div class="analytics-kpi danger">
+                <span class="analytics-kpi-label">Fail</span>
+                <strong>{{ passFailStats.fail }}</strong>
+              </div>
+            </div>
+            @if (gradedGroupsCount === 0 && groupScoreDebug.length > 0) {
+              <div class="analytics-debug-box">
+                @for (item of groupScoreDebug; track item.groupId) {
+                  <p>#{{ item.groupId }} - {{ item.groupName }} : {{ item.score === null ? 'no score from API' : item.score }}</p>
+                }
+              </div>
+            }
+          </div>
+
+          <app-pass-fail-donut [data]="passFailStats"></app-pass-fail-donut>
+        </section>
+      }
+
       @if (viewMode === 'users') {
 
         <!-- Toolbar -->
@@ -310,6 +344,7 @@
                 <tbody>
                   @for (user of pagedUsers; track user.userId || user.id) {
                     <tr class="dt-row">
+                      <td class="td-phone">{{ user.phone || '—' }}</td>
                       <td>
                         <div class="user-cell">
                           <div>
@@ -319,7 +354,6 @@
                         </div>
                       </td>
                       <td class="td-email">{{ user.email }}</td>
-                      <td class="td-phone">{{ user.phone || '—' }}</td>
                       <td>
                         @if (user.groupMember?.group || user.GroupMember?.Group) {
                           <div class="group-cell">
@@ -337,12 +371,8 @@
                         }
                       </td>
                       <td>
-                        @if (user.groupMember?.group?.finalGrade || user.GroupMember?.Group?.FinalGrade) {
-                          <span class="grade-tag">
-                            {{ user.groupMember?.group?.finalGrade?.score || user.groupMember?.group?.finalGrade?.value 
-                            || user.GroupMember?.Group?.FinalGrade?.Score || user.GroupMember?.Group?.FinalGrade?.Value 
-                            || '—' }}
-                          </span>
+                        @if (getUserGroupScore(user) !== null) {
+                          <span class="grade-tag">{{ formatScore(getUserGroupScore(user)) }}</span>
                         } @else {
                           <span class="td-muted">—</span>
                         }
@@ -760,3 +790,4 @@
     </div>
   </main>
 </div>
+
