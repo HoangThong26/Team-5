@@ -157,4 +157,8 @@ export class AuthService {
     return user ? user.role : null;
   }
 
+  getGroupId(): number | null {
+  const user = this.getCurrentUser() as any;
+  return user?.groupId ? Number(user.groupId) : null;
+}
 }

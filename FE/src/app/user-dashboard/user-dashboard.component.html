@@ -357,6 +357,34 @@
             </svg>
           </button>
 
+          @if (finalGrade && finalGrade.isPublished) {
+          <button class="action-card grade-action-card fade-in" style="border: 2px solid #10B981;">
+            <div class="ac-icon" style="background: linear-gradient(135deg,#10B981,#059669)">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 11-5.93-9.14" />
+                <polyline points="22 4 12 14.01 9 11.01" />
+              </svg>
+            </div>
+            <p class="ac-label">Final Result</p>
+            <div class="grade-display">
+              <span class="grade-score">{{ finalGrade.averageScore }}</span>
+              <span class="grade-letter">({{ finalGrade.gradeLetter }})</span>
+            </div>
+            <p class="ac-sub">Published on {{ finalGrade.publishedAt | date:'dd/MM/yyyy' }}</p>
+          </button>
+        } @else {
+          <button class="action-card disabled-card">
+            <div class="ac-icon" style="background: #e2e8f0">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="8" y1="12" x2="16" y2="12" />
+              </svg>
+            </div>
+            <p class="ac-label" style="color: #94a3b8;">Final Result</p>
+            <p class="ac-sub">Not yet published</p>
+          </button>
+        }
+
         </div>
 
         <!-- ROADMAP -->

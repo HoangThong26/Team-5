@@ -298,14 +298,24 @@ export class MentorDashboardComponent implements OnInit, OnDestroy {
   }
 
   downloadReportFile(report: any) {
-    const fileName = report.fileName || report.FileName || report.fileUrl; 
-
-    if (!fileName) {
-      this.errorMessage = "File name not found!";
+    const fileUrl = report.fileUrl || report.FileUrl;
+    
+    if (!fileUrl) {
+      this.errorMessage = "File URL not found!";
       return;
     }
 
-    this.weeklyReportService.downloadFile(fileName).subscribe({
+    // Extract filename from URL if it contains one, otherwise use a default
+    let fileName = 'report_file';
+    if (fileUrl && typeof fileUrl === 'string') {
+      const urlParts = fileUrl.split('/');
+      const lastPart = urlParts[urlParts.length - 1];
+      if (lastPart && !lastPart.includes('?')) {
+        fileName = lastPart;
+      }
+    }
+
+    this.weeklyReportService.downloadFile(fileUrl).subscribe({
       next: (blob: Blob) => {
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
@@ -313,10 +323,13 @@ export class MentorDashboardComponent implements OnInit, OnDestroy {
         link.download = fileName;
         link.click();
         window.URL.revokeObjectURL(url);
+        this.successMessage = 'File downloaded successfully!';
+        setTimeout(() => this.successMessage = '', 3000);
       },
       error: (err) => {
         console.error('Download error:', err);
         this.errorMessage = "Could not download file. It might have been deleted.";
+        setTimeout(() => this.errorMessage = '', 5000);
       }
     });
   }
