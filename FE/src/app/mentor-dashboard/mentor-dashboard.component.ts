@@ -8,11 +8,14 @@ import { WebsocketService } from '../services/websocket.service';
 import { Subscription } from 'rxjs';
 import { WeeklyReportService } from '../services/weekly-report.service';
 import { WeeklyEvaluationService } from '../services/weekly-evaluation.service';
+import { GradeDistributionItem } from '../models/grade-distribution-item.model';
+import { GradeBarChartComponent } from '../grade-bar-chart/grade-bar-chart.component';
+import { FinalGrade, GradeService } from '../services/grade.service';
 
 @Component({
   selector: 'app-mentor-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, GradeBarChartComponent],
   templateUrl: './mentor-dashboard.component.html',
   styleUrls: ['./mentor-dashboard.component.css']
 })
@@ -36,11 +39,20 @@ export class MentorDashboardComponent implements OnInit, OnDestroy {
   }
 
   successMessage: string = '';
-  viewMode: 'topics' | 'reports' = 'topics';
+  viewMode: 'topics' | 'reports' | 'grades' = 'topics';
   mentorName: string = 'Mentor';
 
   // Weekly Reports
   weeklyReports: any[] = [];
+  gradeDistribution: GradeDistributionItem[] = [
+    { grade: 'A', count: 0 },
+    { grade: 'B', count: 0 },
+    { grade: 'C', count: 0 },
+    { grade: 'D', count: 0 },
+    { grade: 'F', count: 0 }
+  ];
+  isLoadingGradeDistribution = false;
+  gradeDistributionError = '';
   isLoadingReports = false;
   selectedReport: any = null;
   evaluationScore: number = 0;
@@ -57,6 +69,7 @@ export class MentorDashboardComponent implements OnInit, OnDestroy {
     private wsService: WebsocketService,
     private weeklyReportService: WeeklyReportService,
     private evaluationService: WeeklyEvaluationService,
+    private gradeService: GradeService,
     private router: Router,
     @Inject(PLATFORM_ID) platformId: Object
   ) {
@@ -73,6 +86,7 @@ export class MentorDashboardComponent implements OnInit, OnDestroy {
     }
 
     this.loadMentorInbox();
+    this.loadGradeDistribution();
   }
 
   ngOnDestroy() {
@@ -222,10 +236,12 @@ export class MentorDashboardComponent implements OnInit, OnDestroy {
     return Math.round((this.countByStatus(status) / this.allTopics.length) * 100);
   }
 
-  switchView(mode: 'topics' | 'reports') {
+  switchView(mode: 'topics' | 'reports' | 'grades') {
     this.viewMode = mode;
     if (mode === 'reports') {
       this.loadMentorInbox();
+    } else if (mode === 'grades') {
+      this.loadGradeDistribution();
     }
   }
 
@@ -288,6 +304,7 @@ export class MentorDashboardComponent implements OnInit, OnDestroy {
         this.successMessage = res.message || 'Evaluation submitted successfully!';
         this.selectedReport = null;
         this.loadMentorInbox();
+        this.loadGradeDistribution();
         setTimeout(() => this.successMessage = '', 3000);
       },
       error: (err) => {
@@ -295,6 +312,72 @@ export class MentorDashboardComponent implements OnInit, OnDestroy {
         alert('Evaluation failed: ' + (err.error?.message || 'Unknown error'));
       }
     });
+  }
+
+  loadGradeDistribution() {
+    this.isLoadingGradeDistribution = true;
+    this.gradeDistributionError = '';
+
+    this.gradeService.getAllGrades().subscribe({
+      next: (grades) => {
+        this.updateGradeDistribution(grades || []);
+        this.isLoadingGradeDistribution = false;
+      },
+      error: () => {
+        this.isLoadingGradeDistribution = false;
+        this.gradeDistributionError = 'Unable to load final grade distribution for this account.';
+        this.gradeDistribution = [
+          { grade: 'A', count: 0 },
+          { grade: 'B', count: 0 },
+          { grade: 'C', count: 0 },
+          { grade: 'D', count: 0 },
+          { grade: 'F', count: 0 }
+        ];
+      }
+    });
+  }
+
+  private updateGradeDistribution(grades: FinalGrade[]) {
+    const distribution: Record<GradeDistributionItem['grade'], number> = {
+      A: 0,
+      B: 0,
+      C: 0,
+      D: 0,
+      F: 0
+    };
+
+    for (const grade of grades || []) {
+      const bucket = this.resolveGradeBucket(grade);
+      if (bucket) {
+        distribution[bucket] += 1;
+      }
+    }
+
+    this.gradeDistribution = (['A', 'B', 'C', 'D', 'F'] as const).map((grade) => ({
+      grade,
+      count: distribution[grade]
+    }));
+  }
+
+  private resolveGradeBucket(grade: FinalGrade): GradeDistributionItem['grade'] | null {
+    const normalizedLetter = `${grade?.gradeLetter || ''}`.trim().toUpperCase();
+
+    if (normalizedLetter === 'A' || normalizedLetter === 'B' || normalizedLetter === 'C' || normalizedLetter === 'D' || normalizedLetter === 'F') {
+      return normalizedLetter;
+    }
+
+    const score = Number(grade?.averageScore);
+    if (!Number.isFinite(score)) return null;
+
+    if (score >= 8.5) return 'A';
+    if (score >= 7) return 'B';
+    if (score >= 5.5) return 'C';
+    if (score >= 4) return 'D';
+    return 'F';
+  }
+
+  get totalDistributedGrades(): number {
+    return this.gradeDistribution.reduce((sum, item) => sum + item.count, 0);
   }
 
   downloadReportFile(report: any) {

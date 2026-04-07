@@ -540,6 +540,19 @@
    REPORTS & TABLES
    ══════════════════════════ */
 .reports-container { padding: 0; margin-top: 1rem; }
+.grades-view { padding: 0; margin-top: 1rem; }
+.grades-card-shell { overflow: hidden; }
+.grades-chart-wrap { padding: 1.5rem; }
+.grade-error-banner {
+  margin: 0 1.5rem;
+  padding: .875rem 1rem;
+  border-radius: 12px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+  font-size: .85rem;
+  font-weight: 600;
+}
 .table-card {
   background: white; border-radius: 16px; border: 1px solid #e2e8f0;
   box-shadow: 0 4px 20px rgba(0,0,0,0.03); overflow: hidden;
@@ -575,6 +588,8 @@
 .tbtn.sm { padding: .5rem 1rem; font-size: .8rem; }
 .tbtn.primary { background: #2563eb; color: white; }
 .tbtn.primary:hover { background: #1d4ed8; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(37,99,235,0.2); }
+.tbtn.secondary { background: #f8fafc; color: #334155; border: 1px solid #e2e8f0; }
+.tbtn.secondary:hover { background: #ffffff; border-color: #cbd5e1; }
 
 .status-badge {
   padding: .35rem .75rem; border-radius: 6px; font-size: .75rem; font-weight: 700;
