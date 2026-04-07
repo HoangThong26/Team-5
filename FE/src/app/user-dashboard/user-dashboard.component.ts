@@ -47,7 +47,8 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
   defenseRegistrations: DefenseRegistrationItemDto[] = [];
   isLoadingDefenseStatus = false;
   isLoadingDefenseRegistrations = false;
-  isRegisteringDefense = false;
+  isRegisteringDefense: boolean = false;
+  submissionStatus: any = null;
 
   // Sidebar
   activeTab: 'overview' | 'profile' | 'password' = 'overview';
@@ -388,6 +389,7 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
     this.loadHistory();
     this.loadWeeklyReports();
     this.loadCouncilEligibility();
+    this.loadSubmissionStatus();
     this.reportContent = '';
     this.reportGithubLink = '';
     this.reportFileUrl = '';
@@ -459,6 +461,42 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
         console.error('Failed to load council eligibility:', err);
         this.councilEligibility = null;
         this.isLoadingCouncilEligibility = false;
+      }
+    });
+  }
+
+  loadSubmissionStatus() {
+    console.log('--- Calling WeeklyReport Status API ---');
+    this.weeklyReportService.getSubmissionStatus().subscribe({
+      next: (res) => {
+        console.log('API Raw Response:', res);
+        const isSuccess = res.success !== undefined ? res.success : (res.Success !== undefined ? res.Success : true);
+        const data = res.data || res.Data || (res.daysRemaining !== undefined || res.DaysRemaining !== undefined ? res : null);
+        
+        if (data) {
+          this.submissionStatus = { ...data };
+          
+          // Pre-processing dates
+          const processDate = (dateStr: string) => {
+            if (!dateStr || !dateStr.includes('/')) return null;
+            const parts = dateStr.split(' ');
+            const dateParts = parts[0].split('/');
+            if (dateParts.length === 3) {
+              return `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}${parts[1] ? 'T' + parts[1] : ''}`;
+            }
+            return null;
+          };
+
+          this.submissionStatus.weeklyDeadlineISO = processDate(this.submissionStatus.weeklyDeadline || this.submissionStatus.WeeklyDeadline);
+          this.submissionStatus.currentDateISO = processDate(this.submissionStatus.currentDate || this.submissionStatus.CurrentDate);
+          
+          console.log('Processed Submission Status:', this.submissionStatus);
+        } else {
+          console.warn('No data found in status response');
+        }
+      },
+      error: (err) => {
+        console.error('API Status Error:', err);
       }
     });
   }
@@ -663,6 +701,7 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
       this.loadProfile();
       this.loadMyGroup();
       this.loadMyGroupSilently();
+      this.loadSubmissionStatus();
 
       // Refresh defense status/schedule periodically so students see admin updates quickly.
       this.defenseRefreshTimer = setInterval(() => {
