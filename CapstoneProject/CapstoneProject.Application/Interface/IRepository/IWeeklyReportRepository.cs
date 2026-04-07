@@ -1,8 +1,5 @@
 ﻿using CapstoneProject.Application.DTO;
 using CapstoneProject.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CapstoneProject.Application.Interface.IRepository
 {
@@ -23,8 +20,10 @@ namespace CapstoneProject.Application.Interface.IRepository
         Task<WeeklyReport?> GetByIdAsync(int id);
         Task<bool> UpdateAsync(WeeklyReport report);
         Task<WeekDefinition?> GetWeekDefinitionByNumberAsync(int weekNumber);
+        Task<List<WeeklyReport>> GetPendingReportsAsync();
 
-   
+
+
 
 
     }
