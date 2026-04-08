@@ -176,6 +176,7 @@ export class MentorDashboardComponent implements OnInit, OnDestroy {
     this.topicService.approveTopic(request).subscribe({
       next: (res) => {
         alert('Successful!');
+        this.selectedTopic = null;
         this.loadTopics();
       },
       error: (err) => alert('Error: ' + err.error?.message)

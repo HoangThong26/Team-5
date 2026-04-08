@@ -1,5 +1,5 @@
 
-import { Component, OnInit, OnDestroy, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject, PLATFORM_ID, ChangeDetectorRef } from '@angular/core';
 import { isPlatformBrowser, CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -38,6 +38,7 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
   newGroupName = '';
   inviteEmail = '';
   isGroupLoading = false;
+  isCreatingGroup: boolean = false;
   submissionHistory: any[] = [];
   selectedReport: any = null;
   finalGrade: any = null;
@@ -124,19 +125,25 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
     private defenseService: DefenseService,
     private datePipe: DatePipe,
     private router: Router,
+    private cdr: ChangeDetectorRef,
     @Inject(PLATFORM_ID) platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
   }
   loadMyGroup() {
     this.isGroupLoading = true;
+    console.log('🔵 Loading my group...');
+    
     this.groupService.getMyGroup().subscribe({
       next: (res) => {
+        console.log('✅ My Group loaded:', res);
         this.myGroup = res;
+        
         if (res.topic) {
           this.topicTitle = res.topic.title;
           this.topicDescription = res.topic.description;
         }
+        
         if (res.groupId) {
           this.loadFinalGrade(res.groupId);
         }
@@ -145,14 +152,20 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
         this.loadCouncilEligibility();
         this.loadDefenseRegistrationStatus();
         this.loadDefenseRegistrations();
+        
         this.isGroupLoading = false;
+        this.cdr.markForCheck();
+        console.log('✅ Group loading completed');
       },
       error: (err) => {
+        console.error('❌ Error loading group:', err);
         this.isGroupLoading = false;
         this.myGroup = null;
         this.councilEligibility = null;
         this.defenseRegistrationStatus = null;
-        this.loadDefenseRegistrations();
+        this.errorMessage = 'Failed to load group information.';
+        setTimeout(() => this.errorMessage = '', 3000);
+        this.cdr.markForCheck();
       }
     });
   }
@@ -784,19 +797,56 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
     }
 
     this.isLoading = true;
+    this.isCreatingGroup = true;
+    console.log('🔵 Creating group with name:', this.newGroupName);
+    
     this.groupService.createGroup({
       groupName: this.newGroupName,
       targetMembers: 4
     }).subscribe({
       next: (res) => {
+        console.log('✅ Group created successfully:', res);
         this.isLoading = false;
-        this.successMessage = res.message;
-        this.newGroupName = '';
-        this.loadMyGroup();
+        this.successMessage = res.message || res.Message || 'Group created successfully!';
+        
+        // Reload trang sau 1 giây để reset toàn bộ state
+        setTimeout(() => {
+          console.log('🔄 Reloading page...');
+          window.location.reload();
+        }, 1000);
       },
       error: (err) => {
+        console.error('❌ API ERROR:', err);
+        console.error('❌ Error status:', err.status);
+        console.error('❌ Error response:', err.error);
+        
+        // Xử lý trường hợp backend trả 400 nhưng group vẫn được tạo
+        const errorBody = err.error;
+        const errorMsg = typeof errorBody === 'string' ? errorBody : 
+                        (errorBody?.message || errorBody?.Message || '');
+        
+        console.log('❌ Error message from body:', errorMsg);
+        
+        // Nếu message chứa "successfully" hoặc "created", xem như thành công
+        if (errorMsg.toLowerCase().includes('successfully') || 
+            errorMsg.toLowerCase().includes('created')) {
+          console.log('✅ Group created despite 400 error, reloading...');
+          this.successMessage = errorMsg;
+          
+          setTimeout(() => {
+            console.log('🔄 Reloading page...');
+            window.location.reload();
+          }, 1000);
+          return;
+        }
+        
+        // Nếu không phải success, hiển thị error
         this.isLoading = false;
-        this.errorMessage = this.extractError(err, 'Failed to create group.');
+        this.isCreatingGroup = false;
+        const displayErrorMsg = this.extractError(err, 'Failed to create group.');
+        this.errorMessage = displayErrorMsg;
+        console.error('❌ Error message displayed:', this.errorMessage);
+        this.cdr.markForCheck();
       }
     });
   }
