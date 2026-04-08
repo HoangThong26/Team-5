@@ -146,16 +146,5 @@ namespace CapstoneProject.API.Controllers
                 });
             }
         }
-
-        [HttpGet("search")]
-        public async Task<IActionResult> SearchTopics([FromQuery] string? keyword, [FromQuery] string? status, [FromQuery] int? supervisorId)
-        {
-            var result = await _topicService.SearchTopicsAsync(keyword, status, supervisorId);
-            if (result.Count == 0)
-            {
-                return Ok(new { message = "No results found", data = new List<TopicDto>() });
-            }
-            return Ok(result);
-        }
     }
 }

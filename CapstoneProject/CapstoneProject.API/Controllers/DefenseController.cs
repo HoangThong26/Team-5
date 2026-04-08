@@ -163,17 +163,5 @@ namespace CapstoneProject.WebAPI.Controllers
             var assignedGroups = await _defenseService.GetAssignedDefensesAsync(userId);
             return Ok(assignedGroups);
         }
-
-        [HttpGet("search")]
-        [Authorize(Roles = "Council")]
-        public async Task<IActionResult> SearchDefenseSchedules([FromQuery] string? keyword, [FromQuery] string? status)
-        {
-            var result = await _defenseService.SearchDefenseSchedulesAsync(keyword, status);
-            if (result.Count == 0)
-            {
-                return Ok(new { message = "No results found", data = new List<DefenseScheduleDto>() });
-            }
-            return Ok(result);
-        }
     }
 }

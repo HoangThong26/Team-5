@@ -316,36 +316,5 @@ namespace CapstoneProject.Application.Service
                 })
                 .ToListAsync();
         }
-
-        public async Task<List<DefenseScheduleDto>> SearchDefenseSchedulesAsync(string? keyword, string? status)
-        {
-            var query = _context.DefenseSchedules
-                .Include(ds => ds.Group)
-                .Include(ds => ds.Council)
-                .AsQueryable();
-
-            if (!string.IsNullOrEmpty(keyword))
-            {
-                query = query.Where(ds => ds.Group.GroupName.Contains(keyword) ||
-                                          ds.Room.Contains(keyword));
-            }
-
-            if (!string.IsNullOrEmpty(status))
-            {
-                query = query.Where(ds => ds.Status == status);
-            }
-
-            return await query.Select(ds => new DefenseScheduleDto
-            {
-                DefenseId = ds.DefenseId,
-                GroupId = ds.GroupId,
-                GroupName = ds.Group.GroupName,
-                CouncilId = ds.CouncilId,
-                Room = ds.Room,
-                StartTime = ds.StartTime,
-                EndTime = ds.EndTime,
-                Status = ds.Status
-            }).ToListAsync();
-        }
     }
 }
