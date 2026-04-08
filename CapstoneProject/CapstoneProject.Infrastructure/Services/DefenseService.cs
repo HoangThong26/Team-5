@@ -276,6 +276,15 @@ namespace CapstoneProject.Application.Service
                 await _defenseRepository.AddScoreAsync(newScore);
             }
 
+            // --- THÊM LOGIC CẬP NHẬT TRẠNG THÁI TẠI ĐÂY ---
+            // Giả sử bạn có truy cập vào _context hoặc qua Repository
+            var schedule = await _context.DefenseSchedules.FindAsync(request.DefenseId);
+            if (schedule != null && schedule.Status != "Completed")
+            {
+                schedule.Status = "Completed";
+                await _defenseRepository.UpdateDefenseScheduleAsync(schedule);
+            }
+
             return await _defenseRepository.SaveChangesAsync() > 0;
         }
 
