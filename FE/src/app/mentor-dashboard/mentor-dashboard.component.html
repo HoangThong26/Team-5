@@ -52,6 +52,15 @@
         <span>Weekly Reports</span>
         <span class="nav-badge">{{ weeklyReports.length }}</span>
       </a>
+      <a class="nav-link" [class.active]="viewMode === 'grades'" (click)="switchView('grades')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="20" x2="12" y2="10"/>
+          <line x1="18" y1="20" x2="18" y2="4"/>
+          <line x1="6" y1="20" x2="6" y2="14"/>
+        </svg>
+        <span>Grade Distribution</span>
+        <span class="nav-badge">{{ totalDistributedGrades }}</span>
+      </a>
     </nav>
 
     <!-- Stats mini -->
@@ -118,10 +127,10 @@
         </div>
         <div>
           <h1 class="ah-title">
-            {{ viewMode === 'topics' ? 'Proposal Review Board' : 'Weekly Report Inbox' }}
+            {{ viewMode === 'topics' ? 'Proposal Review Board' : viewMode === 'reports' ? 'Weekly Report Inbox' : 'Grade Distribution' }}
           </h1>
           <p class="ah-sub">
-            {{ viewMode === 'topics' ? 'ThesisPro Mentor Console · Review capstone proposals' : 'Review and grade group weekly submissions' }}
+            {{ viewMode === 'topics' ? 'ThesisPro Mentor Console · Review capstone proposals' : viewMode === 'reports' ? 'Review and grade group weekly submissions' : 'Monitor the shared final grade distribution used across the system' }}
           </p>
         </div>
       </div>
@@ -144,11 +153,18 @@
             <p class="asp-l">Rejected</p>
           </div>
         </div>
-      } @else {
+      } @else if (viewMode === 'reports') {
         <div class="ah-stat-pills">
           <div class="ah-stat-pill">
             <p class="asp-n">{{ weeklyReports.length }}</p>
             <p class="asp-l">Received</p>
+          </div>
+        </div>
+      } @else {
+        <div class="ah-stat-pills">
+          <div class="ah-stat-pill">
+            <p class="asp-n">{{ totalDistributedGrades }}</p>
+            <p class="asp-l">Graded</p>
           </div>
         </div>
       }
@@ -434,6 +450,35 @@
                   }
                 </tbody>
               </table>
+            </div>
+          </div>
+        </div>
+      }
+
+      @if (viewMode === 'grades') {
+        <div class="grades-view animate-fade-in w-full">
+          <div class="table-card grades-card-shell">
+            <div class="tc-header grades-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <div>
+                <h3 class="tc-title">Shared Final Grade Distribution</h3>
+                <p class="tc-sub">This chart uses the same final grade source as the admin dashboard.</p>
+              </div>
+              <button class="tbtn secondary sm" (click)="loadGradeDistribution()" [disabled]="isLoadingGradeDistribution" style="display: flex; gap: 6px; align-items: center;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" [class.spin-sm]="isLoadingGradeDistribution">
+                  <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                </svg>
+                Refresh
+              </button>
+            </div>
+
+            @if (gradeDistributionError) {
+              <div class="grade-error-banner">
+                {{ gradeDistributionError }}
+              </div>
+            }
+
+            <div class="grades-chart-wrap">
+              <app-grade-bar-chart [data]="gradeDistribution"></app-grade-bar-chart>
             </div>
           </div>
         </div>

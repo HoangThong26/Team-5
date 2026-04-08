@@ -178,6 +178,30 @@
       }
 
       <!-- ═══ USERS VIEW ═══ -->
+      @if (viewMode === 'users' || viewMode === 'grades') {
+        <section class="admin-analytics">
+          <div class="analytics-copy">
+            <p class="analytics-eyebrow">Academic Snapshot</p>
+            <h2>Pass and fail distribution by final group grade</h2>
+            <p class="analytics-desc">
+              This chart is calculated from the current final grade list. Scores from 5 and above count as pass.
+            </p>
+            <div class="analytics-kpis">
+              <div class="analytics-kpi success">
+                <span class="analytics-kpi-label">Pass</span>
+                <strong>{{ passFailStats.pass }}</strong>
+              </div>
+              <div class="analytics-kpi danger">
+                <span class="analytics-kpi-label">Fail</span>
+                <strong>{{ passFailStats.fail }}</strong>
+              </div>
+            </div>
+          </div>
+
+          <app-pass-fail-donut [data]="passFailStats"></app-pass-fail-donut>
+        </section>
+      }
+
       @if (viewMode === 'users') {
 
         <!-- Toolbar -->
@@ -655,6 +679,10 @@
       }
 
       @if (viewMode === 'grades') {
+        <section class="grade-chart-panel">
+          <app-grade-bar-chart [data]="gradeDistribution"></app-grade-bar-chart>
+        </section>
+
         <div class="toolbar">
           <div class="search-wrap">
             <svg class="search-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
