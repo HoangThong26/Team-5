@@ -410,6 +410,7 @@
                     <th>Week</th>
                     <th>Submitted</th>
                     <th>Status</th>
+                    <th>Remaining Time</th>
                     <th style="text-align:center">Action</th>
                   </tr>
                 </thead>
@@ -429,6 +430,15 @@
                           {{ report.status || report.Status }}
                         </span>
                       </td>
+                      <td>
+                        <span class="deadline-badge" [ngClass]="getDeadlineBadgeClass(report)">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display: inline-block; margin-right: 4px;">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                          </svg>
+                          {{ getDeadlineDisplay(report) }}
+                        </span>
+                      </td>
                       <td style="text-align:center">
                         <button class="tbtn primary sm" (click)='selectReport(report)' [class.secondary]="['reviewed', 'pass', 'fail'].includes((report.status || report.Status || '').toLowerCase())">
                           {{ ['reviewed', 'pass', 'fail'].includes((report.status || report.Status || '').toLowerCase()) ? 'View Evaluation' : 'Review & Grade' }}
@@ -436,7 +446,7 @@
                       </td>
                     </tr>
                   } @empty {
-                    <tr><td colspan="5" class="empty-cell" style="text-align:center; padding: 3rem; color: #64748b;">No weekly reports found.</td></tr>
+                    <tr><td colspan="6" class="empty-cell" style="text-align:center; padding: 3rem; color: #64748b;">No weekly reports found.</td></tr>
                   }
                 </tbody>
               </table>

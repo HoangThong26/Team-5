@@ -143,8 +143,10 @@
       }
 
       <!-- ══════════ OVERVIEW TAB ══════════ -->
-      @if (activeTab === 'overview' && profile) {
-      <div class="fade-in">
+      @if (activeTab === 'overview') {
+        
+        @if (profile) {
+        <div class="fade-in">
 
         <!-- HERO WELCOME -->
         <div class="hero-card">
@@ -237,6 +239,34 @@
 
         <!-- QUICK ACTIONS GRID -->
         <h3 class="section-title">Quick Access</h3>
+
+        <!-- WEEKLY REPORT DEADLINE NOTICE -->
+        @if (submissionStatus) {
+        <div class="deadline-notice fade-in" style="border-left: 5px solid #3b82f6; margin-bottom: 2rem; background: #f8faff;">
+          <div class="deadline-icon" [style.background]="(submissionStatus.daysRemaining || submissionStatus.DaysRemaining) <= 2 ? '#fee2e2' : '#eff6ff'" 
+               [style.color]="(submissionStatus.daysRemaining || submissionStatus.DaysRemaining) <= 2 ? '#dc2626' : '#2563eb'">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 8v4l3 3" />
+              <circle cx="12" cy="12" r="9" />
+            </svg>
+          </div>
+          <div class="deadline-content">
+            <h4 class="deadline-title">Weekly Report Requirement</h4>
+            <div class="deadline-sub">
+              {{ submissionStatus.messageStatus || submissionStatus.MessageStatus || 'Submission deadline is approaching' }}
+              <div style="font-size: 0.72rem; color: #64748b; margin-top: 4px; font-weight: 500;">
+                • Deadline: {{ (submissionStatus.weeklyDeadlineISO || submissionStatus.weeklyDeadline || '') | date:'MMM dd, yyyy HH:mm' }}
+                <br>
+                • Server time: {{ (submissionStatus.currentDateISO || submissionStatus.currentDate || '') | date:'dd/MM/yyyy HH:mm:ss' }}
+              </div>
+            </div>
+          </div>
+          <div class="deadline-badge" [class.urgent]="(submissionStatus.daysRemaining || submissionStatus.DaysRemaining) <= 2" [class.safe]="(submissionStatus.daysRemaining || submissionStatus.DaysRemaining) > 2" style="min-width: 100px; text-align: center;">
+            {{ (submissionStatus.daysRemaining || submissionStatus.DaysRemaining) }} Days Left
+          </div>
+        </div>
+        }
+
         <div class="action-grid">
 
           <!-- GROUP INFO -->
@@ -445,31 +475,43 @@
               </svg>
               }
             </div>
-            <div class="rm-connector"></div>
+            <div class="rm-connector" [class.filled]="myGroup?.topic?.status === 'Approved'"></div>
             <div class="rm-body">
               <h4>Mentor Approval</h4>
               <p>Awaiting mentor review</p>
             </div>
           </div>
-          <div class="rm-step rm-dim">
+          <div class="rm-step" [class.rm-done]="finalGrade" [class.rm-active]="myGroup?.topic?.status === 'Approved' && !hasScheduledDefense() && !finalGrade" [class.rm-dim]="myGroup?.topic?.status !== 'Approved'">
             <div class="rm-circle">
+              @if (finalGrade) {
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              } @else {
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="16 18 22 12 16 6" />
                 <polyline points="8 6 2 12 8 18" />
               </svg>
+              }
             </div>
-            <div class="rm-connector"></div>
+            <div class="rm-connector" [class.filled]="hasScheduledDefense() || finalGrade"></div>
             <div class="rm-body">
               <h4>Development</h4>
               <p>Build & submit reports</p>
             </div>
           </div>
-          <div class="rm-step rm-dim">
+          <div class="rm-step" [class.rm-done]="finalGrade?.isPublished" [class.rm-active]="hasScheduledDefense() || defenseRegistrationStatus?.isRegistered" [class.rm-dim]="!hasScheduledDefense() && !defenseRegistrationStatus?.isRegistered && !finalGrade">
             <div class="rm-circle">
+              @if (finalGrade?.isPublished) {
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              } @else {
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polygon
                   points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
               </svg>
+              }
             </div>
             <div class="rm-body">
               <h4>Final Defense</h4>
@@ -479,6 +521,7 @@
         </div>
 
       </div>
+      }
       }
 
       <!-- ══════════ MODALS ══════════ -->
@@ -600,7 +643,7 @@
 
             <!-- CREATE GROUP -->
             @if (activeModal === 'create') {
-            @if (myGroup) {
+            @if (myGroup || isCreatingGroup) {
             <div class="notice err-notice">You are already in a group.</div>
             } @else {
             <p class="modal-desc">Create a new team. You'll be assigned as Group

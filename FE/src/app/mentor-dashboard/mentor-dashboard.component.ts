@@ -148,7 +148,7 @@ export class MentorDashboardComponent implements OnInit, OnDestroy {
           this.rejectedTopics = res.filter((t: any) => (t.Status || t.status || '').toLowerCase() === 'rejected');
         }
       },
-      error: (err) => console.error('Lỗi khi gọi API Mentor Board:', err)
+      error: (err) => console.error('Error loading mentor board:', err)
     });
   }
 
@@ -190,6 +190,7 @@ export class MentorDashboardComponent implements OnInit, OnDestroy {
     this.topicService.approveTopic(request).subscribe({
       next: (res) => {
         alert('Successful!');
+        this.selectedTopic = null;
         this.loadTopics();
       },
       error: (err) => alert('Error: ' + err.error?.message)
@@ -247,14 +248,44 @@ export class MentorDashboardComponent implements OnInit, OnDestroy {
 
   loadMentorInbox() {
     this.isLoadingReports = true;
+    
+    // Get full report data from WeeklyReport endpoint
     this.weeklyReportService.getMentorInbox().subscribe({
-      next: (res) => {
-        this.weeklyReports = res;
-        this.isLoadingReports = false;
+      next: (reports) => {
+        console.log('WeeklyReport data:', reports);
+        
+        // Then enrich with deadline info from WeeklyEvaluation endpoint
+        this.evaluationService.getPendingReports().subscribe({
+          next: (deadlines) => {
+            console.log('WeeklyEvaluation deadline data:', deadlines);
+            
+            // Map deadline data to reports by reportId
+            const deadlineMap = new Map(deadlines.map((d: any) => [d.reportId, d]));
+            
+            const enrichedReports = reports.map((report: any) => {
+              const reportId = report.reportId || report.ReportId;
+              const deadline = deadlineMap.get(reportId);
+              return {
+                ...report,
+                RemainingTime: deadline?.remainingTime || deadline?.RemainingTime || 'Pending',
+                IsExpired: deadline?.isExpired || deadline?.IsExpired || false
+              };
+            });
+            
+            console.log('Enriched reports:', enrichedReports);
+            this.weeklyReports = enrichedReports;
+            this.isLoadingReports = false;
+          },
+          error: (err) => {
+            console.error('Error loading deadlines:', err);
+            this.weeklyReports = reports;
+            this.isLoadingReports = false;
+          }
+        });
       },
       error: (err) => {
         this.isLoadingReports = false;
-        console.error('Lỗi load inbox:', err);
+        console.error('Error loading inbox:', err);
       }
     });
   }
@@ -415,5 +446,38 @@ export class MentorDashboardComponent implements OnInit, OnDestroy {
         setTimeout(() => this.errorMessage = '', 5000);
       }
     });
+  }
+
+  getDeadlineDisplay(report: any): string {
+    // Check if report has been evaluated/graded
+    const status = (report.status || report.Status || '').toLowerCase();
+    if (status === 'reviewed' || status === 'pass' || status === 'fail') {
+      return 'Done';
+    }
+
+    // Check if already expired
+    if (report.IsExpired || report.isExpired) {
+      return 'Expired';
+    }
+
+    // Use RemainingTime from backend - exactly as returned
+    const remainingTime = report.RemainingTime || report.remainingTime || '';
+    
+    if (remainingTime && typeof remainingTime === 'string' && remainingTime.trim() !== '' && remainingTime !== 'Expired') {
+      return remainingTime;
+    }
+
+    return 'Pending';
+  }
+
+  getDeadlineBadgeClass(report: any): string {
+    const status = (report.status || report.Status || '').toLowerCase();
+    if (status === 'reviewed' || status === 'pass' || status === 'fail') {
+      return 'done';
+    }
+    if (report.IsExpired || report.isExpired) {
+      return 'expired';
+    }
+    return 'pending';
   }
 }
