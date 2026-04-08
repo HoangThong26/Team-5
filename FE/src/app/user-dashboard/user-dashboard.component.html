@@ -643,7 +643,7 @@
 
             <!-- CREATE GROUP -->
             @if (activeModal === 'create') {
-            @if (myGroup) {
+            @if (myGroup || isCreatingGroup) {
             <div class="notice err-notice">You are already in a group.</div>
             } @else {
             <p class="modal-desc">Create a new team. You'll be assigned as Group
