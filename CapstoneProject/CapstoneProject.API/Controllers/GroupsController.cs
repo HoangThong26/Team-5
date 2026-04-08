@@ -166,6 +166,23 @@ namespace CapstoneProject.API.Controllers
             var result = await _groupService.GetAllGroupsForAdminAsync();
             return Ok(result);
         }
+
+        [Authorize(Roles = "Mentor")]
+        [HttpGet("mentor/requests")]
+        public async Task<IActionResult> GetMentorRequests([FromQuery] string? status)
+        {
+            var mentorIdStr = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(mentorIdStr)) return Unauthorized();
+
+            var mentorId = int.Parse(mentorIdStr);
+            var requests = await _groupService.GetMentorRequestsAsync(mentorId, status);
+            if (requests == null || !requests.Any())
+            {
+                return Ok(new { message = "No requests found", data = new List<MentorRequestDto>() });
+            }
+            return Ok(requests);
+        }
+
         [Authorize(Roles = "Admin")] 
         [HttpDelete("admin/{groupId}/kick-mentor")]
         public async Task<IActionResult> KickMentorByAdmin(int groupId)
@@ -243,6 +260,17 @@ namespace CapstoneProject.API.Controllers
             {
                 return StatusCode(500, new { message = "Internal server error: " + ex.Message });
             }
+        }
+
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchGroups([FromQuery] string? keyword, [FromQuery] string? status, [FromQuery] int? supervisorId)
+        {
+            var result = await _groupService.SearchGroupsAsync(keyword, status, supervisorId);
+            if (result.Count == 0)
+            {
+                return Ok(new { message = "No results found", data = new List<GroupDetailResponse>() });
+            }
+            return Ok(result);
         }
     }
 }

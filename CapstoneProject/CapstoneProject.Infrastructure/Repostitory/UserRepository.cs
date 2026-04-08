@@ -168,6 +168,28 @@ namespace CapstoneProject.Infrastructure.Repostitory
                 .Where(u => u.Role == "Student")
                 .ToListAsync();
         }
+
+        public async Task<List<User>> SearchUsersAsync(string? keyword, string? role, string? status)
+        {
+            var query = _context.Users.AsQueryable();
+
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                query = query.Where(u => u.FullName.Contains(keyword) || u.Email.Contains(keyword));
+            }
+
+            if (!string.IsNullOrEmpty(role))
+            {
+                query = query.Where(u => u.Role == role);
+            }
+
+            if (!string.IsNullOrEmpty(status))
+            {
+                query = query.Where(u => u.Status == status);
+            }
+
+            return await query.ToListAsync();
+        }
     }
 }
 
