@@ -1,10 +1,7 @@
-﻿using CapstoneProject.Application.Interface.IRepository;
+using CapstoneProject.Application.Interface.IRepository;
 using CapstoneProject.Domain.Entities;
 using CapstoneProject.Infrastructure.Database.AppDbContext;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CapstoneProject.Infrastructure.Repostitory
 {
@@ -20,34 +17,7 @@ namespace CapstoneProject.Infrastructure.Repostitory
         public async Task<Topic?> GetByGroupIdAsync(int groupId)
         {
             return await _context.Topics
-                .Include(t => t.TopicVersions)
                 .FirstOrDefaultAsync(t => t.GroupId == groupId);
-        }
-
-        public async Task AddTopicAsync(Topic topic)
-        {
-            await _context.Topics.AddAsync(topic);
-        }
-
-        public async Task AddVersionAsync(TopicVersion version)
-        {
-            await _context.TopicVersions.AddAsync(version);
-        }
-
-        public async Task SaveChangesAsync()
-        {
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task<bool> GroupExistsAsync(int groupId)
-        {
-            return await _context.Groups.AnyAsync(g => g.GroupId == groupId);
-        }
-
-        public async Task<bool> IsUserInGroupAsync(int groupId, int userId)
-        {
-            return await _context.GroupMembers
-                .AnyAsync(gm => gm.GroupId == groupId && gm.UserId == userId);
         }
 
         public async Task<Topic?> GetByIdAsync(int topicId)
@@ -63,6 +33,127 @@ namespace CapstoneProject.Infrastructure.Repostitory
                 .OrderByDescending(v => v.VersionNumber)
                 .FirstOrDefaultAsync();
         }
+
+        public async Task AddTopicAsync(Topic topic)
+        {
+            await _context.Topics.AddAsync(topic);
+        }
+
+        public async Task AddVersionAsync(TopicVersion version)
+        {
+            await _context.TopicVersions.AddAsync(version);
+        }
+
+        public async Task<bool> GroupExistsAsync(int groupId)
+        {
+            return await _context.Groups.AnyAsync(g => g.GroupId == groupId);
+        }
+
+        public async Task<bool> IsUserInGroupAsync(int groupId, int userId)
+        {
+            return await _context.GroupMembers
+                .AnyAsync(gm => gm.GroupId == groupId && gm.UserId == userId);
+        }
+
+        public async Task<int> SaveChangesAsync()
+        {
+            return await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> IsMentorOfGroupAsync(int groupId, int mentorId)
+        {
+            return await _context.MentorAssignments
+                .AnyAsync(ma => ma.GroupId == groupId && ma.MentorId == mentorId);
+        }
+
+        public async Task<IEnumerable<TopicVersion>> GetPendingTopicVersionsByMentorAsync(int mentorId)
+        {
+            return await _context.TopicVersions
+                .Include(tv => tv.Topic) 
+                    .ThenInclude(t => t.Group) 
+                .Where(tv => tv.Status == "Submitted" &&
+                             _context.MentorAssignments.Any(ma => ma.MentorId == mentorId && ma.GroupId == tv.Topic.GroupId))
+                .OrderByDescending(tv => tv.SubmittedAt)
+                .ToListAsync();
+        }
+        public async Task<TopicVersion?> GetVersionByIdAsync(int id)
+        {
+            return await _context.TopicVersions.FindAsync(id);
+        }
+        public async Task<bool> HasMentorAssignedAsync(int groupId)
+        {
+            return await _context.MentorAssignments.AnyAsync(ma => ma.GroupId == groupId);
+        }
+
+        public async Task<IEnumerable<TopicVersion>> GetTopicVersionsByMentorAsync(int mentorId)
+        {
+            return await _context.TopicVersions
+                .AsNoTracking()
+                .Include(v => v.Topic)
+                    .ThenInclude(t => t.Group)
+                .Where(v => _context.MentorAssignments
+                    .Any(ma => ma.MentorId == mentorId && ma.GroupId == v.Topic.GroupId))
+                // Lọc lấy Version cao nhất của mỗi TopicId ngay tại SQL
+                .Where(v => v.VersionNumber == _context.TopicVersions
+                    .Where(v2 => v2.TopicId == v.TopicId)
+                    .Max(v2 => v2.VersionNumber))
+                .OrderByDescending(v => v.SubmittedAt)
+                .ToListAsync();
+        }
+
+        public async Task<bool> IsGroupLeaderAsync(int groupId, int userId)
+        {
+            return await _context.GroupMembers
+                .AnyAsync(gm => gm.GroupId == groupId && gm.UserId == userId && gm.RoleInGroup == "Leader");
+        }
+
+        public async Task<int?> GetMentorIdByGroupIdAsync(int groupId)
+        {
+            return await _context.MentorAssignments
+                .Where(ma => ma.GroupId == groupId)
+                .Select(ma => ma.MentorId)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<int?> GetGroupIdByTopicIdAsync(int topicId)
+        {
+            return await _context.Topics
+                .Where(t => t.TopicId == topicId)
+                .Select(t => t.GroupId)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<string?> GetMentorEmailByGroupIdAsync(int groupId)
+        {
+            return await _context.MentorAssignments
+                .Where(ma => ma.GroupId == groupId)
+                .Include(ma => ma.Mentor)
+                .Select(ma => ma.Mentor.Email)
+                .FirstOrDefaultAsync();
+        }
+        public async Task<IEnumerable<TopicVersion>> GetMentorBoardVersionsAsync(int mentorId)
+        {
+            return await _context.TopicVersions
+                .AsNoTracking()
+                .Include(v => v.Topic)
+                    .ThenInclude(t => t.Group)
+                .Where(v => _context.MentorAssignments
+                    .Any(ma => ma.MentorId == mentorId && ma.GroupId == v.Topic.GroupId))
+                .Where(v => v.VersionNumber == _context.TopicVersions
+                    .Where(v2 => v2.TopicId == v.TopicId)
+                    .Max(v2 => v2.VersionNumber))
+                .OrderByDescending(v => v.SubmittedAt)
+                .ToListAsync();
+        }
+        public async Task<bool> IsTopicApprovedForGroupAsync(int groupId)
+        {
+            return await _context.Topics
+                .AnyAsync(t => t.GroupId == groupId &&
+                               _context.TopicVersions
+                                   .Where(v => v.TopicId == t.TopicId)
+                                   .OrderByDescending(v => v.VersionNumber)
+                                   .Select(v => v.Status)
+                                   .FirstOrDefault() == "Approved");
+        }
     }
 }
-

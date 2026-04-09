@@ -2,9 +2,6 @@
 using CapstoneProject.Domain.Entities;
 using CapstoneProject.Infrastructure.Database.AppDbContext;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CapstoneProject.Infrastructure.Repostitory
 {
@@ -41,7 +38,11 @@ namespace CapstoneProject.Infrastructure.Repostitory
 
         public async Task<List<User>> GetAllUsersAsync()
         {
-            return await _context.Users.ToListAsync();
+            return await _context.Users
+         .Include(u => u.GroupMember)
+             .ThenInclude(gm => gm.Group)
+                 .ThenInclude(g => g.FinalGrade)
+         .ToListAsync();
         }
 
         public async Task UpdateUserStatusAsync(int userId, string newStatus)
@@ -146,5 +147,27 @@ namespace CapstoneProject.Infrastructure.Repostitory
                     u.Email.ToLower().Contains(keyword))
                 .ToListAsync();
         }
+
+        public async Task<List<string>> GetAllEmailsAsync()
+        {
+            return await _context.Users.Select(u => u.Email).ToListAsync();
+        }
+
+        public async Task AddRangeAsync(IEnumerable<User> users)
+        {
+            await _context.Users.AddRangeAsync(users);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<User>> GetStudentsAsync()
+        {
+            return await _context.Users
+                .Include(u => u.GroupMember)            // 1. Kết nối bảng trung gian GroupMember
+                    .ThenInclude(gm => gm.Group)        // 2. Từ GroupMember lấy thông tin Groups
+                        .ThenInclude(g => g.FinalGrade) // 3. Từ Groups lấy điểm FinalGrades
+                .Where(u => u.Role == "Student")
+                .ToListAsync();
+        }
     }
 }
+
