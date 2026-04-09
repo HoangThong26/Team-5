@@ -503,6 +503,89 @@
 .animate-drop { animation: drop .3s ease-out; }
 @keyframes drop { from { opacity:0; transform: translateY(-8px); } to { opacity:1; transform: none; } }
 
+.admin-analytics {
+  display: grid;
+  grid-template-columns: minmax(260px, 1.1fr) minmax(320px, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+  align-items: stretch;
+}
+
+.grade-chart-panel {
+  margin-bottom: 1.5rem;
+}
+
+.analytics-copy {
+  padding: 1.5rem;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at top left, rgba(16, 185, 129, 0.16), transparent 34%),
+    linear-gradient(135deg, #eff6ff 0%, #ffffff 48%, #f8fafc 100%);
+  border: 1px solid #dbeafe;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
+}
+
+.analytics-eyebrow {
+  margin: 0 0 0.5rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #2563eb;
+}
+
+.analytics-copy h2 {
+  margin: 0;
+  font-size: 1.6rem;
+  line-height: 1.2;
+  color: #0f172a;
+}
+
+.analytics-desc {
+  margin: 0.85rem 0 0;
+  max-width: 48ch;
+  line-height: 1.65;
+  color: #475569;
+}
+
+.analytics-kpis {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+  margin-top: 1.25rem;
+}
+
+.analytics-kpi {
+  padding: 1rem 1.1rem;
+  border-radius: 18px;
+  border: 1px solid #e2e8f0;
+  background: rgba(255, 255, 255, 0.84);
+}
+
+.analytics-kpi.success {
+  border-color: #bbf7d0;
+  background: linear-gradient(135deg, #f0fdf4, #ffffff);
+}
+
+.analytics-kpi.danger {
+  border-color: #fecaca;
+  background: linear-gradient(135deg, #fef2f2, #ffffff);
+}
+
+.analytics-kpi-label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.analytics-kpi strong {
+  font-size: 1.8rem;
+  line-height: 1;
+  color: #0f172a;
+}
+
 /* ══════════════════════════
    TIMELINE SPECIAL
    ══════════════════════════ */
@@ -601,3 +684,19 @@
 .scroll-y::-webkit-scrollbar-track { background: transparent; }
 .scroll-y::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
 .scroll-y::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
+
+@media (max-width: 980px) {
+  .admin-analytics {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .analytics-kpis {
+    grid-template-columns: 1fr;
+  }
+
+  .analytics-copy h2 {
+    font-size: 1.35rem;
+  }
+}

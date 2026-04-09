@@ -1,0 +1,49 @@
+<div class="rounded-3xl bg-white p-6 shadow-sm">
+  <div class="flex items-center justify-between gap-3">
+    <div>
+      <p class="text-sm font-medium text-slate-500">Pass / Fail</p>
+      <h3 class="text-lg font-semibold text-slate-900">Donut Overview</h3>
+    </div>
+  </div>
+
+  @if (hasData()) {
+    <div class="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_180px] lg:items-center">
+      <div class="relative mx-auto h-64 w-64">
+        <canvas
+          baseChart
+          [type]="'doughnut'"
+          [data]="doughnutChartData()"
+          [options]="doughnutChartOptions"
+        ></canvas>
+
+        <div class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-center">
+          <span class="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">Total</span>
+          <span class="text-4xl font-bold text-slate-900">{{ total() }}</span>
+        </div>
+      </div>
+
+      <div class="space-y-3">
+        @for (segment of segments(); track segment.label) {
+          <div class="flex items-center justify-between rounded-2xl border border-slate-200 px-4 py-3">
+            <div class="flex items-center gap-3">
+              <span
+                class="h-3 w-3 rounded-full"
+                [style.background]="segment.color"
+              ></span>
+              <span class="text-sm font-medium text-slate-700">{{ segment.label }}</span>
+            </div>
+
+            <div class="text-right">
+              <p class="text-base font-semibold text-slate-900">{{ segment.value }}</p>
+              <p class="text-xs text-slate-500">{{ segment.percentage }}%</p>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  } @else {
+    <div class="mt-6 rounded-2xl border border-dashed border-slate-300 px-6 py-12 text-center">
+      <p class="text-sm font-medium text-slate-500">No pass/fail data available.</p>
+    </div>
+  }
+</div>

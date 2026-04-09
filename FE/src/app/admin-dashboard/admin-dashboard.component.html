@@ -178,6 +178,30 @@
       }
 
       <!-- ═══ USERS VIEW ═══ -->
+      @if (viewMode === 'users' || viewMode === 'grades') {
+        <section class="admin-analytics">
+          <div class="analytics-copy">
+            <p class="analytics-eyebrow">Academic Snapshot</p>
+            <h2>Pass and fail distribution by final group grade</h2>
+            <p class="analytics-desc">
+              This chart is calculated from the current final grade list. Scores from 5 and above count as pass.
+            </p>
+            <div class="analytics-kpis">
+              <div class="analytics-kpi success">
+                <span class="analytics-kpi-label">Pass</span>
+                <strong>{{ passFailStats.pass }}</strong>
+              </div>
+              <div class="analytics-kpi danger">
+                <span class="analytics-kpi-label">Fail</span>
+                <strong>{{ passFailStats.fail }}</strong>
+              </div>
+            </div>
+          </div>
+
+          <app-pass-fail-donut [data]="passFailStats"></app-pass-fail-donut>
+        </section>
+      }
+
       @if (viewMode === 'users') {
 
         <!-- Toolbar -->
@@ -334,7 +358,14 @@
                       <td class="td-email">{{ user.email }}</td>
                       <td class="td-phone">{{ user.phone || '—' }}</td>
                       <td>
-                        @if (user.groupMember?.group || user.GroupMember?.Group) {
+                        @if (user.groupName) {
+                          <div class="group-cell">
+                            <div class="gc-icon">
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                            </div>
+                            <span style="font-weight: 500;">{{ user.groupName }}</span>
+                          </div>
+                        } @else if (user.groupMember?.group || user.GroupMember?.Group) {
                           <div class="group-cell">
                             <div class="gc-icon">
                               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
@@ -350,7 +381,9 @@
                         }
                       </td>
                       <td>
-                        @if (user.groupMember?.group?.finalGrade || user.GroupMember?.Group?.FinalGrade) {
+                        @if (user.grade) {
+                          <span class="grade-tag">{{ user.grade }}</span>
+                        } @else if (user.groupMember?.group?.finalGrade || user.GroupMember?.Group?.FinalGrade) {
                           <span class="grade-tag">
                             {{ user.groupMember?.group?.finalGrade?.score || user.groupMember?.group?.finalGrade?.value 
                             || user.GroupMember?.Group?.FinalGrade?.Score || user.GroupMember?.Group?.FinalGrade?.Value 
@@ -655,6 +688,10 @@
       }
 
       @if (viewMode === 'grades') {
+        <section class="grade-chart-panel">
+          <app-grade-bar-chart [data]="gradeDistribution"></app-grade-bar-chart>
+        </section>
+
         <div class="toolbar">
           <div class="search-wrap">
             <svg class="search-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
