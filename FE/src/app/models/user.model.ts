@@ -6,6 +6,9 @@ export interface UserProfile {
   avatarUrl?: string;
   status?: string;
   roleName?: string;
+  role?: string;
+  groupName?: string;
+  grade?: number;
 }
 
 export interface UpdateProfileRequest {
