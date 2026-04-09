@@ -1,0 +1,1283 @@
+<div class="shell" [class.collapsed]="sidebarCollapsed">
+
+  <!-- ═══════════════════ SIDEBAR ═══════════════════ -->
+  <aside class="sidebar">
+    <!-- LOGO -->
+    <div class="sb-logo">
+      <div class="logo-mark">
+        <svg width="28" height="28" viewBox="0 0 36 36" fill="none">
+          <rect width="36" height="36" rx="10" fill="url(#grad1)" />
+          <path d="M18 8L28 13V19C28 24.5 23.5 28.8 18 30C12.5 28.8 8 24.5 8 19V13L18 8Z" fill="white" opacity="0.25" />
+          <path d="M12 17L16.5 21.5L24 13" stroke="white" stroke-width="2.5" stroke-linecap="round"
+            stroke-linejoin="round" />
+          <defs>
+            <lineargradient id="grad1" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#2563EB" />
+              <stop offset="1" stop-color="#10B981" />
+            </lineargradient>
+          </defs>
+        </svg>
+      </div>
+      @if (!sidebarCollapsed) { <span class="logo-name">Capstone Project</span>
+      }
+    </div>
+
+    <!-- USER PROFILE -->
+    <div class="sb-user">
+      <div class="avatar-glow">
+        @if (profile?.avatarUrl) {
+        <img [src]="profile!.avatarUrl" alt="Avatar" class="avatar-photo" />
+        } @else {
+        <span class="avatar-letters">{{ getInitials() }}</span>
+        }
+      </div>
+      @if (!sidebarCollapsed) {
+      <div class="user-meta">
+        <p class="user-fullname">{{ profile?.fullName || 'Student' }}</p>
+        <span class="user-badge">
+          <svg class="status-pulse" width="10" height="10" viewBox="0 0 12 12">
+            <circle cx="6" cy="6" r="6" fill="#10B981" />
+          </svg>
+          Student
+        </span>
+      </div>
+      }
+    </div>
+
+    <!-- NAVIGATION -->
+    <nav class="sb-nav">
+      <button class="sb-link" [class.active]="activeTab === 'overview'" (click)="switchTab('overview')">
+        <svg class="sb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="9" rx="1" />
+          <rect x="14" y="3" width="7" height="5" rx="1" />
+          <rect x="14" y="12" width="7" height="9" rx="1" />
+          <rect x="3" y="16" width="7" height="5" rx="1" />
+        </svg>
+        @if (!sidebarCollapsed) { <span>Dashboard</span> }
+      </button>
+      <button class="sb-link" [class.active]="activeTab === 'profile'" (click)="switchTab('profile')">
+        <svg class="sb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="8" r="4" />
+          <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+        </svg>
+        @if (!sidebarCollapsed) { <span>Profile</span> }
+      </button>
+      <button class="sb-link" [class.active]="activeTab === 'password'" (click)="switchTab('password')">
+        <svg class="sb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="5" y="11" width="14" height="10" rx="2" />
+          <path d="M8 11V7a4 4 0 018 0v4" />
+          <circle cx="12" cy="16" r="1.5" fill="currentColor" />
+        </svg>
+        @if (!sidebarCollapsed) { <span>Security</span> }
+      </button>
+    </nav>
+
+    <!-- LOGOUT -->
+    <div class="sb-bottom">
+      <button class="sb-logout" (click)="logout()">
+        <svg class="sb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+          <polyline points="16 17 21 12 16 7" />
+          <line x1="21" y1="12" x2="9" y2="12" />
+        </svg>
+        @if (!sidebarCollapsed) { <span>Log Out</span> }
+      </button>
+    </div>
+  </aside>
+
+  <!-- ═══════════════════ MAIN ═══════════════════ -->
+  <main class="main">
+
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <button class="toggle-btn" (click)="toggleSidebar()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <line x1="3" y1="12" x2="21" y2="12" />
+          <line x1="3" y1="18" x2="21" y2="18" />
+        </svg>
+      </button>
+      <div class="tb-title">
+        @switch (activeTab) {
+        @case ('overview') { Dashboard }
+        @case ('profile') { My Profile }
+        @case ('password') { Security }
+        }
+      </div>
+      <div class="tb-right">
+        <div class="tb-avatar">{{ getInitials() }}</div>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <!-- ALERTS -->
+      @if (successMessage) {
+      <div class="alert ok">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="12" cy="12" r="10" />
+          <polyline points="9 12 11 14 15 10" />
+        </svg>
+        {{ successMessage }}
+        <button class="alert-x" (click)="successMessage = ''">✕</button>
+      </div>
+      }
+      @if (errorMessage) {
+      <div class="alert err">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="8" x2="12" y2="12" />
+          <circle cx="12" cy="16" r="1" fill="currentColor" />
+        </svg>
+        {{ errorMessage }}
+        <button class="alert-x" (click)="errorMessage = ''">✕</button>
+      </div>
+      }
+
+      <!-- LOADER -->
+      @if (isLoading && !profile) {
+      <div class="page-loader">
+        <div class="spin-ring"></div>
+        <p>Loading...</p>
+      </div>
+      }
+
+      <!-- ══════════ OVERVIEW TAB ══════════ -->
+      @if (activeTab === 'overview') {
+        
+        @if (profile) {
+        <div class="fade-in">
+
+        <!-- HERO WELCOME -->
+        <div class="hero-card">
+          <div class="hero-left">
+            <p class="hero-sub">Good day 👋</p>
+            <h2 class="hero-name">{{ profile.fullName }}</h2>
+            <p class="hero-desc">Track your thesis progress, manage your group
+              and stay on top of every deadline.</p>
+            <div class="hero-pills">
+              <span class="pill green">
+                <svg class="status-pulse" width="12" height="12" viewBox="0 0 12 12">
+                  <circle cx="6" cy="6" r="6" fill="#10B981" />
+                </svg>
+                Active
+              </span>
+              <span class="pill blue">Capstone 2026</span>
+              <button class="pill ai-sparkle" (click)="fetchAISuggestions()">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path
+                    d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+                </svg>
+                ✨ AI Suggestions
+              </button>
+            </div>
+          </div>
+          <div class="hero-graphic">
+            <svg width="100" height="100" viewBox="0 0 100 100" fill="none">
+              <circle cx="50" cy="50" r="48" stroke="rgba(255,255,255,0.15)" stroke-width="2" />
+              <circle cx="50" cy="50" r="35" stroke="rgba(255,255,255,0.1)" stroke-width="2" />
+              <path d="M50 20L70 32V52C70 63 61 72 50 75C39 72 30 63 30 52V32L50 20Z" fill="rgba(255,255,255,0.15)" />
+              <path class="hero-checkmark-pulse" d="M40 50L47 57L62 42" stroke="white" stroke-width="3"
+                stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </div>
+        </div>
+
+        <div class="readiness-grid">
+          <div class="readiness-card" [class.pass]="councilEligibility?.isEligibleForCouncil" [class.fail]="councilEligibility && !councilEligibility.isEligibleForCouncil">
+            <p class="rd-eyebrow">Council Readiness</p>
+            <h4>15-Week Eligibility Status</h4>
+            @if (isLoadingCouncilEligibility) {
+              <p class="rd-muted">Loading council eligibility...</p>
+            } @else if (councilEligibility) {
+              <div class="rd-row">
+                <span class="rd-pill" [class.fail]="!councilEligibility.isEligibleForCouncil">
+                  {{ councilEligibility.isEligibleForCouncil ? 'ELIGIBLE' : 'NOT ELIGIBLE' }}
+                </span>
+                <span class="rd-score">{{ councilEligibility.totalScore }}/{{ councilEligibility.maxScore }}</span>
+              </div>
+              <p class="rd-muted">{{ councilEligibility.percentage }}% · {{ councilEligibility.evaluatedWeeks }}/{{ councilEligibility.totalWeeks }} weeks evaluated</p>
+            } @else {
+              <p class="rd-muted">No council eligibility data yet.</p>
+            }
+          </div>
+
+          <div class="readiness-card defense">
+            <p class="rd-eyebrow">Defense Registration</p>
+            <h4>Group Defense Status</h4>
+            @if (isLoadingDefenseStatus) {
+              <p class="rd-muted">Loading defense registration...</p>
+            } @else if (defenseRegistrationStatus) {
+              <div class="rd-row">
+                <span class="rd-pill" [class.fail]="!defenseRegistrationStatus.isEligibleForDefense">
+                  {{ defenseRegistrationStatus.isEligibleForDefense ? 'CAN REGISTER' : 'NOT ELIGIBLE' }}
+                </span>
+                <span class="rd-score">{{ defenseRegistrationStatus.passRate }}%</span>
+              </div>
+              <p class="rd-muted">Evaluated: {{ defenseRegistrationStatus.evaluatedWeeks }} · Passed: {{ defenseRegistrationStatus.passedWeeks }}</p>
+              @if (isLoadingDefenseRegistrations) {
+                <p class="rd-muted">Loading scheduled defense...</p>
+              } @else if (hasScheduledDefense()) {
+                <p class="rd-muted">Time: {{ formatDefenseDateTime(myDefenseRegistration?.startTime) }}</p>
+                <p class="rd-muted">Room: {{ myDefenseRegistration?.room || 'TBD' }}</p>
+                <p class="rd-muted">Council: {{ myDefenseRegistration?.councilName || 'Not assigned' }}</p>
+              } @else if (defenseRegistrationStatus.isRegistered) {
+                <p class="rd-muted">Your group is registered. Waiting for admin to schedule council, room and time.</p>
+              }
+              <button class="rd-btn" (click)="registerForDefense()" [disabled]="isRegisteringDefense || defenseRegistrationStatus.isRegistered || !defenseRegistrationStatus.isEligibleForDefense">
+                @if (isRegisteringDefense) {
+                  Registering...
+                } @else {
+                  {{ defenseRegistrationStatus.isRegistered ? 'Already Registered' : 'Register for Defense' }}
+                }
+              </button>
+            } @else {
+              <p class="rd-muted">Join a group to view registration status.</p>
+            }
+          </div>
+        </div>
+
+        <!-- QUICK ACTIONS GRID -->
+        <h3 class="section-title">Quick Access</h3>
+
+        <!-- WEEKLY REPORT DEADLINE NOTICE -->
+        @if (submissionStatus) {
+        <div class="deadline-notice fade-in" style="border-left: 5px solid #3b82f6; margin-bottom: 2rem; background: #f8faff;">
+          <div class="deadline-icon" [style.background]="(submissionStatus.daysRemaining || submissionStatus.DaysRemaining) <= 2 ? '#fee2e2' : '#eff6ff'" 
+               [style.color]="(submissionStatus.daysRemaining || submissionStatus.DaysRemaining) <= 2 ? '#dc2626' : '#2563eb'">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 8v4l3 3" />
+              <circle cx="12" cy="12" r="9" />
+            </svg>
+          </div>
+          <div class="deadline-content">
+            <h4 class="deadline-title">Weekly Report Requirement</h4>
+            <div class="deadline-sub">
+              {{ submissionStatus.messageStatus || submissionStatus.MessageStatus || 'Submission deadline is approaching' }}
+              <div style="font-size: 0.72rem; color: #64748b; margin-top: 4px; font-weight: 500;">
+                • Deadline: {{ (submissionStatus.weeklyDeadlineISO || submissionStatus.weeklyDeadline || '') | date:'MMM dd, yyyy HH:mm' }}
+                <br>
+                • Server time: {{ (submissionStatus.currentDateISO || submissionStatus.currentDate || '') | date:'dd/MM/yyyy HH:mm:ss' }}
+              </div>
+            </div>
+          </div>
+          <div class="deadline-badge" [class.urgent]="(submissionStatus.daysRemaining || submissionStatus.DaysRemaining) <= 2" [class.safe]="(submissionStatus.daysRemaining || submissionStatus.DaysRemaining) > 2" style="min-width: 100px; text-align: center;">
+            {{ (submissionStatus.daysRemaining || submissionStatus.DaysRemaining) }} Days Left
+          </div>
+        </div>
+        }
+
+        <div class="action-grid">
+
+          <!-- GROUP INFO -->
+          <button class="action-card" (click)="activeModal = 'details'">
+            <div class="ac-icon" style="background: linear-gradient(135deg,#3b82f6,#6366f1)">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
+              </svg>
+            </div>
+            <p class="ac-label">Group Info</p>
+            <p class="ac-sub">View details &amp; mentor</p>
+            <svg class="ac-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </button>
+
+          <!-- CREATE GROUP -->
+          <button class="action-card" (click)="activeModal = 'create'">
+            <div class="ac-icon" style="background: linear-gradient(135deg,#8b5cf6,#a855f7)">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="16" />
+                <line x1="8" y1="12" x2="16" y2="12" />
+              </svg>
+            </div>
+            <p class="ac-label">Create Group</p>
+            <p class="ac-sub">Start a new team</p>
+            <svg class="ac-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </button>
+
+          <!-- INVITE MEMBER -->
+          <button class="action-card" (click)="activeModal = 'invite'">
+            <div class="ac-icon" style="background: linear-gradient(135deg,#059669,#10b981)">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+                <line x1="18" y1="8" x2="23" y2="8" />
+                <line x1="20.5" y1="5.5" x2="20.5" y2="10.5" />
+              </svg>
+            </div>
+            <p class="ac-label">Invite Member</p>
+            <p class="ac-sub">Add a teammate</p>
+            <svg class="ac-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </button>
+
+          <!-- MEMBER LIST -->
+          <button class="action-card" (click)="activeModal = 'members'">
+            <div class="ac-icon" style="background: linear-gradient(135deg,#f59e0b,#ef4444)">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
+              </svg>
+            </div>
+            <p class="ac-label">Member List</p>
+            <p class="ac-sub">{{ myGroup?.members?.length || 0 }}/5 members</p>
+            <svg class="ac-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </button>
+
+          <!-- SUBMIT TOPIC (button → opens panel) -->
+          <button class="action-card topic-action-card" (click)="activeModal = 'topic'">
+            <div class="ac-icon" style="background: linear-gradient(135deg,#f97316,#fb923c)">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                <polyline points="14 2 14 8 20 8" />
+                <line x1="16" y1="13" x2="8" y2="13" />
+                <line x1="16" y1="17" x2="8" y2="17" />
+                <polyline points="10 9 9 9 8 9" />
+              </svg>
+            </div>
+            <p class="ac-label">Capstone Topic</p>
+            <p class="ac-sub">
+              @if (myGroup?.topic) { Status: {{ myGroup!.topic!.status }} }
+              @else { Submit your topic }
+            </p>
+            <svg class="ac-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </button>
+
+          <!-- WEEKLY REPORT -->
+          <button class="action-card" (click)="openReportModal()">
+            <div class="ac-icon" style="background: linear-gradient(135deg,#6366f1,#8b5cf6)">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2" />
+                <rect x="8" y="2" width="8" height="4" rx="1" />
+                <path d="M9 14h6" />
+                <path d="M9 18h6" />
+                <path d="M9 10h6" />
+              </svg>
+            </div>
+            <p class="ac-label">Weekly Report</p>
+            <p class="ac-sub">
+              @if (weeklyReports.length > 0) {
+              Latest: Week {{ weeklyReports[0].weekId ||
+              weeklyReports[0].weekNumber }} ({{ weeklyReports[0].status ||
+              'Submitted' }})
+              } @else {
+              Submit progress update
+              }
+            </p>
+            <svg class="ac-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </button>
+
+          @if (finalGrade && finalGrade.isPublished) {
+          <button class="action-card grade-action-card fade-in" style="border: 2px solid #10B981;">
+            <div class="ac-icon" style="background: linear-gradient(135deg,#10B981,#059669)">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 11-5.93-9.14" />
+                <polyline points="22 4 12 14.01 9 11.01" />
+              </svg>
+            </div>
+            <p class="ac-label">Final Result</p>
+            <div class="grade-display">
+              <span class="grade-score">{{ finalGrade.averageScore }}</span>
+              <span class="grade-letter">({{ finalGrade.gradeLetter }})</span>
+            </div>
+            <p class="ac-sub">Published on {{ finalGrade.publishedAt | date:'dd/MM/yyyy' }}</p>
+          </button>
+        } @else {
+          <button class="action-card disabled-card">
+            <div class="ac-icon" style="background: #e2e8f0">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="8" y1="12" x2="16" y2="12" />
+              </svg>
+            </div>
+            <p class="ac-label" style="color: #94a3b8;">Final Result</p>
+            <p class="ac-sub">Not yet published</p>
+          </button>
+        }
+
+        </div>
+
+        <!-- ROADMAP -->
+        <h3 class="section-title" style="margin-top: 2rem;">Your Roadmap</h3>
+        <div class="roadmap-wrap">
+          <div class="rm-step" [class.rm-done]="myGroup" [class.rm-active]="!myGroup">
+            <div class="rm-circle">
+              @if (myGroup) {
+              <svg class="status-pulse" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white"
+                stroke-width="3">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              } @else {
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
+              </svg>
+              }
+            </div>
+            <div class="rm-connector" [class.filled]="myGroup"></div>
+            <div class="rm-body">
+              <h4>Group Formation</h4>
+              <p>Create or join a group</p>
+            </div>
+          </div>
+          <div class="rm-step" [class.rm-done]="myGroup?.topic" [class.rm-active]="myGroup && !myGroup.topic">
+            <div class="rm-circle">
+              @if (myGroup?.topic) {
+              <svg class="status-pulse" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white"
+                stroke-width="3">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              } @else {
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                <polyline points="14 2 14 8 20 8" />
+              </svg>
+              }
+            </div>
+            <div class="rm-connector" [class.filled]="myGroup?.topic?.status === 'Approved'"></div>
+            <div class="rm-body">
+              <h4>Topic Proposal</h4>
+              <p>Submit your project idea</p>
+            </div>
+          </div>
+          <div class="rm-step" [class.rm-done]="myGroup?.topic?.status === 'Approved'"
+            [class.rm-active]="myGroup?.topic && myGroup?.topic?.status !== 'Approved'">
+            <div class="rm-circle">
+              @if (myGroup?.topic?.status === 'Approved') {
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              } @else {
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 11-5.93-9.14" />
+                <polyline points="22 4 12 14.01 9 11.01" />
+              </svg>
+              }
+            </div>
+            <div class="rm-connector" [class.filled]="myGroup?.topic?.status === 'Approved'"></div>
+            <div class="rm-body">
+              <h4>Mentor Approval</h4>
+              <p>Awaiting mentor review</p>
+            </div>
+          </div>
+          <div class="rm-step" [class.rm-done]="finalGrade" [class.rm-active]="myGroup?.topic?.status === 'Approved' && !hasScheduledDefense() && !finalGrade" [class.rm-dim]="myGroup?.topic?.status !== 'Approved'">
+            <div class="rm-circle">
+              @if (finalGrade) {
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              } @else {
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="16 18 22 12 16 6" />
+                <polyline points="8 6 2 12 8 18" />
+              </svg>
+              }
+            </div>
+            <div class="rm-connector" [class.filled]="hasScheduledDefense() || finalGrade"></div>
+            <div class="rm-body">
+              <h4>Development</h4>
+              <p>Build & submit reports</p>
+            </div>
+          </div>
+          <div class="rm-step" [class.rm-done]="finalGrade?.isPublished" [class.rm-active]="hasScheduledDefense() || defenseRegistrationStatus?.isRegistered" [class.rm-dim]="!hasScheduledDefense() && !defenseRegistrationStatus?.isRegistered && !finalGrade">
+            <div class="rm-circle">
+              @if (finalGrade?.isPublished) {
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              } @else {
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+              </svg>
+              }
+            </div>
+            <div class="rm-body">
+              <h4>Final Defense</h4>
+              <p>Present to the council</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      }
+      }
+
+      <!-- ══════════ MODALS ══════════ -->
+      @if (activeModal !== 'none') {
+      <div class="modal-scrim" (click)="activeModal = 'none'">
+        <div class="modal-pane" (click)="$event.stopPropagation()">
+
+          <!-- MODAL HEADER -->
+          <div class="modal-top">
+            <div class="modal-icon-wrap">
+              @if (activeModal === 'details') {
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
+              </svg>
+              }
+              @if (activeModal === 'create') {
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="16" />
+                <line x1="8" y1="12" x2="16" y2="12" />
+              </svg>
+              }
+              @if (activeModal === 'invite') {
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+                <line x1="18" y1="8" x2="23" y2="8" />
+                <line x1="20.5" y1="5.5" x2="20.5" y2="10.5" />
+              </svg>
+              }
+              @if (activeModal === 'members') {
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
+              </svg>
+              }
+              @if (activeModal === 'topic') {
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                <polyline points="14 2 14 8 20 8" />
+                <line x1="16" y1="13" x2="8" y2="13" />
+                <line x1="16" y1="17" x2="8" y2="17" />
+              </svg>
+              }
+              @if (activeModal === 'report') {
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2" />
+                <rect x="8" y="2" width="8" height="4" rx="1" />
+              </svg>
+              }
+            </div>
+            <h3 class="modal-h">
+              @if (activeModal === 'details') { Group Details }
+              @if (activeModal === 'create') { Create Group }
+              @if (activeModal === 'invite') { Invite Member }
+              @if (activeModal === 'members') { Members }
+              @if (activeModal === 'topic') { Capstone Topic }
+              @if (activeModal === 'report') { Weekly Report }
+            </h3>
+            <button class="modal-x" (click)="activeModal = 'none'">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+
+          <div class="modal-body">
+
+            <!-- GROUP DETAILS -->
+            @if (activeModal === 'details') {
+            @if (!myGroup) {
+            <div class="empty-state">
+              <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5">
+                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
+              </svg>
+              <p>You haven't joined any group.</p>
+            </div>
+            } @else {
+            <div class="gd-header">
+              <div>
+                <span class="gd-eyebrow">Group Name</span>
+                <h2 class="gd-name">{{ myGroup.groupName }}</h2>
+              </div>
+              <span class="chip">{{ myGroup.status }}</span>
+            </div>
+            <div class="info-box-mentor">
+              <div class="mentor-avatar-sq"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg></div>
+              <div>
+                <span class="gd-eyebrow">Assigned Mentor</span>
+                <p class="mentor-name-text">{{ myGroup.mentorName ||
+                  'Awaiting assignment...' }}</p>
+              </div>
+            </div>
+            <div class="count-row">
+              <span>Members in group</span>
+              <strong>{{ myGroup.members.length || 0 }} / 5</strong>
+            </div>
+            @if (isCurrentUserLeader()) {
+            <div class="danger-zone">
+              <p class="danger-label">Danger Zone</p>
+              <button class="btn danger w-full" (click)="handleDeleteGroup()" [disabled]="isGroupLoading">
+                @if (isGroupLoading) { Deleting... } @else { Delete Group
+                Permanently }
+              </button>
+            </div>
+            }
+            }
+            }
+
+            <!-- CREATE GROUP -->
+            @if (activeModal === 'create') {
+            @if (myGroup || isCreatingGroup) {
+            <div class="notice err-notice">You are already in a group.</div>
+            } @else {
+            <p class="modal-desc">Create a new team. You'll be assigned as Group
+              Leader.</p>
+            <div class="f-group">
+              <label>Group Name</label>
+              <input class="f-input" type="text" [(ngModel)]="newGroupName" placeholder="e.g. Team Phoenix 🔥">
+            </div>
+            <button class="btn primary w-full" (click)="handleCreateGroup()" [disabled]="isLoading">
+              @if (isLoading) { Creating... } @else { Create Group }
+            </button>
+            }
+            }
+
+            <!-- INVITE MEMBER -->
+            @if (activeModal === 'invite') {
+            @if (!myGroup) {
+            <div class="empty-state">
+              <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5">
+                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+              <p>Create a group first.</p>
+            </div>
+            } @else if (myGroup.members && myGroup.members.length >= 5) {
+            <div class="notice err-notice">Your group is full (5/5).</div>
+            } @else {
+            <div class="notice ok-notice">{{ 5 - (myGroup.members.length || 0)
+              }} slot(s) remaining.</div>
+            <div class="f-group">
+              <label>Invitee Email</label>
+              <input class="f-input" type="email" [(ngModel)]="inviteEmail" placeholder="student@university.edu">
+            </div>
+            <button class="btn green w-full" (click)="handleInviteMember()" [disabled]="isLoading">
+              @if (isLoading) { Sending... } @else { Send Invitation }
+            </button>
+            }
+            }
+
+            <!-- MEMBERS -->
+            @if (activeModal === 'members') {
+            @if (!myGroup || !myGroup.members || myGroup.members.length === 0) {
+            <div class="empty-state">
+              <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5">
+                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+              </svg>
+              <p>No members yet.</p>
+            </div>
+            } @else {
+            <p class="modal-desc">{{ myGroup.members.length }} of 5 slots
+              filled</p>
+            <ul class="member-ul">
+              @for (member of myGroup.members; track member.userId) {
+              <li class="member-li">
+                <div class="mem-av">{{ (member.fullName || '?')[0] }}</div>
+                <div class="mem-info">
+                  <p class="mem-name">{{ member.fullName }}</p>
+                  <span class="mem-role" [class.is-leader]="member.roleInGroup === 'Leader'">{{
+                    member.roleInGroup
+                    }}</span>
+                </div>
+                @if (isCurrentUserLeader() && member.roleInGroup !== 'Leader') {
+                <button class="kick-btn" (click)="handleKickMember(member.userId)" [disabled]="isGroupLoading">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                  </svg>
+                </button>
+                }
+              </li>
+              }
+            </ul>
+            }
+            }
+
+            <!-- TOPIC MODAL -->
+            @if (activeModal === 'topic') {
+            @if (!myGroup) {
+            <div class="notice err-notice">You must be in a group to submit a
+              topic.</div>
+            } @else if (!isTopicEditing && myGroup.topic) {
+
+            @if (myGroup.topic.status === 'Rejected') {
+            <div class="rejection-callout">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <circle cx="12" cy="16" r="1" fill="#dc2626" />
+              </svg>
+              <p>"{{ myGroup.topic.reviewComment || 'Mentor requested changes. Please resubmit.' }}"</p>
+            </div>
+            }
+
+            <div class="topic-view">
+              <h3 class="tv-title">{{ myGroup.topic.title }}</h3>
+              <p class="tv-desc">{{ myGroup.topic.description }}</p>
+              <span class="tv-status" [style.background]="getStatusColor(myGroup.topic.status)"
+                [style.color]="getStatusTextColor(myGroup.topic.status)">
+                {{ myGroup.topic.status }}
+              </span>
+            </div>
+
+            @if (myGroup.topic.status === 'Pending' || myGroup.topic.status ===
+            'Rejected') {
+            <button class="btn secondary mt-2" (click)="enableTopicEdit()">
+              @if (myGroup.topic.status === 'Rejected') { Resubmit Topic } @else
+              { Edit Topic }
+            </button>
+            }
+
+            } @else {
+            <p class="modal-desc">{{ isTopicEditing ?
+              'You are editing your topic.' : 'Submit your capstone topic for
+              mentor review.' }}</p>
+            <div class="f-group">
+              <label>Project Title</label>
+              <input class="f-input" type="text" [(ngModel)]="topicTitle"
+                placeholder="e.g. AI-powered Academic Advisor">
+            </div>
+            <div class="f-group">
+              <label>Description</label>
+              <textarea class="f-input f-ta" [(ngModel)]="topicDescription" rows="5"
+                placeholder="Describe your project goals, scope and technology stack..."></textarea>
+            </div>
+            <div class="modal-footer">
+              @if (isTopicEditing) {
+              <button class="btn secondary" (click)="cancelTopicEdit()">Cancel</button>
+              }
+              <button class="btn primary" (click)="handleTopicSubmit()" [disabled]="isTopicLoading">
+                @if (isTopicLoading) { Processing... }
+                @else { {{ isTopicEditing ? 'Save Changes' : 'Submit Topic' }} }
+              </button>
+            </div>
+            }
+            }
+
+            <!-- WEEKLY REPORT MODAL -->
+            <!-- WEEKLY REPORT MODAL -->
+            @if (activeModal === 'report') {
+            <div class="report-container">
+
+              <!-- TOP SECTION: DETAIL OR FORM -->
+              <div class="report-main-view">
+                @if (isReportAdding) {
+                <!-- ADD NEW FORM -->
+                <div class="report-form fade-in">
+                  <div class="form-header-row">
+                    <h4>Submission for Week</h4>
+                    <div class="week-picker">
+                      <input type="number" [(ngModel)]="reportWeek" min="1" [disabled]="isReportEditing"
+                        class="f-input week-input">
+                    </div>
+                    <button class="btn secondary btn-sm" (click)="isReportAdding = false; isReportEditing = false">Back
+                      to View</button>
+                  </div>
+                  <div class="f-group">
+                    <label>Report Content <span class="req">*</span></label>
+                    <textarea class="f-input f-ta" [(ngModel)]="reportContent" rows="4"
+                      placeholder="Detail your progress, challenges and next steps..."></textarea>
+                  </div>
+                  <div class="f-group">
+                    <label>GitHub Repository / PR Link <span class="req">*</span></label>
+                    <input class="f-input" type="url" [(ngModel)]="reportGithubLink"
+                      placeholder="https://github.com/user/repo/pull/1">
+                  </div>
+                  <div class="f-group">
+                    <label>Supporting Document (.doc, .docx) <span class="req">*</span></label>
+                    <input #fileInput type="file"
+                      accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                      (change)="onReportFileSelected($event)" style="display: none;">
+                    <div class="custom-file-sel" (click)="fileInput.click()">
+                      <div class="cfs-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                          stroke-width="2">
+                          <path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"></path>
+                          <polyline points="13 2 13 9 20 9"></polyline>
+                        </svg>
+                      </div>
+                      <span class="cfs-text">{{ selectedReportFile ? selectedReportFile.name : 'Choose doc file...'
+                        }}</span>
+                      <button type="button" class="cfs-btn">Browse</button>
+                    </div>
+                    <div class="file-status">
+                      @if (isFileReading) {
+                      <span class="reading-msg">
+                        <span class="spin-sm"></span> Reading file...
+                      </span>
+                      } @else if (selectedReportFile) {
+                      <span class="ready-msg">File ready to submit ✓</span>
+                      }
+                    </div>
+                  </div>
+                  <div class="form-actions">
+                    <button class="btn primary w-full" (click)="handleReportSubmit()" [disabled]="isReportLoading">
+                      @if (isReportLoading) { {{ isReportEditing ? 'Updating...' : 'Submitting...' }} } @else { {{
+                      isReportEditing ? 'Confirm Update' : 'Confirm Submission' }} }
+                    </button>
+                  </div>
+                </div>
+                } @else if (selectedReport) {
+                <!-- DETAIL VIEW -->
+                <div class="report-detail fade-in">
+                  <div class="detail-header">
+                    <div class="dh-left">
+                      <span class="week-pill">Week {{ selectedReport.weekId }}</span>
+                      <span class="status-badge" [class]="selectedReport.status?.toLowerCase()">{{ selectedReport.status
+                        }}</span>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                      @if (canEditReport(selectedReport)) {
+                      <button class="btn secondary btn-sm" (click)="enableReportEdit()">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                          stroke-width="2.5">
+                          <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path>
+                          <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                        Edit Submission
+                      </button>
+                      }
+                      <button class="btn primary btn-sm" (click)="startNewReport()">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                          stroke-width="2.5">
+                          <line x1="12" y1="5" x2="12" y2="19"></line>
+                          <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        Submit New
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="detail-scroll-content">
+                    <div class="content-box">
+                      <label>REPORT CONTENT</label>
+                      <p>{{ selectedReport.content }}</p>
+                    </div>
+
+                    @if (selectedReport.githubLink || selectedReport.GithubLink) {
+                    <div class="link-box">
+                      <label>GITHUB LINK</label>
+                      <a [href]="ensureExternalLink(selectedReport.githubLink || selectedReport.GithubLink)"
+                        target="_blank">{{ selectedReport.githubLink || selectedReport.GithubLink }}</a>
+                    </div>
+                    }
+
+                    @if (selectedReport.fileUrl || selectedReport.FileUrl) {
+                    <div class="link-box">
+                      <label>SUBMITTED DOCUMENT</label>
+                      <a href="javascript:void(0)"
+                        (click)="downloadReportFile(selectedReport.fileUrl || selectedReport.FileUrl)"
+                        class="download-link">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                          stroke-width="2" style="margin-right:4px; vertical-align: middle;">
+                          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"></path>
+                          <polyline points="7 10 12 15 17 10"></polyline>
+                          <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        Download Document File
+                      </a>
+                    </div>
+                    }
+
+                    @if (isReportReviewed(selectedReport)) {
+                    <div class="mentor-feedback-box" [class.pass-box]="selectedReport.isPass"
+                      [class.fail-box]="!selectedReport.isPass">
+                      <div class="mf-header">
+                        <label>MENTOR FEEDBACK & SCORE</label>
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                          @if (selectedReport.mentorName) {
+                          <span class="pass-pill" [class.fail]="!selectedReport.isPass">
+                            {{ selectedReport.isPass ? 'PASS' : 'FAIL' }}
+                          </span>
+                          <span class="score-tag">{{ selectedReport.score || 0 }}/10</span>
+                          } @else {
+                          <span class="spin-sm"></span>
+                          }
+                        </div>
+                      </div>
+                      @if (selectedReport.mentorName) {
+                      <p class="mentor-comment">"{{ selectedReport.mentorComment || 'No comment provided.' }}"</p>
+                      <div class="mentor-info-row">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                          stroke-width="2">
+                          <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
+                          <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        <span>{{ selectedReport.mentorName }}</span>
+                        <span class="dot">·</span>
+                        <span>{{ selectedReport.reviewedAt | date:'mediumDate' }}</span>
+                      </div>
+                      }
+                    </div>
+                    }
+                  </div>
+                </div>
+                } @else if (isHistoryLoading) {
+                <div class="report-loader">
+                  <div class="spin-ring"></div>
+                  <p>Loading History...</p>
+                </div>
+                } @else {
+                <div class="empty-state">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5">
+                    <path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"></path>
+                    <rect x="8" y="2" width="8" height="4" rx="1"></rect>
+                  </svg>
+                  <p>No reports found. Submit your first weekly update.</p>
+                  <button class="btn primary mt-3" (click)="startNewReport()">Start New Report</button>
+                </div>
+                }
+              </div>
+
+              <div class="separator"><span>SUBMISSION HISTORY</span></div>
+
+              <!-- BOTTOM SECTION: HISTORY LIST -->
+              <div class="history-scroll-area">
+                @for (item of submissionHistory; track item.reportId) {
+                <div class="history-card" [class.active]="selectedReport?.reportId === item.reportId"
+                  (click)="selectHistoryItem(item)">
+                  <div class="hc-info">
+                    <strong>Week {{ item.weekId }}</strong>
+                    <span>{{ item.submittedAt | date:'MMM dd, HH:mm' }}</span>
+                  </div>
+                  <span class="status-badge btn-sm" [class]="item.status?.toLowerCase()">{{ item.status }}</span>
+                </div>
+                }
+              </div>
+
+            </div>
+            }
+
+          </div>
+        </div>
+      </div>
+      }
+
+      <!-- ══════════ PROFILE TAB ══════════ -->
+      @if (activeTab === 'profile' && profile) {
+      <div class="fade-in">
+        <div class="profile-card">
+          <!-- Cover -->
+          <div class="profile-cover">
+            <div class="pc-gradient"></div>
+          </div>
+          <!-- Avatar + Name -->
+          <div class="pc-avatar-wrap">
+            <div class="pc-avatar">
+              @if (profile.avatarUrl) { <img [src]="profile.avatarUrl" alt="avatar"> }
+              @else { <span>{{ getInitials() }}</span> }
+            </div>
+            <button class="btn-edit-profile" (click)="toggleEdit()">
+              @if (editMode) {
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg> Discard
+              } @else {
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
+                <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
+              </svg> Edit Profile
+              }
+            </button>
+          </div>
+          <div class="pc-body">
+            <div class="pc-name-area">
+              <h2>{{ profile.fullName }}</h2>
+              <p>{{ profile.email }}</p>
+            </div>
+
+            @if (!editMode) {
+            <div class="info-grid">
+              <div class="ig"><label>Full Name</label><span>{{ profile.fullName
+                  }}</span></div>
+              <div class="ig"><label>Email</label><span>{{ profile.email
+                  }}</span></div>
+              <div class="ig"><label>Phone</label><span>{{ profile.phone || '—'
+                  }}</span></div>
+              <div class="ig"><label>Status</label><span class="status-ok">●
+                  Active</span></div>
+            </div>
+            }
+
+            @if (editMode) {
+            <div class="edit-form">
+              <div class="ef-grid">
+                <div class="f-group">
+                  <label>Full Name</label>
+                  <input class="f-input" type="text" [(ngModel)]="fullName" placeholder="Your full name">
+                </div>
+                <div class="f-group">
+                  <label>Phone</label>
+                  <input class="f-input" type="text" [(ngModel)]="phone" placeholder="Your phone number">
+                </div>
+              </div>
+              <div class="f-group">
+                <label>Profile Photo</label>
+                <div class="av-upload">
+                  <div class="av-preview">
+                    @if (avatarPreview) {
+                    <img [src]="avatarPreview" class="av-img">
+                    <button class="av-rm" (click)="removeAvatar()">✕</button>
+                    } @else {
+                    <div class="av-placeholder">
+                      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5">
+                        <circle cx="12" cy="8" r="4" />
+                        <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+                      </svg>
+                    </div>
+                    }
+                  </div>
+                  <label class="btn secondary">
+                    Choose File
+                    <input type="file" accept="image/*" (change)="onAvatarSelected($event)" hidden>
+                  </label>
+                </div>
+                <p class="hint">Max 2MB. JPG, PNG or GIF.</p>
+              </div>
+              <div class="ef-actions">
+                <button class="btn secondary" (click)="toggleEdit()">Cancel</button>
+                <button class="btn primary" (click)="saveProfile()" [disabled]="isLoading">
+                  @if (isLoading) { Saving... } @else { Save Changes }
+                </button>
+              </div>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+      }
+
+      <!-- ══════════ SECURITY TAB ══════════ -->
+      @if (activeTab === 'password') {
+      <div class="fade-in pw-page">
+        <div class="pw-card">
+          <div class="pw-head">
+            <div class="pw-head-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <rect x="5" y="11" width="14" height="10" rx="2" />
+                <path d="M8 11V7a4 4 0 018 0v4" />
+                <circle cx="12" cy="16" r="1.5" fill="white" />
+              </svg>
+            </div>
+            <h2>Change Password</h2>
+            <p>Enter a strong new password to secure your account.</p>
+          </div>
+          <div class="pw-body">
+            <div class="f-group">
+              <label>Current Password</label>
+              <div class="pw-row">
+                <input class="f-input" [type]="showCurrentPassword ? 'text' : 'password'" [(ngModel)]="currentPassword"
+                  placeholder="Current password">
+                <button class="eye-btn" (click)="togglePasswordVisibility('current')">
+                  @if (showCurrentPassword) {
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path
+                      d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24" />
+                    <line x1="1" y1="1" x2="23" y2="23" />
+                  </svg>
+                  } @else {
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12S5 4 12 4s11 8 11 8-4 8-11 8S1 12 1 12z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                  }
+                </button>
+              </div>
+            </div>
+            <div class="f-group">
+              <label>New Password</label>
+              <div class="pw-row">
+                <input class="f-input" [type]="showNewPassword ? 'text' : 'password'" [(ngModel)]="newPassword"
+                  placeholder="Min. 6 characters">
+                <button class="eye-btn" (click)="togglePasswordVisibility('new')">
+                  @if (showNewPassword) {
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path
+                      d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24" />
+                    <line x1="1" y1="1" x2="23" y2="23" />
+                  </svg>
+                  } @else {
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12S5 4 12 4s11 8 11 8-4 8-11 8S1 12 1 12z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                  }
+                </button>
+              </div>
+            </div>
+            <div class="f-group">
+              <label>Confirm Password</label>
+              <div class="pw-row">
+                <input class="f-input" [type]="showConfirmPassword ? 'text' : 'password'" [(ngModel)]="confirmPassword"
+                  placeholder="Re-enter new password">
+                <button class="eye-btn" (click)="togglePasswordVisibility('confirm')">
+                  @if (showConfirmPassword) {
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path
+                      d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24" />
+                    <line x1="1" y1="1" x2="23" y2="23" />
+                  </svg>
+                  } @else {
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12S5 4 12 4s11 8 11 8-4 8-11 8S1 12 1 12z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                  }
+                </button>
+              </div>
+            </div>
+            <div class="otp-section">
+              <div class="f-group" style="margin: 0; flex: 1;">
+                <label>OTP Code</label>
+                <input class="f-input" type="text" [(ngModel)]="otp" placeholder="6-digit code" maxlength="6">
+              </div>
+              <button class="btn secondary otp-btn" (click)="sendOtp()" [disabled]="isSendingOtp">
+                @if (isSendingOtp) { Sending... } @else { Send OTP }
+              </button>
+            </div>
+            @if (otpSent) { <p class="otp-ok">✓ OTP sent to your email.</p> }
+            <button class="btn primary w-full" style="margin-top: 1.5rem;" (click)="changePassword()"
+              [disabled]="isChangingPassword">
+              @if (isChangingPassword) { Updating... } @else { Update Password }
+            </button>
+          </div>
+        </div>
+      </div>
+      }
+
+    </div>
+  </main>
+
+  <!-- ═══════════════════ AI FLOATING ASSISTANT ═══════════════════ -->
+  <div class="ai-assistant-wrapper" [class.active]="showAISuggestions">
+
+    <!-- Suggestion Window (Chat-like) -->
+    @if (showAISuggestions) {
+    <div class="ai-chat-window animate-slide-up">
+      <header class="ai-chat-header">
+        <div class="aich-info">
+          <div class="aich-avatar">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+              <path
+                d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+            </svg>
+          </div>
+          <div>
+            <p class="aich-name">Capstone AI</p>
+            <span class="aich-status">Generator</span>
+          </div>
+        </div>
+        <button class="aich-close" (click)="closeAISuggestions()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </header>
+
+      <div class="ai-chat-body custom-scrollbar">
+        @for (msg of chatMessages; track $index) {
+        <div class="ai-history-msg" [class.user-msg-align]="msg.role === 'user'">
+          <div class="ai-bubble" [class.user-bubble]="msg.role === 'user'"
+            [class.assistant-bubble]="msg.role === 'assistant'" [class.error-bubble]="msg.role === 'error'">
+            @if (msg.role === 'assistant' && msg.suggestions && msg.suggestions.length > 0) {
+            <div class="ai-intro-msg">
+              <p>{{ msg.content }}</p>
+            </div>
+            <div class="ai-suggestions-container">
+              @for (topic of msg.suggestions; track $index) {
+              <div class="ai-msg-bubble animate-in" [style.animation-delay]="$index * 0.1 + 's'">
+                <h4 class="aimb-title">{{ topic.name || topic.Name || topic.title || topic.Title }}</h4>
+                <p class="aimb-desc">{{ topic.description || topic.Description || 'Research proposal for modern
+                  engineering.' }}</p>
+                <div class="aimb-tags">
+                  @for (tag of (topic.tags || topic.Tags || ['Innovative']); track tag) {
+                  <span class="aimb-tag">#{{ tag }}</span>
+                  }
+                </div>
+              </div>
+              }
+            </div>
+            } @else {
+            <p>{{ msg.content }}</p>
+            }
+          </div>
+        </div>
+        }
+
+        @if (isSuggestingTopics) {
+        <div class="ai-chat-loading">
+          <div class="typing-indicator">
+            <span></span><span></span><span></span>
+          </div>
+          <p>Crafting intelligent ideas for you...</p>
+        </div>
+        }
+      </div>
+
+      <footer class="ai-chat-footer">
+        <div class="ai-input-bar">
+          <input type="text" placeholder="Ask AI anything..." [(ngModel)]="aiQuery" (keyup.enter)="fetchAISuggestions()"
+            [disabled]="isSuggestingTopics">
+          <button class="ai-send-btn" (click)="fetchAISuggestions()" [disabled]="!aiQuery.trim() || isSuggestingTopics">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="22" y1="2" x2="11" y2="13" />
+              <polyline points="22 2 15 22 11 13 2 9 22 2" />
+            </svg>
+          </button>
+        </div>
+        @if (chatMessages.length > 1) {
+        <button class="clear-chat-btn" (click)="clearChatHistory()">Clear Conversation</button>
+        }
+      </footer>
+    </div>
+    }
+
+    <!-- FAB Button -->
+    <button class="ai-fab-btn card-shine" (click)="toggleAIChat()" [class.fab-active]="showAISuggestions">
+      <div class="fab-icon-wrap">
+        <svg class="icon-stars" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white"
+          stroke-width="2.5">
+          <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+        </svg>
+        <svg class="icon-close" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white"
+          stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </div>
+      @if (!showAISuggestions) {
+      <span class="fab-label">AI Assistant</span>
+      }
+    </button>
+  </div>
+
+</div>

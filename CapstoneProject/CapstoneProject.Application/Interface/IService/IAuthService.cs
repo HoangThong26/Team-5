@@ -8,8 +8,6 @@ namespace CapstoneProject.Application.Interface.IService
 {
     public interface IAuthService
     {
-        Task<string> RegisterAsync(RegisterRequest request);
-        Task<string> VerifyAsync(string token);
         Task<TokenResponse> RefreshTokenAsync(string refreshToken);
         Task<bool> LogoutAsync(string refreshToken);
         Task<LoginResponse> LoginAsync(LoginRequest request, string ipAddress);

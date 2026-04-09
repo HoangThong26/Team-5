@@ -17,6 +17,9 @@ public partial class Topic
     [StringLength(500)]
     public string? Title { get; set; }
 
+    [NotMapped]
+    public string? TopicName => Title;
+
     public string? Description { get; set; }
 
     [StringLength(50)]

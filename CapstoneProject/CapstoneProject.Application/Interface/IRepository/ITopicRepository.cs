@@ -1,21 +1,27 @@
-﻿using CapstoneProject.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using CapstoneProject.Domain.Entities;
 
 namespace CapstoneProject.Application.Interface.IRepository
 {
     public interface ITopicRepository
     {
-        Task<bool> GroupExistsAsync(int groupId);
-        Task<bool> IsUserInGroupAsync(int groupId, int userId);
-
         Task<Topic?> GetByGroupIdAsync(int groupId);
-        Task AddTopicAsync(Topic topic);
-        Task AddVersionAsync(TopicVersion version);
-        Task SaveChangesAsync();
         Task<Topic?> GetByIdAsync(int topicId);
         Task<TopicVersion?> GetLatestVersionAsync(int topicId);
-
+        Task AddTopicAsync(Topic topic);
+        Task AddVersionAsync(TopicVersion version);
+        Task<bool> GroupExistsAsync(int groupId);
+        Task<bool> IsUserInGroupAsync(int groupId, int userId);
+        Task<bool> IsMentorOfGroupAsync(int groupId, int mentorId);
+        Task<IEnumerable<TopicVersion>> GetPendingTopicVersionsByMentorAsync(int mentorId);
+        Task<TopicVersion?> GetVersionByIdAsync(int id);
+        Task<bool> HasMentorAssignedAsync(int groupId);
+        Task<IEnumerable<TopicVersion>> GetTopicVersionsByMentorAsync(int mentorId);
+        Task<bool> IsGroupLeaderAsync(int groupId, int userId);
+        Task<int?> GetMentorIdByGroupIdAsync(int groupId);
+        Task<int?> GetGroupIdByTopicIdAsync(int topicId);
+        Task<int> SaveChangesAsync();
+        Task<string?> GetMentorEmailByGroupIdAsync(int groupId);
+        Task<IEnumerable<TopicVersion>> GetMentorBoardVersionsAsync(int mentorId);
+        Task<bool> IsTopicApprovedForGroupAsync(int groupId);
     }
 }
