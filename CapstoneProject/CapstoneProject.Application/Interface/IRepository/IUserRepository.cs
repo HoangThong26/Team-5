@@ -27,5 +27,6 @@ namespace CapstoneProject.Application.Interface.IRepository
 
         Task<List<string>> GetAllEmailsAsync();
         Task AddRangeAsync(IEnumerable<User> users);
+        Task<List<User>> SearchUsersAsync(string? keyword, string? role, string? status);
     }
 }

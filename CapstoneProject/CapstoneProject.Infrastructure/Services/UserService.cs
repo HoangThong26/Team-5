@@ -108,5 +108,20 @@ namespace CapstoneProject.Infrastructure.Services
 
             await _emailService.SendEmailAsync(user.Email, "Your OTP", $"Your OTP is: {otp}");
         }
+
+        public async Task<List<AdminUserResponse>> SearchUsersAsync(string? keyword, string? role, string? status)
+        {
+            var users = await _userRepository.SearchUsersAsync(keyword, role, status);
+
+            return users.Select(u => new AdminUserResponse
+            {
+                UserId = u.UserId,
+                Email = u.Email,
+                FullName = u.FullName,
+                Phone = u.Phone,
+                Status = u.Status,
+                Role = u.Role
+            }).ToList();
+        }
     }
 }

@@ -12,5 +12,6 @@ namespace CapstoneProject.Application.Interface.IService
         Task SetupTimelineAsync(DateTime startDate);
         Task<int> ImportUsersFromExcelAsync(Stream excelStream);
         Task<byte[]> ExportStudentsToExcelAsync();
+        Task<AdminDashboardStatsDto> GetDashboardStatsAsync();
     }
 }

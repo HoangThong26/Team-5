@@ -392,7 +392,42 @@ namespace CapstoneProject.Infrastructure.Services
             }
         }
 
-      
-    }
+        public async Task<List<GroupDetailResponse>> SearchGroupsAsync(string? keyword, string? status, int? supervisorId)
+        {
+            var groups = await _groupRepository.SearchGroupsAsync(keyword, status, supervisorId);
 
+            return groups.Select(group => new GroupDetailResponse
+            {
+                GroupId = group.GroupId,
+                GroupName = group.GroupName,
+                Status = group.Status,
+                CreatedAt = group.CreatedAt,
+                MentorId = group?.MentorAssignment?.MentorId,
+                MentorName = group?.MentorAssignment?.Mentor?.FullName,
+                Members = group?.GroupMembers?.Select(m => new GroupMemberDto
+                {
+                    UserId = m.UserId,
+                    FullName = m.User?.FullName,
+                    RoleInGroup = m.RoleInGroup,
+                    JoinedAt = m.JoinedAt
+                }).ToList() ?? new List<GroupMemberDto>()
+            }).ToList();
+        }
+
+        public async Task<List<MentorRequestDto>> GetMentorRequestsAsync(int mentorId, string? status)
+        {
+            var requests = await _groupRepository.GetMentorRequestsAsync(mentorId, status);
+            return requests.Select(mr => new MentorRequestDto
+            {
+                Id = mr.Id,
+                MentorId = mr.MentorId,
+                GroupId = mr.GroupId,
+                GroupName = mr.Group?.GroupName,
+                Status = mr.Status,
+                RequestedAt = mr.RequestedAt,
+                RespondedAt = mr.RespondedAt,
+                GroupLeaderName = mr.Group?.Leader?.FullName
+            }).ToList();
+        }
+    }
 }
