@@ -39,10 +39,10 @@ namespace CapstoneProject.Infrastructure.Repostitory
         public async Task<List<User>> GetAllUsersAsync()
         {
             return await _context.Users
-                .Include(u => u.GroupMember)            // Lấy thông tin bản ghi thành viên
-                    .ThenInclude(gm => gm.Group)        // Từ thành viên lấy thông tin Nhóm
-                        .ThenInclude(g => g.FinalGrade) // Từ Nhóm lấy điểm số cuối cùng
-                .ToListAsync();
+         .Include(u => u.GroupMember)
+             .ThenInclude(gm => gm.Group)
+                 .ThenInclude(g => g.FinalGrade)
+         .ToListAsync();
         }
 
         public async Task UpdateUserStatusAsync(int userId, string newStatus)
