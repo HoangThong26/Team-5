@@ -47,11 +47,41 @@ namespace CapstoneProject.Infrastructure.Services
             return $"Created.";
         }
 
-        public async Task<List<User>> GetAllUsersAsync(int currentUserId)
+        public async Task<List<UserResponseDto>> GetAllUsersAsync(int currentUserId)
         {
-            var allUsers = await _userRepository.GetAllUsersAsync();
-            return allUsers.Where(user => user.UserId != currentUserId).ToList();
+            // 1. Lấy dữ liệu thô từ Repo (Hàm này đã có sẵn các Include cần thiết)
+            var allUsers = await _userRepository.GetStudentsAsync();
+
+            // 2. Map sang DTO
+            var userDtos = allUsers
+                .Where(u => u.UserId != currentUserId)
+                .Select(u =>
+                {
+                    // Lấy groupMember (quan hệ 1-1 theo DB của bạn)
+                    var gm = u.GroupMember;
+                    var group = gm?.Group;
+                    var finalGrade = group?.FinalGrade;
+
+                    return new UserResponseDto
+                    {
+                        UserId = u.UserId,
+                        FullName = u.FullName,
+                        Email = u.Email,
+                        Phone = u.Phone ?? "—",
+                        Role = u.Role,
+                        Status = u.Status,
+
+                        // Lấy tên nhóm giống hàm Excel
+                        GroupName = group?.GroupName ?? "—",
+
+                        // Lấy điểm giống hàm Excel
+                        Grade = finalGrade?.AverageScore // Nếu null sẽ tự động là null trong JSON
+                    };
+                }).ToList();
+
+            return userDtos;
         }
+
 
         public async Task DeleteAsync(int userId)
         {
