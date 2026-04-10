@@ -12,11 +12,18 @@ namespace CapstoneProject.Infrastructure.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IWeeklyReportRepository _weeklyReportRepository;
+        private readonly IGroupRepository _groupRepository;
+        private readonly ITopicRepository _topicRepository;
+        private readonly IDefenseRepository _defenseRepository;
 
-        public AdminService(IUserRepository userRepository, IWeeklyReportRepository weeklyReportRepository)
+        public AdminService(IUserRepository userRepository, IWeeklyReportRepository weeklyReportRepository, 
+            IGroupRepository groupRepository, ITopicRepository topicRepository, IDefenseRepository defenseRepository)
         {
             _userRepository = userRepository;
             _weeklyReportRepository = weeklyReportRepository;
+            _groupRepository = groupRepository;
+            _topicRepository = topicRepository;
+            _defenseRepository = defenseRepository;
         }
 
         public async Task<string> CreateUserByRoleAsync(AdminCreateUserRequest request)
@@ -259,6 +266,120 @@ namespace CapstoneProject.Infrastructure.Services
 
             await _weeklyReportRepository.UpdateProjectStartDateAsync(startDateOnly);
             await _weeklyReportRepository.SaveChangesAsync();
+        }
+
+        public async Task<AdminDashboardStatsDto> GetDashboardStatsAsync()
+        {
+            var stats = new AdminDashboardStatsDto();
+
+            // Get all groups with details
+            var allGroups = await _groupRepository.GetAllGroupsWithDetailsAsync();
+
+            // Core KPI Cards
+            stats.TotalGroups = allGroups.Count;
+
+            // Count students (users with role Student in groups)
+            var studentIds = allGroups
+                .SelectMany(g => g.GroupMembers)
+                .Select(m => m.UserId)
+                .Distinct()
+                .ToList();
+            stats.TotalStudents = studentIds.Count;
+
+            // Count mentors (users assigned as mentors)
+            var mentorIds = allGroups
+                .Where(g => g.MentorAssignment != null)
+                .Select(g => g.MentorAssignment.MentorId)
+                .Distinct()
+                .ToList();
+            stats.TotalMentors = mentorIds.Count;
+
+            // Topic approval stats
+            var topics = new List<Topic>();
+            foreach (var group in allGroups)
+            {
+                var topic = await _topicRepository.GetByGroupIdAsync(group.GroupId);
+                if (topic != null)
+                {
+                    topics.Add(topic);
+                }
+            }
+            var approvedTopics = topics.Count(t => t.Status == "Approved");
+            stats.TopicApprovalStats = new TopicApprovalStatsDto
+            {
+                ApprovedTopics = approvedTopics,
+                TotalTopics = topics.Count
+            };
+
+            // Actionable Insights & Alerts
+            stats.OrphanGroupsCount = allGroups.Count(g => g.MentorAssignment == null);
+            stats.PendingTopicsCount = topics.Count(t => t.Status == "Pending");
+
+            // Report health (simplified - groups without reports this week)
+            var currentWeek = await GetCurrentWeekAsync();
+            var groupsNotSubmitted = new List<string>();
+            var mentorsNotGraded = new List<string>();
+
+            foreach (var group in allGroups)
+            {
+                var report = await _weeklyReportRepository.GetReportByGroupAndWeekAsync(group.GroupId, currentWeek);
+                if (report == null)
+                {
+                    groupsNotSubmitted.Add(group.GroupName);
+                }
+                else if (report.Status != "Reviewed" && report.Status != "Pass" && report.Status != "Fail")
+                {
+                    mentorsNotGraded.Add(group.GroupName);
+                }
+            }
+
+            stats.ReportHealthStats = new ReportHealthStatsDto
+            {
+                GroupsNotSubmittedThisWeek = groupsNotSubmitted.Count,
+                MentorsNotGradedThisWeek = mentorsNotGraded.Count,
+                GroupsNotSubmitted = groupsNotSubmitted,
+                MentorsNotGraded = mentorsNotGraded
+            };
+
+            // --- US-29: CALCULATE PASS/FAIL STATS ---
+            int passedCount = 0;
+            int failedCount = 0;
+
+            foreach (var group in allGroups)
+            {
+                // Chỉ tính các nhóm đã có điểm FinalGrade
+                if (group.FinalGrade != null)
+                {
+                    // Giả sử điểm >= 5.0 là Pass. Bạn có thể tự đổi số 5.0m theo rule của trường
+                    if (group.FinalGrade.AverageScore >= 5.0m)
+                    {
+                        passedCount++;
+                    }
+                    else
+                    {
+                        failedCount++;
+                    }
+                }
+            }
+
+            stats.PassFailStats = new PassFailStatsDto
+            {
+                Passed = passedCount,
+                Failed = failedCount
+            };
+
+            return stats;
+        }
+
+        private async Task<int> GetCurrentWeekAsync()
+        {
+            var startDate = await _weeklyReportRepository.GetStartDateOfFirstWeekAsync();
+            if (startDate == null) return 1;
+
+            var now = DateTime.Now;
+            var startDateTime = startDate.Value.ToDateTime(TimeOnly.MinValue);
+            var daysDiff = (now - startDateTime).TotalDays;
+            return Math.Max(1, (int)Math.Floor(daysDiff / 7) + 1);
         }
     }
 }
