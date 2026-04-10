@@ -322,10 +322,55 @@ namespace CapstoneProject.Infrastructure.Repostitory
             return true;
         }
 
+        public async Task<List<MentorRequest>> GetMentorRequestsAsync(int mentorId, string? status)
+        {
+            var query = _context.MentorRequests
+                .Include(mr => mr.Group)
+                .Include(mr => mr.Mentor)
+                .Where(mr => mr.MentorId == mentorId);
+
+            if (!string.IsNullOrEmpty(status))
+            {
+                query = query.Where(mr => mr.Status == status);
+            }
+
+            return await query
+                .OrderByDescending(mr => mr.RequestedAt)
+                .ToListAsync();
+        }
+
         public async Task UpdateGroupAsync(Group group)
         {
             _context.Groups.Update(group);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<Group>> SearchGroupsAsync(string? keyword, string? status, int? supervisorId)
+        {
+            var query = _context.Groups
+                .Include(g => g.GroupMembers)
+                    .ThenInclude(gm => gm.User)
+                .Include(g => g.MentorAssignment)
+                    .ThenInclude(ma => ma.Mentor)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                query = query.Where(g => g.GroupName.Contains(keyword) ||
+                                          g.GroupMembers.Any(m => m.User.FullName.Contains(keyword)));
+            }
+
+            if (!string.IsNullOrEmpty(status))
+            {
+                query = query.Where(g => g.Status == status);
+            }
+
+            if (supervisorId.HasValue)
+            {
+                query = query.Where(g => g.MentorAssignment != null && g.MentorAssignment.MentorId == supervisorId);
+            }
+
+            return await query.ToListAsync();
         }
     }
 }
