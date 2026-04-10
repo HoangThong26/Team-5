@@ -49,15 +49,12 @@ namespace CapstoneProject.Infrastructure.Services
 
         public async Task<List<UserResponseDto>> GetAllUsersAsync(int currentUserId)
         {
-            // 1. Lấy dữ liệu thô từ Repo (Hàm này đã có sẵn các Include cần thiết)
             var allUsers = await _userRepository.GetStudentsAsync();
 
-            // 2. Map sang DTO
             var userDtos = allUsers
                 .Where(u => u.UserId != currentUserId)
                 .Select(u =>
                 {
-                    // Lấy groupMember (quan hệ 1-1 theo DB của bạn)
                     var gm = u.GroupMember;
                     var group = gm?.Group;
                     var finalGrade = group?.FinalGrade;
@@ -80,6 +77,33 @@ namespace CapstoneProject.Infrastructure.Services
                 }).ToList();
 
             return userDtos;
+        }
+
+        public async Task<List<UserResponseDto>> GetAllMentorsAsync()
+        {
+            var mentors = await _userRepository.GetMentorsWithGroupsAsync();
+
+            var mentorDtos = mentors.Select(u =>
+            {
+                var assignedGroups = u.MentorAssignments?.Select(ma => ma.Group.GroupName).ToList();
+                var groupNames = (assignedGroups != null && assignedGroups.Any())
+                                 ? string.Join(", ", assignedGroups)
+                                 : "No groups assigned";
+
+                return new UserResponseDto
+                {
+                    UserId = u.UserId,
+                    FullName = u.FullName,
+                    Email = u.Email,
+                    Phone = u.Phone ?? "—",
+                    Role = u.Role,
+                    Status = u.Status,
+                    GroupName = groupNames,
+                    Grade = null
+                };
+            }).ToList();
+
+            return mentorDtos;
         }
 
 

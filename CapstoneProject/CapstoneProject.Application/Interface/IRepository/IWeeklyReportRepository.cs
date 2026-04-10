@@ -21,6 +21,7 @@ namespace CapstoneProject.Application.Interface.IRepository
         Task<bool> UpdateAsync(WeeklyReport report);
         Task<WeekDefinition?> GetWeekDefinitionByNumberAsync(int weekNumber);
         Task<List<WeeklyReport>> GetPendingReportsAsync();
+        Task<List<WeeklyReport>> GetReportsForReminderAsync();
 
 
 
