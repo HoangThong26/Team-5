@@ -1,42 +1,34 @@
-# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+############################################
+# ===== .NET BACKEND =====
+############################################
+**/bin/
+**/obj/
+**/out/
 
-# Compiled output
-/dist
-/tmp
-/out-tsc
-/bazel-out
+# Chặn file cá nhân nhưng KHÔNG chặn file dự án
+*.user
+*.suo
+*.userosscache
 
-# Node
-/node_modules
-npm-debug.log
-yarn-error.log
+# QUAN TRỌNG: Chặn thư mục .vs nhưng ép Git phải giữ file .slnx
+.vs/
+!*.slnx
+!*.sln
 
-# IDEs and editors
-.idea/
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
+############################################
+# ===== ANGULAR FRONTEND =====
+############################################
+**/node_modules/
+**/.angular/cache/
+**/dist/
+.tsbuildinfo
 
-# Visual Studio Code
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-.history/*
-
-# Miscellaneous
-/.angular/cache
-.sass-cache/
-/connect.lock
-/coverage
-/libpeerconnection.log
-testem.log
-/typings
-
-# System files
+############################################
+# ===== MÔI TRƯỜNG & OS =====
+############################################
+.env
+.env.*
+!.env.example
 .DS_Store
 Thumbs.db
+Desktop.ini
