@@ -87,6 +87,14 @@ builder.Services.AddScoped<ICouncilRepository, CouncilRepository>();
 builder.Services.AddScoped<ICouncilService, CouncilService>();
 builder.Services.AddScoped<ISystemRepository, SystemRepository>();
 builder.Services.AddScoped<IDateTimeService, DateTimeService>();
+// Đăng ký MemoryCache để dùng được IMemoryCache
+builder.Services.AddMemoryCache();
+
+// Đăng ký Service xử lý logic
+builder.Services.AddScoped<IEvaluationService, EvaluationService>();
+
+// Đăng ký Worker chạy ngầm
+builder.Services.AddHostedService<ReminderWorker>();
 
 builder.Services.AddCors(options =>
 {
