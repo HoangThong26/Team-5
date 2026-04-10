@@ -192,7 +192,12 @@ export class AdminDashboardComponent implements OnInit {
     this.adminService.getAllUsers().subscribe({
       next: (res: any[]) => {
         if (this.users.length === 0) this.users = res;
-        this.mentors = res.filter(u => (u?.role || '').toLowerCase() === 'mentor');
+      },
+      error: () => {}
+    });
+    this.adminService.getAllMentors().subscribe({
+      next: (res: any[]) => {
+        this.mentors = res;
       },
       error: () => {}
     });
@@ -512,20 +517,16 @@ export class AdminDashboardComponent implements OnInit {
         this.errorMessage = 'Could not load group list.';
       }
     });
+    this.loadMentors();
   }
 
   loadMentors() {
-    if (this.users.length > 0) {
-      this.mentors = this.users.filter(u => u.role === 'Mentor');
-    } else {
-      this.adminService.getAllUsers().subscribe({
-        next: (res: any[]) => {
-          this.users = res;
-          this.mentors = res.filter(u => u.role === 'Mentor');
-        },
-        error: (err) => console.error('Could not load mentor list', err)
-      });
-    }
+    this.adminService.getAllMentors().subscribe({
+      next: (res: any[]) => {
+        this.mentors = res;
+      },
+      error: (err) => console.error('Could not load mentor list', err)
+    });
   }
 
   handleAssignMentor(groupId: number, mentorId: number) {
