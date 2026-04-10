@@ -1,19 +1,25 @@
 ############################################
-# ===== .NET BACKEND =====
+# ===== .NET BACKEND (C#) =====
 ############################################
+# Chặn các thư mục biên dịch (build)
 **/bin/
 **/obj/
 **/out/
 
-# Chặn file cá nhân nhưng KHÔNG chặn file dự án
+# Chặn file cấu hình cá nhân của người dùng
 *.user
 *.suo
 *.userosscache
+*.sln.docstates
 
-# QUAN TRỌNG: Chặn thư mục .vs nhưng ép Git phải giữ file .slnx
+# CHẶN THƯ MỤC .VS NHƯNG GIỮ FILE SOLUTION (.slnx)
 .vs/
 !*.slnx
 !*.sln
+
+# BẢO VỆ APPSETTINGS (Đảm bảo không bị mất khi pull/merge)
+!appsettings.json
+!appsettings.*.json
 
 ############################################
 # ===== ANGULAR FRONTEND =====
@@ -24,11 +30,18 @@
 .tsbuildinfo
 
 ############################################
-# ===== MÔI TRƯỜNG & OS =====
+# ===== DATABASE & ENV & OS =====
 ############################################
+# Database tạm
+*.mdf
+*.ldf
+
+# Môi trường
 .env
 .env.*
 !.env.example
+
+# File hệ thống
 .DS_Store
 Thumbs.db
 Desktop.ini

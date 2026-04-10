@@ -27,5 +27,4 @@ public partial class FinalGrade
     [ForeignKey("GroupId")]
     [InverseProperty("FinalGrade")]
     public virtual Group? Group { get; set; }
-
 }

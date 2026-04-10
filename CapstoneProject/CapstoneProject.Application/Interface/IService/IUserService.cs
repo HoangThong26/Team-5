@@ -13,7 +13,7 @@ namespace CapstoneProject.Application.Interface.IService
         Task<bool> UpdateProfileAsync(int userId, UpdateProfileRequest request);
         Task UpdatePasswordProfileAsync(int userId, UpdatePasswordProfileRequest request);
 
-        Task SendOtpForChangePasswordAsync(int userId);
-        Task<List<AdminUserResponse>> SearchUsersAsync(string? keyword, string? role, string? status);
+       Task SendOtpForChangePasswordAsync(int userId);
+       
     }
 }

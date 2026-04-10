@@ -1,28 +1,32 @@
-﻿using CapstoneProject.Application.DTO;
+﻿using CapstoneProject.Application.Interface.IRepository;
 using CapstoneProject.Application.Interface.IService;
 using CapstoneProject.Domain.Entities;
-using CapstoneProject.Infrastructure.Database.AppDbContext;
 using Microsoft.EntityFrameworkCore;
+using CapstoneProject.Infrastructure.Database.AppDbContext;
 
 namespace CapstoneProject.Infrastructure.Services
 {
     public class GradeService : IGradeService
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IFinalGradeRepository _gradeRepository;
+        private readonly ApplicationDbContext _context; // Giữ lại context nếu cần truy vấn bảng khác chưa có Repo
 
-        public GradeService(ApplicationDbContext context)
+        public GradeService(IFinalGradeRepository gradeRepository, ApplicationDbContext context)
         {
+            _gradeRepository = gradeRepository;
             _context = context;
         }
 
         public async Task<decimal> CalculateAndSaveFinalGrade(int groupId)
         {
+            // 1. Lấy điểm Weekly (Vẫn dùng context cho các bảng chưa có Repo)
             var weeklyScores = await _context.WeeklyEvaluations
                 .Include(e => e.Report)
                 .Where(e => e.Report.GroupId == groupId)
                 .Select(e => e.Score)
                 .ToListAsync();
 
+            // 2. Lấy điểm Defense
             var defenseScores = await _context.DefenseScores
                 .Include(s => s.Defense)
                 .Where(s => s.Defense.GroupId == groupId)
@@ -38,75 +42,90 @@ namespace CapstoneProject.Infrastructure.Services
             decimal avgDefense = (decimal)defenseScores.Average();
             decimal finalScore = Math.Round((avgWeekly * 0.4m) + (avgDefense * 0.6m), 2);
 
-            string gradeLetter = finalScore >= 5.0m ? "PASSED" : "FAILED";
+            string gradeLetter = finalScore >= 5.0m ? "PASS" : "FAIL";
 
-            var finalGradeEntry = await _context.FinalGrades
-                .FirstOrDefaultAsync(g => g.GroupId == groupId);
+            // 3. Sử dụng Repository để lưu
+            var finalGradeEntry = await _gradeRepository.GetByGroupIdAsync(groupId);
 
             if (finalGradeEntry == null)
             {
-                _context.FinalGrades.Add(new FinalGrade
+                await _gradeRepository.AddAsync(new FinalGrade
                 {
                     GroupId = groupId,
                     AverageScore = finalScore,
                     GradeLetter = gradeLetter,
                     IsPublished = false,
-                    PublishedAt = null
                 });
             }
             else
             {
                 finalGradeEntry.AverageScore = finalScore;
                 finalGradeEntry.GradeLetter = gradeLetter;
-                finalGradeEntry.IsPublished = false;
-                finalGradeEntry.PublishedAt = null;
+                _gradeRepository.Update(finalGradeEntry);
             }
 
-            await _context.SaveChangesAsync();
+            await _gradeRepository.SaveChangesAsync();
             return finalScore;
         }
 
-        public async Task<List<FinalGradeResponseDto>> GetAllGradesAsync()
+        public async Task PublishGrade(int groupId)
         {
-            var result = await _context.FinalGrades
-                .Include(f => f.Group)
-                    .ThenInclude(g => g.Topic)
-                .OrderBy(f => f.GroupId)
-                .Select(f => new FinalGradeResponseDto
+            var grade = await _gradeRepository.GetByGroupIdAsync(groupId);
+            if (grade != null)
+            {
+                grade.IsPublished = true;
+                grade.PublishedAt = DateTime.Now;
+                _gradeRepository.Update(grade);
+                await _gradeRepository.SaveChangesAsync();
+            }
+        }
+
+        public async Task<FinalGrade?> GetGradeForStudent(int groupId)
+        {
+            var grade = await _gradeRepository.GetByGroupIdAsync(groupId);
+
+            if (grade == null) return null;
+
+            // Logic AC3: Nếu chưa công bố, không trả về điểm
+            if (!grade.IsPublished.GetValueOrDefault())
+            {
+                return new FinalGrade
                 {
-                    GroupId = f.GroupId ?? 0,
-                    AverageScore = f.AverageScore,
-                    GradeLetter = f.GradeLetter,
-                    IsPublished = f.IsPublished ?? false,
-                    PublishedAt = f.PublishedAt,
-                    Group = f.Group == null ? null : new FinalGradeGroupDto
-                    {
-                        GroupName = f.Group.GroupName,
-                        Topic = f.Group.Topic == null ? null : new FinalGradeTopicDto
-                        {
-                            TopicName = f.Group.Topic.Title
-                        }
-                    }
-                })
+                    GroupId = groupId,
+                    IsPublished = false
+                };
+            }
+
+            return grade;
+        }
+
+        public async Task<List<FinalGrade>> GetAllFinalGrades()
+        {
+            // 1. Lấy danh sách các nhóm đã có lịch Defense (hoặc có thể lọc Status = "Completed" nếu bạn có field đó)
+            var groupsWithDefense = await _context.Groups
+                .Include(g => g.Topic)
+                .Where(g => _context.DefenseSchedules.Any(ds => ds.GroupId == g.GroupId))
+                // Bạn có thể thêm: .Where(g => _context.DefenseSchedules.Any(ds => ds.GroupId == g.GroupId && ds.Status == "Completed"))
                 .ToListAsync();
+
+            // 2. Lấy dữ liệu đã tính toán từ Repository
+            var existingGrades = await _gradeRepository.GetAllWithGroupsAsync();
+
+            // 3. Map dữ liệu
+            var result = groupsWithDefense.Select(group => {
+                var gradeEntry = existingGrades.FirstOrDefault(fg => fg.GroupId == group.GroupId);
+
+                return gradeEntry ?? new FinalGrade
+                {
+                    GroupId = group.GroupId,
+                    Group = group,
+                    AverageScore = null,
+                    GradeLetter = null,
+                    IsPublished = false
+                };
+            }).ToList();
 
             return result;
         }
-
-        public async Task PublishGradeAsync(int groupId)
-        {
-            var finalGrade = await _context.FinalGrades
-                .FirstOrDefaultAsync(f => f.GroupId == groupId);
-
-            if (finalGrade == null)
-            {
-                throw new Exception("Final grade not found.");
-            }
-
-            finalGrade.IsPublished = true;
-            finalGrade.PublishedAt = DateTime.Now;
-
-            await _context.SaveChangesAsync();
-        }
-    }//test 
+    }
 }

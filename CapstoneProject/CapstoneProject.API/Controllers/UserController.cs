@@ -89,15 +89,6 @@ namespace CapstoneProject.API.Controllers
             return Ok("OTP sent to your email.");
         }
 
-        [HttpGet("search")]
-        public async Task<IActionResult> SearchUsers([FromQuery] string? keyword, [FromQuery] string? role, [FromQuery] string? status)
-        {
-            var result = await _userService.SearchUsersAsync(keyword, role, status);
-            if (result.Count == 0)
-            {
-                return Ok(new { message = "No results found", data = new List<AdminUserResponse>() });
-            }
-            return Ok(result);
-        }
+
     }
 }

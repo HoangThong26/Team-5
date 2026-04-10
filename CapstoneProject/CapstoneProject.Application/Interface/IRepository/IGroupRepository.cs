@@ -28,7 +28,5 @@ namespace CapstoneProject.Application.Interface.IRepository
         Task<bool> RemoveMentorFromGroupAsync(int groupId);
         Task<int?> GetGroupLeaderIdAsync(int groupId);
         Task UpdateGroupAsync(Group group);
-        Task<List<Group>> SearchGroupsAsync(string? keyword, string? status, int? supervisorId);
-        Task<List<MentorRequest>> GetMentorRequestsAsync(int mentorId, string? status);
     }
 }

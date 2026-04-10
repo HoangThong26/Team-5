@@ -150,20 +150,6 @@ namespace CapstoneProject.API.Controllers
             }
         }
 
-        [HttpGet("dashboard-stats")]
-        public async Task<IActionResult> GetDashboardStats()
-        {
-            try
-            {
-                var stats = await _adminService.GetDashboardStatsAsync();
-                return Ok(stats);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-        }
-
         [HttpPost("setup-timeline")]
         public async Task<IActionResult> SetupTimeline([FromBody] AdminSetupRequest request)
         {

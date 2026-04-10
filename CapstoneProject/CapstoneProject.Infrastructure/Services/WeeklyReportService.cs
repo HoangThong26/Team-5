@@ -114,9 +114,9 @@ namespace CapstoneProject.Infrastructure.Services
             return response;
         }
 
-        public async Task<IEnumerable<WeeklyReport>> GetReportsForMentorAsync(int mentorId, int? weekId = null, int? groupId = null, string? status = null)
+        public async Task<IEnumerable<WeeklyReport>> GetReportsForMentorAsync(int mentorId)
         {
-            return await _weeklyReportRepository.GetReportsForMentorAsync(mentorId, weekId, groupId, status);
+            return await _weeklyReportRepository.GetReportsForMentorAsync(mentorId);
         }
         public async Task<IEnumerable<WeeklyReport>> GetReportsByGroupIdAsync(int groupId)
         {
