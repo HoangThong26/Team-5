@@ -1,6 +1,6 @@
 ﻿using CapstoneProject.Application.DTO;
-using CapstoneProject.Application.Interface.IService;
 using CapstoneProject.Application.Interface.IRepository;
+using CapstoneProject.Application.Interface.IService;
 using CapstoneProject.Domain.Entities;
 using Microsoft.Extensions.Configuration;
 using System.Net;
@@ -332,7 +332,7 @@ namespace CapstoneProject.Infrastructure.Services
             try
             {
                 var group = await _groupRepository.GetGroupByIdAsync(groupId);
-                if(group?.Status == "Active")
+                if (group?.Status == "Active")
                 {
                     return "This group is currently active. Active groups can not kick mentor";
                 }
@@ -358,17 +358,17 @@ namespace CapstoneProject.Infrastructure.Services
                 return "Group not found.";
             }
 
-            var memberCount = group.GroupMembers?.Count ?? 0;
-            if (memberCount < 5)
-            {
-                return $"Cannot assign mentor. This group only has {memberCount}/5 members.";
-            }
+            //var memberCount = group.GroupMembers?.Count ?? 0;
+            //if (memberCount < 5)
+            //{
+            //    return $"Cannot assign mentor. This group only has {memberCount}/5 members.";
+            //}
 
             if (group.MentorAssignment == null)
             {
                 group.MentorAssignment = new MentorAssignment
                 {
-                    GroupId = groupId, 
+                    GroupId = groupId,
                     MentorId = mentorId,
                     AssignedAt = DateTime.Now
                 };
@@ -392,7 +392,7 @@ namespace CapstoneProject.Infrastructure.Services
             }
         }
 
-      
+
     }
 
 }

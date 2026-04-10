@@ -168,6 +168,17 @@ namespace CapstoneProject.Infrastructure.Repostitory
                 .Where(u => u.Role == "Student")
                 .ToListAsync();
         }
+        public async Task<List<User>> GetMentorsWithGroupsAsync()
+        {
+            return await _context.Users
+                .Include(u => u.MentorAssignments)
+                    .ThenInclude(ma => ma.Group)
+                .Where(u => u.Role == "Mentor")
+                .ToListAsync();
+        }
+
+
+
     }
 }
 

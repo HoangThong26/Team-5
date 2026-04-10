@@ -167,6 +167,21 @@ namespace CapstoneProject.API.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+
+        [HttpGet("admin/all-mentors")]
+        [Authorize(Roles = "Admin")] // Comment lại nếu đang test
+        public async Task<IActionResult> GetAllMentors()
+        {
+            try
+            {
+                var result = await _adminService.GetAllMentorsAsync();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
     }
 }
 

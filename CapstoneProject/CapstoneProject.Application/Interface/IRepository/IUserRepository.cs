@@ -1,7 +1,4 @@
 ﻿using CapstoneProject.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CapstoneProject.Application.Interface.IRepository
 {
@@ -27,5 +24,7 @@ namespace CapstoneProject.Application.Interface.IRepository
 
         Task<List<string>> GetAllEmailsAsync();
         Task AddRangeAsync(IEnumerable<User> users);
+
+        Task<List<User>> GetMentorsWithGroupsAsync();
     }
 }
