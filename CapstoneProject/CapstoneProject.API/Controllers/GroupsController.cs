@@ -1,12 +1,10 @@
 ﻿using CapstoneProject.API.Hubs;
 using CapstoneProject.Application.DTO;
 using CapstoneProject.Application.Interface.IService;
-using DocumentFormat.OpenXml.Math;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace CapstoneProject.API.Controllers
 {
@@ -71,10 +69,10 @@ namespace CapstoneProject.API.Controllers
         }
 
         [HttpGet("accept-invite")]
-        [AllowAnonymous] 
+        [AllowAnonymous]
         public async Task<IActionResult> AcceptInvite([FromQuery] int invitationId)
         {
-          
+
             var result = await _groupService.AcceptInviteAsync(invitationId);
 
             if (result.Contains("successfully"))
@@ -92,7 +90,7 @@ namespace CapstoneProject.API.Controllers
                 </div>";
                 return Content(htmlSuccess, "text/html");
             }
-           
+
 
             string htmlError = $@"
                 <div style='text-align:center; padding:50px; font-family:Arial;'>
@@ -159,14 +157,14 @@ namespace CapstoneProject.API.Controllers
             }
         }
 
-        [Authorize(Roles = "Admin")] 
+        [Authorize(Roles = "Admin")]
         [HttpGet("admin/all-groups")]
         public async Task<IActionResult> GetAllGroups()
         {
             var result = await _groupService.GetAllGroupsForAdminAsync();
             return Ok(result);
         }
-        [Authorize(Roles = "Admin")] 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("admin/{groupId}/kick-mentor")]
         public async Task<IActionResult> KickMentorByAdmin(int groupId)
         {
@@ -201,7 +199,7 @@ namespace CapstoneProject.API.Controllers
 
             var result = await _groupService.DeleteGroupByAdminAsync(groupId, currentUserId, currentUserRole);
 
- 
+
             if (result.Contains("not found")) return NotFound(new { message = result });
             if (result.Contains("Access denied")) return Forbid();
             if (result.Contains("successfully")) return Ok(new { message = result });
@@ -211,7 +209,6 @@ namespace CapstoneProject.API.Controllers
 
         [HttpPost("admin/assign-mentor")]
         [Authorize(Roles = "Admin")]
-        [HttpPost("assign-mentor")]
         public async Task<IActionResult> AssignMentor([FromBody] AssignMentorDto request)
         {
             if (request == null || request.GroupId <= 0 || request.MentorId <= 0)

@@ -163,9 +163,25 @@ namespace CapstoneProject.Infrastructure.Repostitory
 
         public async Task<List<WeeklyReport>> GetPendingReportsAsync()
         {
-            // Lấy các report có status là 'Submitted' (chưa được Mentor chấm)
             return await _context.WeeklyReports
                 .Where(r => r.Status == "Submitted")
+                .ToListAsync();
+        }
+
+        public async Task<List<WeeklyReport>> GetReportsForReminderAsync()
+        {
+            var now = DateTime.Now;
+
+            return await _context.WeeklyReports
+                .Include(r => r.Group)
+                    .ThenInclude(g => g.MentorAssignment)
+                        .ThenInclude(ma => ma.Mentor)
+                .Where(r => r.Status == "Submitted"
+                         && r.SubmittedAt.HasValue
+                         && r.SubmittedAt.Value.AddHours(46) <= now
+                         && r.SubmittedAt.Value.AddHours(48) > now
+                         && r.Group.MentorAssignment != null
+                         && r.Group.MentorAssignment.Mentor != null)
                 .ToListAsync();
         }
 

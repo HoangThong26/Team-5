@@ -38,7 +38,7 @@ namespace CapstoneProject.Infrastructure.Services
                 if (DateTime.Now > deadline)
                 {
                     isLate = true;
-                    finalComment = $"[LATE EVALUATION] {finalComment}";
+                    finalComment = $"[SORRY LATE EVALUATION] {finalComment}";
                 }
             }
 
