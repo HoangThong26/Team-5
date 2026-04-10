@@ -59,6 +59,10 @@ export class AdminService {
     });
   }
 
+  getAllMentors(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/admin/all-mentors`);
+  }
+
   setupTimeline(startDate: string): Observable<any> {
     const body = { startDate: startDate };
     return this.http.post(this.apiUrlAdminTimeline, body);
