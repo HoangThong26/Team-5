@@ -17,7 +17,5 @@ namespace CapstoneProject.Application.Interface.IService
         Task<string> DeleteGroupByAdminAsync(int groupId, int currentUserId, string currentUserRole);
         Task<string> AssignMentorAsync(int groupId, int mentorId);
         Task<string> KickMentorByAdminAsync(int groupId);
-        Task<List<GroupDetailResponse>> SearchGroupsAsync(string? keyword, string? status, int? supervisorId);
-        Task<List<MentorRequestDto>> GetMentorRequestsAsync(int mentorId, string? status);
     }
 }

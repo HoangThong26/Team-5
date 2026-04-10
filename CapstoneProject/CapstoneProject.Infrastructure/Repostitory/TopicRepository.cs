@@ -155,32 +155,5 @@ namespace CapstoneProject.Infrastructure.Repostitory
                                    .Select(v => v.Status)
                                    .FirstOrDefault() == "Approved");
         }
-
-        public async Task<List<Topic>> SearchTopicsAsync(string? keyword, string? status, int? supervisorId)
-        {
-            var query = _context.Topics
-                .Include(t => t.Group)
-                    .ThenInclude(g => g.MentorAssignment)
-                        .ThenInclude(ma => ma.Mentor)
-                .Include(t => t.TopicVersions)
-                .AsQueryable();
-
-            if (!string.IsNullOrEmpty(keyword))
-            {
-                query = query.Where(t => t.Title.Contains(keyword) || t.Description.Contains(keyword));
-            }
-
-            if (!string.IsNullOrEmpty(status))
-            {
-                query = query.Where(t => t.Status == status);
-            }
-
-            if (supervisorId.HasValue)
-            {
-                query = query.Where(t => t.Group != null && t.Group.MentorAssignment != null && t.Group.MentorAssignment.MentorId == supervisorId);
-            }
-
-            return await query.ToListAsync();
-        }
     }
 }

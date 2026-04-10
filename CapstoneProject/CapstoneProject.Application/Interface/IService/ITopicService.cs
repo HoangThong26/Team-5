@@ -14,6 +14,7 @@ namespace CapstoneProject.Application.Interface.IService
         Task<int?> GetGroupIdByTopicIdAsync(int topicId);
         Task<string?> GetMentorEmailByGroupId(int groupId);
         Task<ServiceResponse<object>> GetMentorProposalBoardAsync(int mentorId);
-        Task<List<TopicDto>> SearchTopicsAsync(string? keyword, string? status, int? supervisorId);
-    }
+
+
+        }
 }

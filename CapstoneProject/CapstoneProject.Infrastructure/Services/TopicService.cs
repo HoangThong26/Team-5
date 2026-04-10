@@ -215,21 +215,5 @@ namespace CapstoneProject.Infrastructure.Services
             }
             return response;
         }
-
-        public async Task<List<TopicDto>> SearchTopicsAsync(string? keyword, string? status, int? supervisorId)
-        {
-            var topics = await _topicRepository.SearchTopicsAsync(keyword, status, supervisorId);
-
-            return topics.Select(t => new TopicDto
-            {
-                TopicId = t.TopicId,
-                GroupId = t.GroupId ?? 0,
-                Title = t.Title ?? string.Empty,
-                Description = t.Description ?? string.Empty,
-                Status = t.Status ?? string.Empty,
-                GroupName = t.Group?.GroupName,
-                SubmittedAt = t.CreatedAt
-            }).ToList();
-        }
     }
 }
